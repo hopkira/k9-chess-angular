@@ -1,0 +1,30 @@
+<ion-view view-title="Sensor View">
+  <ion-nav-buttons side="right">
+      <x-nr-status-icon></x-nr-status-icon>
+   </ion-nav-buttons>
+  <ion-content class="padding">
+    <!-- Bar chart HTML --!>
+   <!--   <d3-bars data="sensorData"></d3-bars> --!>
+   <!--
+        K9 Dimensions vs viewBox of 640 x 1136
+
+        Overall screen at 640 x 1136 is roughly 2m x 5m
+        with a conversion of 3x between viewBox and mm
+
+        Centre of K9 is at 320, 568
+        Boundary circle is 240 radius from that centre
+        the safe diameter around K9 is 480 = 1440mm in reality
+
+        Sensor placement:
+        Ears are roughly at: 304/333, 448
+        IR sensors are roughly at:
+        320,444 (front centre)
+        287/352, 636 (back panel 1, 6)
+        293/345, 654 (back panel 2, 5)
+        308/331, 664 (back panel 3, 4)
+        320, 768 (back centre)
+    <d3-bars data="sensorData"></d3-bars>
+    --!>
+    <svg id="k9sensors" width="100%" viewBox="0 0 640 1136"></svg>
+  </ion-content>
+</ion-view>

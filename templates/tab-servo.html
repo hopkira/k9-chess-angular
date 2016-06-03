@@ -1,0 +1,61 @@
+<ion-view view-title="Servo Controller">
+  <ion-nav-buttons side="right">
+      <x-nr-status-icon></x-nr-status-icon>
+   </ion-nav-buttons>
+  <ion-content class="padding">
+    <ul class="list">
+    <li class="item item-toggle">
+    Head Up/Down
+     <label class="toggle toggle-balanced">
+       <input type="checkbox" ng-model="dogstatus.head" ng-true-value="'up'" ng-false-value="'down'" ng-change="changeHead()">
+       <div class="track">
+         <div class="handle"></div>
+       </div>
+     </label>
+    </li>
+      <div class="item range range-balanced">
+        <i class="icon ion-arrow-up-a"></i>
+        <input type="range" ng-model="dogstatus.pwmhead" ng-change="setHeadPWM()" name="neck" min="220" max="430" step="10">
+        <i class="icon ion-arrow-down-a"></i>
+      </div>
+    <li class="item item-toggle">
+     Tail Up/Down
+     <label class="toggle toggle-balanced">
+       <input type="checkbox"  ng-model="dogstatus.tail" ng-true-value="'up'" ng-false-value="'down'" ng-change="changeTail()">
+       <div class="track">
+         <div class="handle"></div>
+       </div>
+     </label>
+    </li>
+      <div class="item range range-balanced">
+        <i class="icon ion-arrow-up-a"></i>
+        <input type="range" ng-model="dogstatus.pwmverttail" ng-change="setTailVPWM()" name="tailvertical" min="270" max="370" step="5">
+        <i class="icon ion-arrow-down-a"></i>
+      </div>
+</ul>
+  <div class="item item-divider">
+    Left Ear
+  </div>
+      <div class="item range range-balanced">
+        <i class="icon ion-arrow-left-a"></i>
+        <input type="range" ng-model="dogstatus.pwmleftear" ng-change="setEarLPWM()" name="leftear" min="400" max="600" step="10">
+        <i class="icon ion-arrow-right-a"></i>
+      </div>
+        <div class="item item-divider">
+    Right Ear
+  </div>
+      <div class="item range range-balanced">
+        <i class="icon ion-arrow-left-a"></i>
+        <input type="range" ng-model="dogstatus.pwmrightear" ng-change="setEarRPWM()" name="rightear" min="400" max="600" step="10">
+        <i class="icon ion-arrow-right-a"></i>
+      </div>
+        <div class="item item-divider">
+    Tail horizontal
+  </div>
+      <div class="item range range-balanced">
+        <i class="icon ion-arrow-left-a"></i>
+        <input type="range" ng-model="dogstatus.pwmhoriztail" ng-change="setTailHPWM()" name="tailhorizontal" min="325" max="440" step="5">
+        <i class="icon ion-arrow-right-a"></i>
+      </div>
+  </ion-content>
+</ion-view>

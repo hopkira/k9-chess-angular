@@ -1,0 +1,36 @@
+<ion-view view-title="Motor Controller">
+  <ion-nav-buttons side="right">
+      <x-nr-status-icon></x-nr-status-icon>
+   </ion-nav-buttons>
+  <ion-content class="padding" scroll="false">
+<section class = "motor-controller">
+  <div class = "row screen-row">
+    <div class = "col text-center">
+		<img id="mjpeg_dest" onload="setTimeout('init();', 100);" src="img/K9-Camera-Image.png"
+width="256" height="144" alt="K9 camera"></img>
+    </div>
+  </div>
+  <div class = "row joystick-row">
+    <div class = "col text-center">
+    <joystick position="position"></joystick>
+    </div>
+  </div>
+    <div class = "row output-row">
+    <div class = "col text-center">
+      Left/Right
+    </div>
+    <div class = "col text-center">
+      Forward/Backward
+    </div>
+  </div>
+      <div class = "row output-row">
+    <div class = "col text-center font-size-large"  >
+    <h1><b>{{position.x}}</b></h1>
+    </div>
+    <div class = "col text-center">
+    <h1><b>{{position.y}}</b></h1>
+    </div>
+  </div>
+</section>
+  </ion-content>
+</ion-view>

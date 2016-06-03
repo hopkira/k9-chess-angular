@@ -1,0 +1,13 @@
+<ion-view view-title="Audio Controller">
+  <ion-nav-buttons side="right">
+      <x-nr-status-icon></x-nr-status-icon>
+   </ion-nav-buttons>
+  <ion-content class="padding">
+    <button id="wake_up" ng-click="buttonClick($event)" class="button button-block button-balanced">All systems operational</button>
+    <button id="sad" ng-click="buttonClick($event)" class="button button-block button-balanced">Apologies master</button>
+    <button id="scanning" ng-click="buttonClick($event)" class="button button-block button-balanced">Scanning area</button>
+    <button id="sleep" ng-click="buttonClick($event)" class="button button-block button-balanced">Conserving battery power</button>
+    <button id="thanks" ng-click="buttonClick($event)" class="button button-block button-balanced">Thanks are not necessary</button>
+    <button id="home" ng-click="buttonClick($event)" class="button button-block button-balanced">Welcome home master</button>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,10 @@
+<ion-view view-title="On/Off Controller">
+  <ion-nav-buttons side="right">
+      <x-nr-status-icon></x-nr-status-icon>
+   </ion-nav-buttons>
+  <ion-content class="padding">
+      <ion-toggle ng-repeat="item in settingsList" ng-model="item.checked" ng-checked="item.checked" ng-change="changeCheckItem(item)">
+          {{ item.text }}
+      </ion-toggle>
+  </ion-content>
+</ion-view>
