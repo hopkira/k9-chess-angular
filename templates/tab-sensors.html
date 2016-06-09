@@ -3,13 +3,14 @@
       <x-nr-status-icon></x-nr-status-icon>
    </ion-nav-buttons>
   <ion-content class="padding">
-    <!-- Bar chart HTML --!>
-   <!--   <d3-bars data="sensorData"></d3-bars> --!>
-   <!--
+    <svg id="k9sensors" width="100%" viewBox="0 0 640 1136"></svg>
+  </ion-content>
+</ion-view>
+<!--
         K9 Dimensions vs viewBox of 640 x 1136
 
         Overall screen at 640 x 1136 is roughly 2m x 5m
-        with a conversion of 3x between viewBox and mm
+        with a conversion of 320x between m and viewBox
 
         Centre of K9 is at 320, 568
         Boundary circle is 240 radius from that centre
@@ -23,8 +24,4 @@
         293/345, 654 (back panel 2, 5)
         308/331, 664 (back panel 3, 4)
         320, 768 (back centre)
-    <d3-bars data="sensorData"></d3-bars>
-    --!>
-    <svg id="k9sensors" width="100%" viewBox="0 0 640 1136"></svg>
-  </ion-content>
-</ion-view>
+--!>

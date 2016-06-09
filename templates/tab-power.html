@@ -3,8 +3,33 @@
       <x-nr-status-icon></x-nr-status-icon>
    </ion-nav-buttons>
   <ion-content class="padding">
-      <ion-toggle ng-repeat="item in settingsList" ng-model="item.checked" ng-checked="item.checked" ng-change="changeCheckItem(item)">
-          {{ item.text }}
+      <ion-toggle
+      ng-model="k9.lights"
+      ng-checked="k9.lights"
+      ng-change="changeLights(k9.lights)"
+      id="lights">
+      Back panel lights
+      </ion-toggle>
+      <ion-toggle
+      ng-model="k9.hover"
+      ng-checked="k9.hover"
+      id="hover"
+      ng-change="changeHover(k9.hover)">
+      Hover lights
+      </ion-toggle>
+      <ion-toggle
+      ng-model="k9.eyes"
+      ng-checked="k9.eyes"
+      id="eyes"
+      ng-change="changeEyes(k9.eyes)">
+      Eye lights
+      </ion-toggle>
+      <ion-toggle
+      ng-model="k9.screen"
+      ng-checked="k9.screen"
+      id="screen"
+      ng-change="changeScreen(k9.screen)">
+      Side monitor
       </ion-toggle>
   </ion-content>
 </ion-view>

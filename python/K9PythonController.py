@@ -8,23 +8,33 @@
 # This program performs receives two different command strings
 # of type 'navigation' routed from a local node-RED instance.
 #
-# In response to the 'alive' command (a heartbeat every 250ms generated in the brower)
+# In response to the 'browser' command (a heartbeat every 250ms generated in the brower)
 # it will respond with status information about the driving motors and other information
 # e.g. status of lights.  Node-RED will then route this information to the end user browser.
 #
-# In response to the 'move' command, the controller will calculate the respective motor speeds
+# In response to the 'motors' command, the controller will calculate the respective motor speeds
 # and send a message to the PicoBorg Reverse to move K9.
 #
 import sys   # allows for command line to be interpreted
 import json  # enables creation of JSON strings
 
 import math # import maths operations
+import random # import random numbers
 
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
 sim = False # by default run as a real motor controller
+
+# Global variables for K9 state
+
 steering = 0
 motorspeed = 0
+leftMotor = 0
+rightMotor = 0
+lights = 0
+eyes = 0
+hover = 0
+screen = 0
 
 # sim is a program wide flag to allow the program to run without the PiBorg Reverse
 # and without access to the Raspberry Pi GPIO ports
@@ -53,10 +63,12 @@ if not sim :
 # updates a set of global variables
 def getStatusInfo() :
 	result = []
+	global lights
+	global eyes
+	global hover
+	global screen
 	left = 0
 	right = 0
-	lights = 0
-	eyes = 0
 	# retrieves status of motors and lights
 	if not sim :
 	    left = PBR.GetMotor1()
@@ -64,7 +76,19 @@ def getStatusInfo() :
 	    # retrieves status of lights:
 	    lights = GPIO.input(11)
 	    eyes = GPIO.input(13)
-	result = json.dumps({"type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
+	    # *** fix need status of hover lights and screen ****
+	else:
+	    left = leftMotor
+	    right = rightMotor
+	    if  (random.randint(1, 100)) == 10:
+	      lights = 1-lights
+	    if  (random.randint(1, 100)) == 10:
+	      eyes = 1-eyes
+	    if  (random.randint(1, 100)) == 10:
+	      hover = 1-hover
+	    if  (random.randint(1, 100)) == 10:
+	      screen = 1-screen
+	result = json.dumps({"type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes,"hover": hover,"screen": screen}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
 	return result
 
 # manages the ws socket connection from this Controller to local node-RED server
@@ -87,6 +111,8 @@ class K9PythonController(WebSocketClient) :
     def received_message(self, message) :
         global motorspeed
         global steering
+        global leftMotor
+        global rightMotor
         message = str(message) # turn message into JSON formatted string
         driveinfo = []
         driveinfo = json.loads(message) # parse JSON message string
@@ -94,7 +120,7 @@ class K9PythonController(WebSocketClient) :
         if driveinfo["type"] == "navigation":
             # navigation command received
             if driveinfo["object"] == "browser":
-                setMotorSpeed(motorspeed, steering) # this will reset the failsafe
+                setMotorSpeed(leftMotor, rightMotor) # this will reset the failsafe
                 m = getStatusInfo()		# get K9 status information
                 self.send(m)			# send current status information to the node-RED websocket
                 print str(m)
@@ -102,6 +128,7 @@ class K9PythonController(WebSocketClient) :
                 # change the motor speeds
                 motorspeed = float(driveinfo["motorspeed"])
                 steering = float(driveinfo["steering"])
+                calculateMotorSpeed(motorspeed,steering)
                 setMotorSpeed(motorspeed, steering) # this will reset the failsafe
             else:
                 # command could not be interpreted
@@ -116,16 +143,21 @@ class K9PythonController(WebSocketClient) :
 # http://k9-build.blogspot.co.uk/2016/02/taking-pythagoras-for-spin.html
 #
 def setMotorSpeed(reqmotorspeed,reqsteering) :
+    if not sim :
+            PBR.SetMotor1(reqmotorspeed)		# set actual motor speed
+            PBR.SetMotor2(reqsteering)		# set actual motor speed
+    return
+
+def calculateMotorSpeed(reqmotorspeed,reqsteering) :
+    global leftMotor
+    global rightMotor
     magnitude = min(100,math.sqrt(math.pow(reqmotorspeed,2) + math.pow(reqsteering,2)))
     myAngle = math.atan2(reqmotorspeed,reqsteering)
     myAngle = myAngle - (math.pi/4)
-    leftMotor = magnitude * math.cos(myAngle)
-    rightMotor = magnitude * math.sin(myAngle)
+    leftMotor = round(magnitude * math.cos(myAngle),0)
+    rightMotor = round(magnitude * math.sin(myAngle),0)
     print "Motorspeed: " + str(int(reqmotorspeed)) + " Steering: " + str(int(reqsteering))
     print "Left motor: " + str(int(leftMotor)) + " Right motor: " + str(int(rightMotor))
-    if not sim :
-            PBR.SetMotor1(leftMotor)		# set actual motor speed
-            PBR.SetMotor2(rightMotor)		# set actual motor speed
     return
 
 try:

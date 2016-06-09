@@ -1,31 +1,66 @@
 angular.module('K9.controllers', [])
 
 // Controller for K9 Motor Tab
-.controller('MotorCtrl', function($scope, NRInstruction) {
+.controller('MotorCtrl',["$scope","K9", function($scope, K9) {
     // initialise joystick
-      $scope.position ={
+    $scope.position = {
         x: 0,
         y: 0
         };
-  })
+    $scope.k9 = K9;
+}])
 
 // Controller for K9 On/Off Tab
-.controller('PowerCtrl', function($scope, NRInstruction) {
-    $scope.settingsList = [
-    { text: "Eyes Lights", checked: false, id: "eyes" },
-    { text: "Back Lights", checked: false, id: "lights" },
-    { text: "Hover Lights", checked: false, id: "hover" },
-    { text: "Display Screen", checked: false, id: "screen" }
-    ];
-    $scope.changeCheckItem = function (item) {
-    var value;
-    if (item.checked) {value="on"} else {value="off"};
-    NRInstruction.send('toggle', item.id, value);
+.controller('PowerCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
+    $scope.k9 = K9;
+    $scope.changeLights = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.lights==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("Lights button sent "+value);
+        NRInstruction.send('toggle', "lights", value);
     }
-  })
+    $scope.changeHover = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.hover==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("Hover button sent "+value);
+        NRInstruction.send('toggle', "hover", value);
+    }
+    $scope.changeEyes = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.eyes==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("Eyes button sent "+value);
+        NRInstruction.send('toggle', "eyes", value);
+    }
+    $scope.changeScreen = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.screen==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("Screen button sent "+value);
+        NRInstruction.send('toggle', "screen", value);
+    }
+}])
 
 // Controller for K9 Servos Tab
-.controller('ServoCtrl', function($scope, NRInstruction) {
+.controller('ServoCtrl',["$scope", "NRInstruction", function($scope, NRInstruction) {
      $scope.dogstatus = {};
      $scope.changeHead = function() {
       NRInstruction.send('toggle','head',$scope.dogstatus.head);
@@ -68,28 +103,34 @@ angular.module('K9.controllers', [])
     $scope.setEarLPWM = function() {
         NRInstruction.send('servo','earl',$scope.dogstatus.pwmleftear);
     }
-  })
+  }])
 
 // Controller for K9 Audio Tab
-.controller('AudioCtrl', function($scope, NRInstruction) {
+.controller('AudioCtrl',["$scope","NRInstruction", function($scope, NRInstruction) {
     // receive button click event and send mood message
     $scope.buttonClick = function(event) {
       NRInstruction.send('mood', event.target.id,'null');
       }
-  })
+  }])
 
 // Controller for K9 Sensor Tab
-.controller('SensorsCtrl', function($scope) {
-    /* Temporary chart data */
-    var s = Snap("#k9sensors");
+.controller('SensorsCtrl',["$scope","msgtoPoint", function($scope,msgtoPoint) {
+    // Load SVG picture of K9
+    var s = Snap("#k9sensors")
+    var mySensorArray=[];
+    var bigline;
     Snap.load("img/K9 m2-01.svg", onSVGLoaded );
+    // view needs to be kept in line with the sensorArray object
+    // ideally back1 to back6 will have a line joining them
+    // perhaps a setInterval refresh of
     function onSVGLoaded( data ){
       s.append( data );
       var plot;
       var x_pos;
       var y_pos;
       var sensor_name;
-      var readingsData = '[{"sensorName":"centre","x": 320,"y":568},{"sensorName":"leftear","x": 306,"y":452},{"sensorName":"rightear","x": 335,"y":452},{"sensorName":"front","x": 320,"y":463},{"sensorName":"back1","x": 291,"y":593},{"sensorName":"back6","x": 350,"y":593},{"sensorName":"back2","x": 298,"y":612},{"sensorName":"back5","x": 346,"y":612},{"sensorName":"back3","x": 310,"y":620},{"sensorName":"back4","x": 333,"y":620},{"sensorName":"back","x": 320,"y":740}]';
+      // Centrepoint {"sensorName":"centre","x": 320,"y":568},
+      var readingsData = '[{"sensorName":"leftear","x": 306,"y":452},{"sensorName":"rightear","x": 335,"y":452},{"sensorName":"front","x": 320,"y":463},{"sensorName":"back1","x": 291,"y":593},{"sensorName":"back6","x": 350,"y":593},{"sensorName":"back2","x": 298,"y":612},{"sensorName":"back5","x": 346,"y":612},{"sensorName":"back3","x": 310,"y":620},{"sensorName":"back4","x": 333,"y":620},{"sensorName":"back","x": 320,"y":740}]';
       var readings = JSON.parse(readingsData);
       // indexed iteration
       for (var key in readings) {
@@ -103,20 +144,28 @@ angular.module('K9.controllers', [])
         sensor_name = readings[key].sensorName;
         plot = s.circle(x_pos,y_pos,5);
         plot.attr({fill: "#33CD5F",});
-        console.log(sensor_name + ": x-"+ x_pos + " y-" + y_pos);
+        // console.log(sensor_name + ": x-"+ x_pos + " y-" + y_pos);
       }
+      mySensorArray=msgtoPoint.getSensorArray();
+      $scope.line1 = s.line(parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y),parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y));
+      $scope.line2 = s.line(parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y),parseInt(mySensorArray[7].x),parseInt(mySensorArray[7].y));
+      $scope.line3 = s.line(parseInt(mySensorArray[7].x),parseInt(mySensorArray[7].y),parseInt(mySensorArray[8].x),parseInt(mySensorArray[8].y));
+      $scope.bigline = s.group($scope.line1, $scope.line2, $scope.line3);
+      $scope.bigline.attr({
+        stroke: "#33CD5F",
+        strokeWidth: 5
+        });
+      $scope.rdtime=setInterval(function() {$scope.reDraw();},200);
     }
-    })
-    // Lets create big circle in the middle:
-    // var bigCircle = s.circle(150, 150, 5);
-    // By default its black, lets change its attributes
-   //bigCircle.attr({
-   // fill: "#33CD5F",
-   //});
-   // }
-   // var data = '[{"cohortName": "Boston Public Schools","value": 0.3337727272727273},{"cohortName": "Stanley Middle School","value": 0.2844818181818182},{"cohortName": "My Students","value": 0.1590909090909091}]';
-   // what does the sensor have to react to?
-
+    $scope.reDraw = function () {
+      // method to reDraw sensor screen
+      mySensorArray=msgtoPoint.getSensorArray();
+      $scope.line1.animate({ x1: mySensorArray[3].x, x2: mySensorArray[5].x, y1: mySensorArray[3].y, y2: mySensorArray[5].y},100);
+      $scope.line2.animate({ x1: mySensorArray[5].x, x2: mySensorArray[7].x, y1: mySensorArray[5].y, y2: mySensorArray[7].y},100);
+      $scope.line3.animate({ x1: mySensorArray[7].x, x2: mySensorArray[8].x, y1: mySensorArray[7].y, y2: mySensorArray[8].y},100);
+      // console.log("Sensor array: " + JSON.stringify(mySensorArray));
+      }
+  }])
 
 // Controller for K9 Settings Tab
 .controller('SettingsCtrl', function($scope, NodeREDConnection) {

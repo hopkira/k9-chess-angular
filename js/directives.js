@@ -13,7 +13,8 @@ angular.module('K9.directives', [])
         function(){return NodeREDConnection.status()},
         function(newVal,oldVal) {
           scope.icon = newVal;
-          console.log("Indirective: " + newVal);}
+          // console.log("Indirective: " + newVal);
+          }
         )}
       }
 }])
