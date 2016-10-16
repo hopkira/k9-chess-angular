@@ -212,7 +212,8 @@ angular.module('K9.services', [])
     // connect WebSocket to node-RED as specified
     var NRSettings = {};
     NRSettings = settings;
-    var NRwebsocket = "ws://"+ NRSettings.URL +":" + NRSettings.port +"/"+ NRSettings.dir +"/ws/k9";
+    if (NRSettings.dir=="") {filler="";} else {filler="/";}
+    var NRwebsocket = "ws://"+ NRSettings.URL +":" + NRSettings.port + filler + NRSettings.dir +"/ws/k9";
     console.log("Connecting to " + NRwebsocket);
     // connect to node-RED
     // connect(NRwebsocket);

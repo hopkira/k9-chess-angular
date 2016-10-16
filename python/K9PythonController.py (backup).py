@@ -19,22 +19,12 @@ import sys   # allows for command line to be interpreted
 import json  # enables creation of JSON strings
 
 import math # import maths operations
-import random # import random numbers
 
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
 sim = False # by default run as a real motor controller
-
-# Global variables for K9 state
-
 steering = 0
 motorspeed = 0
-leftMotor = 0
-rightMotor = 0
-lights = 0
-eyes = 0
-hover = 0
-screen = 0
 
 # sim is a program wide flag to allow the program to run without the PiBorg Reverse
 # and without access to the Raspberry Pi GPIO ports
@@ -63,42 +53,20 @@ if not sim :
 # updates a set of global variables
 def getStatusInfo() :
 	result = []
-	global lights
-	global eyes
-	global hover
-	global screen
 	left = 0
 	right = 0
+	lights = 0
+	eyes = 0
 	# retrieves status of motors and lights
 	if not sim :
 	    left = PBR.GetMotor1()
 	    right = PBR.GetMotor2()
-	    if left is None:
-	      left = 0
-	    else:
-	      left = left*100
-	    if right is None:
-	      right = 0
-	    else:
-	      right = right*100
-	    # left = PBR.GetMotor1()*100
-	    # right = PBR.GetMotor2()*100
 	    # retrieves status of lights:
 	    lights = GPIO.input(11)
 	    eyes = GPIO.input(13)
-	    # *** fix need status of hover lights and screen ****
 	else:
-	    left = leftMotor
-	    right = rightMotor
-	    if  (random.randint(1, 100)) == 10:
-	      lights = 1-lights
-	    if  (random.randint(1, 100)) == 10:
-	      eyes = 1-eyes
-	    if  (random.randint(1, 100)) == 10:
-	      hover = 1-hover
-	    if  (random.randint(1, 100)) == 10:
-	      screen = 1-screen
-	result = json.dumps({"type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes,"hover": hover,"screen": screen}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
+	    setMotorSpeed(motorspeed, steering)
+	result = json.dumps({"type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
 	return result
 
 # manages the ws socket connection from this Controller to local node-RED server
@@ -121,8 +89,6 @@ class K9PythonController(WebSocketClient) :
     def received_message(self, message) :
         global motorspeed
         global steering
-        global leftMotor
-        global rightMotor
         message = str(message) # turn message into JSON formatted string
         driveinfo = []
         driveinfo = json.loads(message) # parse JSON message string
@@ -130,7 +96,7 @@ class K9PythonController(WebSocketClient) :
         if driveinfo["type"] == "navigation":
             # navigation command received
             if driveinfo["object"] == "browser":
-                setMotorSpeed(leftMotor, rightMotor) # this will reset the failsafe
+                setMotorSpeed(motorspeed, steering) # this will reset the failsafe
                 m = getStatusInfo()		# get K9 status information
                 self.send(m)			# send current status information to the node-RED websocket
                 print str(m)
@@ -138,7 +104,6 @@ class K9PythonController(WebSocketClient) :
                 # change the motor speeds
                 motorspeed = float(driveinfo["motorspeed"])
                 steering = float(driveinfo["steering"])
-                calculateMotorSpeed(motorspeed,steering)
                 setMotorSpeed(motorspeed, steering) # this will reset the failsafe
             else:
                 # command could not be interpreted
@@ -153,21 +118,19 @@ class K9PythonController(WebSocketClient) :
 # http://k9-build.blogspot.co.uk/2016/02/taking-pythagoras-for-spin.html
 #
 def setMotorSpeed(reqmotorspeed,reqsteering) :
-    if not sim :
-            PBR.SetMotor1(reqmotorspeed/100)		# set actual motor speed
-            PBR.SetMotor2(reqsteering/100)		# set actual motor speed
-    return
-
-def calculateMotorSpeed(reqmotorspeed,reqsteering) :
-    global leftMotor
-    global rightMotor
     magnitude = min(100,math.sqrt(math.pow(reqmotorspeed,2) + math.pow(reqsteering,2)))
     myAngle = math.atan2(reqmotorspeed,reqsteering)
     myAngle = myAngle - (math.pi/4)
-    leftMotor = round(magnitude * math.cos(myAngle),0)
-    rightMotor = round(magnitude * math.sin(myAngle),0)
+    leftMotor = magnitude * math.cos(myAngle)
+    rightMotor = magnitude * math.sin(myAngle)
     print "Motorspeed: " + str(int(reqmotorspeed)) + " Steering: " + str(int(reqsteering))
     print "Left motor: " + str(int(leftMotor)) + " Right motor: " + str(int(rightMotor))
+    if not sim :
+      PBR.SetMotor1(leftMotor)		# set actual motor speed
+      PBR.SetMotor2(rightMotor)		# set actual motor speed
+    else:
+      motorspeed = leftMotor
+      steering = rightMotor
     return
 
 try:

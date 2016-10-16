@@ -8,6 +8,7 @@ angular.module('K9.controllers', [])
         y: 0
         };
     $scope.k9 = K9;
+    $scope.getRound = function (value) {return Math.round(value)}
 }])
 
 // Controller for K9 On/Off Tab
@@ -171,6 +172,10 @@ angular.module('K9.controllers', [])
 .controller('SettingsCtrl', function($scope, NodeREDConnection) {
   // retrieve stored node-Red socket settings
   $scope.K9settings = NodeREDConnection.getSettings();
+  // include slash or not
+  $scope.getFiller = function(directory) {
+  if (directory=="") {return "";} else {return "/";}
+  }
   // save and connect to node-Red via socket
   $scope.connect = function () {
     NodeREDConnection.saveSettings($scope.K9settings);
