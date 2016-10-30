@@ -71,18 +71,9 @@ def getStatusInfo() :
 	right = 0
 	# retrieves status of motors and lights
 	if not sim :
-	    left = PBR.GetMotor1()
-	    right = PBR.GetMotor2()
-	    if left is None:
-	      left = 0
-	    else:
-	      left = left*100
-	    if right is None:
-	      right = 0
-	    else:
-	      right = right*100
-	    # left = PBR.GetMotor1()*100
-	    # right = PBR.GetMotor2()*100
+	    
+		left = PBR.GetMotor1()*100
+	    right = PBR.GetMotor2()*100
 	    # retrieves status of lights:
 	    lights = GPIO.input(11)
 	    eyes = GPIO.input(13)

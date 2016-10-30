@@ -171,7 +171,7 @@ def calculateMotorSpeed(reqmotorspeed,reqsteering) :
     return
 
 try:
-     ws = K9PythonController('ws://127.0.0.1:1880/ws/motors')
+     ws = K9PythonController('ws://127.0.0.1:1880/admin/ws/motors')
      ws.connect()
      ws.run_forever()
 except KeyboardInterrupt:
