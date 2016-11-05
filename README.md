@@ -4,7 +4,7 @@ Code and configuration files for a chess playing enhancement to a remote presenc
 # Directory Structure
 
 ## node-RED
-This directory contains the flows to control K9
+This directory contains the flows to control K9.
 
 ## python
 This directory contains the python programs that use the Adafruit PWM Servo Driver to make K9 move.
