@@ -1,4 +1,4 @@
-# K9 Controller App
+# K9 Controller
 Code and configuration files for a chess playing enhancement to a remote presence robot.
 
 # Directory Structure
