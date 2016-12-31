@@ -1,6 +1,6 @@
 #!/bin/sh
 node-red-stop
 shopt -s dotglob nullglob
-sudo mv /var/lib/jenkins/jobs/k9/workspace/k9-chess-angular/node-RED/flows_k9.json /home/pi/.node-red/flows_k9.json
-sudo mv /var/lib/jenkins/jobs/k9/workspace/k9-chess-angular/* /var/www/html
+cp /var/lib/jenkins/jobs/k9/workspace/k9-chess-angular/node-RED/flows_k9.json /home/pi/.node-red/flows_k9.json
+cp -r /var/lib/jenkins/jobs/k9/workspace/k9-chess-angular/* /var/www/html
 node-red-start &
