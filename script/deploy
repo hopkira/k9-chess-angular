@@ -5,9 +5,9 @@ kill $(pgrep -f 'K9PythonController.py')
 # Ensure that hidden files are copied
 shopt -s dotglob nullglob
 # Copy the node-RED flows to the home directory
-sudo cp /var/lib/jenkins/jobs/k9/workspace/k9-chess-angular/node-RED/flows_k9.json /home/pi/.node-red/flows_k9.json
+sudo cp /home/pi/k9-chess-angular/node-RED/flows_k9.json /home/pi/.node-red/flows_k9.json
 # Copy the remainder of the files to the Apache webserver
-sudo cp -r /var/lib/jenkins/jobs/k9/workspace/k9-chess-angular/* /var/www/html
+sudo cp -r /home/pi/k9-chess-angular/* /var/www/html
 # Restart the running K9 processes
 node-red-start &>> node-red.log &
 sleep 30
