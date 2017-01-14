@@ -1,7 +1,7 @@
 #
 # K9 Python Controller
 #
-# authored by Richard Hopkins, February 2016
+# authored by Richard Hopkins, January 2017
 #
 # Licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
 #
@@ -17,7 +17,7 @@
 #
 import sys   # allows for command line to be interpreted
 import json  # enables creation of JSON strings
-
+import os # enables access to environment variables
 import math # import maths operations
 import random # import random numbers
 
@@ -171,7 +171,15 @@ def calculateMotorSpeed(reqmotorspeed,reqsteering) :
     return
 
 try:
-     ws = K9PythonController('ws://127.0.0.1:1880/ws/motors')
+	os.environ['K9PyContWS']
+except KeyError:
+	print "Please set the K9PyContWS environment variable to the URL of the motor websocket"
+	sys.exit(1)
+
+address = os.environ['K9PyContWS']
+
+try:
+     ws = K9PythonController(address)
      ws.connect()
      ws.run_forever()
 except KeyboardInterrupt:

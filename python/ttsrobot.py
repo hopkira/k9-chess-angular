@@ -16,11 +16,20 @@
 # Snowboy elements derived from
 # Kitt-AI/snowboy/examples/Python/demo.py
 #
+# Released under Creative Commons license
 
 from ws4py.client.threadedclient import WebSocketClient
 from watson_developer_cloud import ConversationV1
 from Adafruit_PWM_Servo_Driver import PWM
-import sys, signal, snowboydecoder, re, base64, json, ssl, subprocess, threading, time
+import os, sys, signal, snowboydecoder, re, base64, json, ssl, subprocess, threading, time
+
+variables = ['WCpassword','WCusername','WCversion','WCworkspace','WTTSurl','WTTSpassword','WTTSusername']
+for variable in variables:
+	try:
+		os.environ[variable]
+	except KeyError:
+		print "Please set the environment variable " + variable
+		sys.exit(1)
 
 # Initialising TTS global variables
 speech_received = False # has speech been returned by Watson?
@@ -32,10 +41,10 @@ interrupted = False
 
 # Initialise conversation global variables
 conversation = ConversationV1(
-    username='xxxxx',
-    password='xxxxx',
-    version='xxxxx')
-workspace_id = 'xxxxxx'
+    username=os.environ['WCusername'],
+    password=os.environ['WCpassword'],
+    version=os.environ['WCversion'])
+workspace_id = os.environ['WCworkspace']
 
 # Initialise the PWM device using the default address
 pwm = PWM(0x40)
@@ -60,9 +69,9 @@ detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
 # Test to Speech
 class SpeechToTextClient(WebSocketClient):
 	def __init__(self):
-		username = "xxxxxx"
-		password = "xxxxxx"
-		ws_url = "wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize"
+		username = os.environ['WTTSusername']
+		password = os.environ['WTTSpassword']
+		ws_url = os.environ['WTTSurl']
 		auth_string = "%s:%s" % (username, password)
 		base64string = base64.encodestring(auth_string).replace("\n", "")
 		self.listening = False
