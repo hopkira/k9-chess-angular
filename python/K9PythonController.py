@@ -171,10 +171,10 @@ def calculateMotorSpeed(reqmotorspeed,reqsteering) :
     return
 
 try:
-	os.environ['K9PyContWS']
-except KeyError:
-	print "Please set the K9PyContWS environment variable to the URL of the motor websocket"
-	sys.exit(1)
+    os.environ['K9PyContWS']
+    except KeyError:
+    print "Please set the K9PyContWS environment variable to the URL of the motor websocket"
+    sys.exit(1)
 
 address = os.environ['K9PyContWS']
 
