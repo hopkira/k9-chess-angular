@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Stop the running K9 processes
 node-red-stop
 kill $(pgrep -f 'K9PythonController.py')

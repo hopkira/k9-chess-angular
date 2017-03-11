@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Starting chromium in 30 seconds..."
+sleep 30
+chromium-browser --noerrdialogs --disable-infobars --kiosk http://localhost:1880/ui --incognito &

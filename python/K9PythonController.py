@@ -20,10 +20,16 @@ import json  # enables creation of JSON strings
 import os # enables access to environment variables
 import math # import maths operations
 import random # import random numbers
+import time
+
+sys.path.append('/home/pi/picoborgrev') # include home directory in path
+sys.path.append('/home/pi')
 
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
+from k9secrets import K9PyContWS 
 
 sim = False # by default run as a real motor controller
+address = K9PyContWS
 
 # Global variables for K9 state
 
@@ -99,7 +105,7 @@ def getStatusInfo() :
 	    if  (random.randint(1, 100)) == 10:
 	      screen = 1-screen
 	result = json.dumps({"type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes,"hover": hover,"screen": screen}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
-	return result
+ 	return result
 
 # manages the ws socket connection from this Controller to local node-RED server
 class K9PythonController(WebSocketClient) :
@@ -170,13 +176,15 @@ def calculateMotorSpeed(reqmotorspeed,reqsteering) :
     print "Left motor: " + str(int(leftMotor)) + " Right motor: " + str(int(rightMotor))
     return
 
-try:
-    os.environ['K9PyContWS']
-except KeyError:
-    print "Please set the K9PyContWS environment variable to the URL of the motor websocket"
-    sys.exit(1)
+#try:
+#    os.environ['K9PyContWS']
+#except KeyError:
+#    print "Please set the K9PyContWS environment variable to the URL of the motor websocket"
+#    sys.exit(1)
+#
+#address = os.environ['K9PyContWS']
 
-address = os.environ['K9PyContWS']
+time.sleep(30)
 
 try:
      ws = K9PythonController(address)
