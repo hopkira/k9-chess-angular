@@ -67,22 +67,23 @@ class Motor :
       self.speed = 0.0
       self.target = 0.0
 
-   def calculateTargetSpeed(reqmotorspeed,reqsteering) :
+   def calculateTargetSpeed(self,reqmotorspeed,reqsteering) :
       self.reqmotorspeed = reqmotorspeed
       self.reqsteering = reqsteering
       self.magnitude = min(100.0,math.sqrt(math.pow(self.reqmotorspeed,2.0) + math.pow(self.reqsteering,2.0)))
       self.myAngle = math.atan2(self.reqmotorspeed,self.reqsteering)
       self.myAngle = self.myAngle - (math.pi/4.0)
       if self.name == "left" :
-         self.targetspeed = int(self.magnitude * math.cos(self.myAngle),0.0)
+         self.targetspeed = self.magnitude * math.cos(self.myAngle)
       elif self.name == "right" :
-         self.targetspeed = int(self.magnitude * math.sin(self.myAngle),0.0)
+         self.targetspeed = self.magnitude * math.sin(self.myAngle)
       else :
          print "Unknown motor"
          self.targetspeed = 0
       return self.targetspeed
 
    def getActualSpeed(self) :
+      self.clicks = 0
       if not sim :
          if self.name == "left" :
             self.clicks = rc.ReadSpeedM1(rc_address)
@@ -91,9 +92,10 @@ class Motor :
          else:
             print "Unknown motor"
             self.speed = 0
-         self.speed = int(self.clicks / self.QPPS)
+         self.speed = int(self.clicks[1] / self.QPPS)
       else:
          self.speed = self.target
+      print "Motor: " + str(self.name) + " at " + str(self.speed)
       return self.speed
 
    def setTargetSpeed(self, target) :
@@ -104,16 +106,17 @@ class Motor :
       if not sim :
          self.click_speed = int(self.QPPS * self.target)
          self.distance = int(abs(self.target * self.QPPS / 4))
+         print "Motor " + str(self.name) + " set to " + str(self.click_speed)
          if self.name == "left" :
             if self.target == 0 :
                rc.SpeedM1(rc_address,0)
             else :
-               rc.SpeedDistanceM1(rc_address,self.target,self.distance,0)
+               rc.SpeedM1(rc_address,self.click_speed)
          elif self.name == "right" :
             if self.target == 0 :
                rc.SpeedM2(rc_address,0)
             else :
-              rc.SpeedDistanceM2(rc_address,self.target,self.distance,0)
+              rc.SpeedM2(rc_address,self.click_speed)
          else :
             print "Unknown motor"
 
@@ -127,10 +130,10 @@ class K9 :
       self.leftMotor = Motor("left",708.0)
       self.rightMotor = Motor("right",720.0)
 
-   def getStatusInfo() :
+   def getStatusInfo(self) :
       self.result = []
-      self.left = leftMotor.getActualSpeed()
-      self.right = rightMotor.getActualSpeed()
+      self.left = self.leftMotor.getActualSpeed()
+      self.right = self.rightMotor.getActualSpeed()
       # retrieves status of motors and lights
       if not sim :
          self.lights = GPIO.input(11)
@@ -145,7 +148,7 @@ class K9 :
             self.hover = 1-self.hover
          if  (random.randint(1, 100)) == 10:
             self.screen = 1-self.screen
-      result = json.dumps({"type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes,"hover": hover,"screen": screen}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
+      result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
       return result
 
 # manages the ws socket connection from this Controller to local node-RED server
@@ -184,15 +187,15 @@ class K9PythonController(WebSocketClient) :
             # heartbeat received from browser
             self.message = self.k9.getStatusInfo()    # get K9 status information
             self.send(self.message)                   # send current status information to the node-RED websocket
-            print "Status: " + str(self.message)
+            # print "Status: " + str(self.message)
          elif self.driveinfo["object"] == "motors":
             # change the motor speeds
             self.motorspeed = float(self.driveinfo["motorspeed"])
             self.steering = float(self.driveinfo["steering"])
             self.leftTarget = self.k9.leftMotor.calculateTargetSpeed(self.motorspeed, self.steering)
             self.rightTarget = self.k9.rightMotor.calculateTargetSpeed(self.motorspeed, self.steering)
-            self.k9.leftMotor.setTargetSpeed(leftTarget)
-            self.k9.rightMotor.setTargetSpeed(rightTarget)
+            self.k9.leftMotor.setTargetSpeed(self.leftTarget)
+            self.k9.rightMotor.setTargetSpeed(self.rightTarget)
             self.k9.leftMotor.setMotorSpeed()
             self.k9.rightMotor.setMotorSpeed()
          else:
@@ -215,8 +218,8 @@ except KeyboardInterrupt:
       # reset motors to zero
       ws.k9.leftMotor.setTargetSpeed(0)
       ws.k9.rightMotor.setTargetSpeed(0)
-      ws.k9.leftMotor.setMotorSpeed(0)
-      ws.k9.rightMotor.setMotorSpeed(0)
+      ws.k9.leftMotor.setMotorSpeed()
+      ws.k9.rightMotor.setMotorSpeed()
       GPIO.cleanup()
    ws.close()
    print "Exiting controller after cleanup."
