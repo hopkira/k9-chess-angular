@@ -70,7 +70,7 @@ class Motor :
    def calculateTargetSpeed(self,reqmotorspeed,reqsteering,motorctrl) :
       self.reqmotorspeed = reqmotorspeed
       self.reqsteering = reqsteering
-      self motorctrl = motorctrl
+      self.motorctrl = motorctrl
       self.magnitude = min(100.0,math.sqrt(math.pow(self.reqmotorspeed,2.0) + math.pow(self.reqsteering,2.0)))
       self.myAngle = math.atan2(self.reqmotorspeed,self.reqsteering)
       # If motorctrl is 1, then translate into precise speed and direction up to 10mph
