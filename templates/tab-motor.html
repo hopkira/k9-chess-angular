@@ -15,21 +15,34 @@ width="256" height="144" alt="K9 camera"></img>
     <joystick position="position"></joystick>
     </div>
   </div>
-    <div class = "row output-row">
-    <div class = "col text-center">
-      Motor L
+   <div class = "row output-row">
+    <div class = "col-25 text-center">
+      Left Speed
     </div>
-    <div class = "col text-center">
-      Motor R
+    <div class = "col-50 text-center">
     </div>
-  </div>
+    <div class = "col-25 text-center">
+      Right Speed
+    </div>
+    </div>
       <div class = "row output-row">
-    <div class = "col text-center font-size-large"  >
+    <div class = "col-25 text-center font-size-large"  >
     <h3><b>{{ getRound(k9.left) }}</b></h3>
     </div>
-    <div class = "col text-center">
-    <h3><b>{{ getRound(k9.right) }}</b></h3>
+        <div class = "col-50">
+    <ion-toggle
+      ng-model="k9.motorctrl"
+      ng-checked="k9.motorctrl"
+      ng-change="changeMotorCtrl(k9.motorctrl)"
+      id="motorctrl"
+      toggle-class="toggle-balanced"
+      class="toggle-large"
+      >
+      Control Speed
+      </ion-toggle>
     </div>
+    <div class = "col-25 text-center font-size-large">
+    <h3><b>{{ getRound(k9.right) }}</b></h3>
   </div>
 </section>
   </ion-content>

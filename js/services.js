@@ -81,19 +81,17 @@ angular.module('K9.services', [])
     var NRstatus = status;
     var slot1="object";
     var slot2="value";
-    if (NRverb=="navigation") {
-        NRobject = "motors";
-        NRstatus = object;
-        NRstatus2 = status;
-        slot2="steering";
-        slot3="motorspeed";
-        var message = '{"type":"' + NRverb + '", "' + slot1 + '": "' + NRobject + '", "' + slot2 + '": "' + NRstatus + '", "' + slot3 + '": "' + NRstatus2 + '"}';
-        }
-
+    if ((NRverb == "navigation") && (NRobject != "motorctrl")) {
+      NRobject = "motors";
+      NRstatus = object;
+      NRstatus2 = status;
+      slot2="steering";
+      slot3="motorspeed";
+      var message = '{"type":"' + NRverb + '", "' + slot1 + '": "' + NRobject + '", "' + slot2 + '": "' + NRstatus + '", "' + slot3 + '": "' + NRstatus2 + '"}';
+      }
     else {
-        var message = '{"type":"' + NRverb + '", "' + slot1 + '": "' + NRobject + '", "' + slot2 + '": "' + NRstatus + '"}';
-        }
-
+      var message = '{"type":"' + NRverb + '", "' + slot1 + '": "' + NRobject + '", "' + slot2 + '": "' + NRstatus + '"}';
+      }
       try {
       NodeREDWebSocket.sendmsg(message);
     }

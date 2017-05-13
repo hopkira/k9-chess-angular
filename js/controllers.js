@@ -1,13 +1,24 @@
 angular.module('K9.controllers', [])
 
 // Controller for K9 Motor Tab
-.controller('MotorCtrl',["$scope","K9", function($scope, K9) {
+.controller('MotorCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
     // initialise joystick
     $scope.position = {
         x: 0,
         y: 0
         };
     $scope.k9 = K9;
+    $scope.changeMotorCtrl = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.motorctrl==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("MotorCtrl button sent "+value);
+        NRInstruction.send('navigation', "motorctrl", value);
+    }
     $scope.getRound = function (value) {return Math.round(value)}
 }])
 

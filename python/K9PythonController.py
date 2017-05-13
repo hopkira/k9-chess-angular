@@ -57,7 +57,7 @@ if not sim :
    GPIO.setup(chan_list, GPIO.IN) # set GPIO to low at initialise
 else :
    # otherwise use local host as node-RED server and don't initialise GPIO or Roboclaw
-   address = "ws://127.0.0.1:1880/ws"
+   address = "ws://127.0.0.1:1880/admin/ws/k9"
 
 class Motor :
    def __init__(self,name,QPPS) :
@@ -67,11 +67,17 @@ class Motor :
       self.speed = 0.0
       self.target = 0.0
 
-   def calculateTargetSpeed(self,reqmotorspeed,reqsteering) :
+   def calculateTargetSpeed(self,reqmotorspeed,reqsteering,motorctrl) :
       self.reqmotorspeed = reqmotorspeed
       self.reqsteering = reqsteering
+      self motorctrl = motorctrl
       self.magnitude = min(100.0,math.sqrt(math.pow(self.reqmotorspeed,2.0) + math.pow(self.reqsteering,2.0)))
       self.myAngle = math.atan2(self.reqmotorspeed,self.reqsteering)
+      # If motorctrl is 1, then translate into precise speed and direction up to 10mph
+      if (self.motorctrl != 1.0) :
+         # Make 1mph the maximum speed and approximate direction to forward, backward or spin
+         self.magnitude = self.magnitude / 10
+         self.myAngle = round(self.myAngle / (math.pi/4.0))*math.pi/4.0
       self.myAngle = self.myAngle - (math.pi/4.0)
       if self.name == "left" :
          self.targetspeed = self.magnitude * math.cos(self.myAngle)
@@ -127,6 +133,7 @@ class K9 :
       self.eyes = 0.0
       self.hover = 0.0
       self.screen = 0.0
+      self.motorctrl = 0.0
       self.leftMotor = Motor("left",708.0)
       self.rightMotor = Motor("right",720.0)
 
@@ -148,7 +155,7 @@ class K9 :
             self.hover = 1-self.hover
          if  (random.randint(1, 100)) == 10:
             self.screen = 1-self.screen
-      result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
+      result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
       return result
 
 # manages the ws socket connection from this Controller to local node-RED server
@@ -188,12 +195,18 @@ class K9PythonController(WebSocketClient) :
             self.message = self.k9.getStatusInfo()    # get K9 status information
             self.send(self.message)                   # send current status information to the node-RED websocket
             # print "Status: " + str(self.message)
+         elif self.driveinfo["object"] == "motorctrl":
+            # toggle fine or coarse grained motor control
+            if self.driveinfo["value"] == "on":
+               self.k9.motorctrl = 1.0
+            else:
+               self.k9.motorctrl = 0.0
          elif self.driveinfo["object"] == "motors":
             # change the motor speeds
             self.motorspeed = float(self.driveinfo["motorspeed"])
             self.steering = float(self.driveinfo["steering"])
-            self.leftTarget = self.k9.leftMotor.calculateTargetSpeed(self.motorspeed, self.steering)
-            self.rightTarget = self.k9.rightMotor.calculateTargetSpeed(self.motorspeed, self.steering)
+            self.leftTarget = self.k9.leftMotor.calculateTargetSpeed(self.motorspeed, self.steering,self.k9.motorctrl)
+            self.rightTarget = self.k9.rightMotor.calculateTargetSpeed(self.motorspeed, self.steering,self.k9.motorctrl)
             self.k9.leftMotor.setTargetSpeed(self.leftTarget)
             self.k9.rightMotor.setTargetSpeed(self.rightTarget)
             self.k9.leftMotor.setMotorSpeed()
