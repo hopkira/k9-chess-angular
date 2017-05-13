@@ -141,7 +141,7 @@ angular.module('K9.services', [])
             // ensure the various switches are set to their correct value if transmitted
             // "type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes
             // console.log("Status message received")
-            K9.setStatus(messageObj);
+            //K9.setStatus(messageObj);
             break;
           case 'sensor':
             // sensor message has been received
