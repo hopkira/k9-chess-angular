@@ -101,7 +101,7 @@ class Motor :
          self.speed = int(self.clicks[1] / self.QPPS)
       else:
          self.speed = self.target
-      print "Motor: " + str(self.name) + " at " + str(self.speed)
+      print "Actual: " + str(self.name) + " at " + str(self.speed)
       return self.speed
 
    def setTargetSpeed(self, target) :
@@ -112,7 +112,7 @@ class Motor :
       if not sim :
          self.click_speed = int(self.QPPS * self.target)
          self.distance = int(abs(self.target * self.QPPS / 4))
-         print "Motor " + str(self.name) + " set to " + str(self.click_speed)
+         print "Command: " + str(self.name) + " set to " + str(self.click_speed)
          if self.name == "left" :
             if self.target == 0 :
                rc.SpeedM1(rc_address,0)
