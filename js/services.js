@@ -57,13 +57,23 @@ angular.module('K9.services', [])
             //The current property is not a direct property of p
             continue;
         }
+        // if the keys are toggle switches, use the browser as master
+        // until I work out how to stop bad loops happening!
         if (key=="lights" ||
             key=="screen" ||
             key=="screen" ||
-            key=="hover") {
+            key=="hover" ||
+            key=="motorctrl")
+            {
+              // the line below is only required if I re-enable this refresh
+              // of k9 switch status overriding browser status, but this is
+              // only required once I've got the back panel interface working
               if (status[key]==1) {status[key]=true} else {status[key]=false};
             }
-        this[key]=status[key];
+        else
+        {
+           this[key]=status[key];
+        }
         $rootScope.$apply();
       }
     }
@@ -141,7 +151,7 @@ angular.module('K9.services', [])
             // ensure the various switches are set to their correct value if transmitted
             // "type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes
             // console.log("Status message received")
-            //K9.setStatus(messageObj);
+            K9.setStatus(messageObj);
             break;
           case 'sensor':
             // sensor message has been received

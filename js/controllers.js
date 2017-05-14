@@ -19,7 +19,12 @@ angular.module('K9.controllers', [])
         console.log("MotorCtrl button sent "+value);
         NRInstruction.send('navigation', "motorctrl", value);
     }
-    $scope.getRound = function (value) {return Math.round(value)}
+    $scope.getMPH = function (value) {
+       // 0.97 is the conversion factor from 0-100 to speed of dog
+       value = Math.round(value * 0.97)/10;
+       value = String(value) + "mph"
+       return value
+       }
 }])
 
 // Controller for K9 On/Off Tab
