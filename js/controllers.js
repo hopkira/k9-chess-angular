@@ -22,7 +22,7 @@ angular.module('K9.controllers', [])
     $scope.getMPH = function (value) {
        // 0.97 is the conversion factor from 0-100 to speed of dog
        value = Math.round(value * 0.97)/10;
-       value = String(value) + "mph"
+       value = String(value) + " mph"
        return value
        }
 }])
