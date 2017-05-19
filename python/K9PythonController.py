@@ -27,6 +27,8 @@ sys.path.append('/home/pi') # persistent import directory for K9 secrets
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
 sim = False # by default run as a real motor controller
+m1_qpps = 708
+m2_qpps = 720
 
 # sim is a program wide flag to allow the program to run without the Roboclaw
 # and without access to the Raspberry Pi GPIO ports
@@ -42,15 +44,23 @@ if not sim :
    from Adafruit_PWM_Servo_Driver import PWM # enable control of devices
    from k9secrets import K9PyContWS # gets the node-RED websocket address
    address = K9PyContWS
-   from roboclaw import Roboclaw # enabling Roboclaw
+   # Initialise the roboclaw motorcontroller
+   from roboclaw import Roboclaw
    rc = Roboclaw("/dev/roboclaw",115200)
    rc.Open()
    rc_address = 0x80
+   # Get roboclaw version to test if is attached
    version = rc.ReadVersion(rc_address)
    if version[0]==False:
       print "Roboclaw get version failed"
+      sys.exit()
    else:
       print repr(version[1])
+      # Set PID variables to those required by K9
+      rc.SetM1VelocityPID(rc_address,3000,300,0,m1_qpps)
+      rc.SetM2VelocityPID(rc_address,3000,300,0,m2_qpps)
+      # Zero the motor encoders
+      rc.ResetEncoders(rc_address)
    import RPi.GPIO as GPIO # enables manipulation of GPIO ports
    GPIO.setmode(GPIO.BOARD) # use board numbers rather than BCM numbers
    GPIO.setwarnings(False) # remove duplication warnings
@@ -141,8 +151,8 @@ class K9 :
       self.screen = 100
       self.motorctrl = 0
       # Create two motor objects
-      self.leftMotor = Motor("left",708.0)
-      self.rightMotor = Motor("right",720.0)
+      self.leftMotor = Motor("left",m1_qpps)
+      self.rightMotor = Motor("right",m2_qpps)
       if not sim :
          # Initialise the PWM device using the default address
          # This is the Adafruit servo control device that makes the tail,
@@ -173,7 +183,11 @@ class K9 :
       self.result = []
       self.left = self.leftMotor.getActualSpeed()
       self.right = self.rightMotor.getActualSpeed()
-      result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
+      self.main_volt = self.ReadMainBatteryVoltage(rc_address)/10
+      self.brain_volt = self.ReadLogicBatteryVoltage(rc_address)/10
+      self.currents = self.ReadCurrents(rc_address)/100
+      self.temp = self.ReadTemp(rc_address)/10
+      result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl, "main_volt": self.main_volt, "brain_volt": self.brain_volt, "motor_l_amp": self.currents[1], "motor_r_amp": self.currents[2], "temp": self.temp }, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
       return result
 
 # manages the ws socket connection from this Controller to local node-RED server
