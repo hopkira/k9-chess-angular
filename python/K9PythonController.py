@@ -202,8 +202,8 @@ class K9PythonController(WebSocketClient) :
 
    def closed(self, code, reason=None) :
       if not sim :
-         self.k9.leftMotor.setTargetSpeed(0)
-         self.k9.rightMotor.setTargetSpeed(0)
+         self.leftMotor.setTargetSpeed(0)
+         self.rightMotor.setTargetSpeed(0)
          #PBR.SetMotor1(0)
          #PBR.SetMotor2(0)
       print "K9 Python Controller disconnected from node-RED server: ", code, reason
