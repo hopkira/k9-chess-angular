@@ -23,6 +23,7 @@ import random  # import random numbers
 import time    # enable sleep function
 
 sys.path.append('/home/pi') # persistent import directory for K9 secrets
+sys.path.append('/home/pi/Adafruit_Python_PCA9685') # persistent directory for Adafruit driver
 
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
