@@ -42,7 +42,7 @@ if ( len(sys.argv) > 1 ) :
 
 # If running for real initialise remote socket, roboclaw driver and GPIO
 if not sim :
-   from Adafruit_PWM_Servo_Driver import PWM # enable control of devices
+   import Adafruit_PCA9685 # enable control of devices
    from k9secrets import K9PyContWS # gets the node-RED websocket address
    address = K9PyContWS
    # Initialise the roboclaw motorcontroller
@@ -160,15 +160,15 @@ class K9 :
          # neck and ears move; it also is used to turn control the various
          # lights and devices such as the eye and hover lights and the
          # side screen using MOSFETS
-         self.pwm = PWM(0x40)
-         self.pwm.setPWMFreq(100)  # Set frequency to 100 Hz
-         self.set_PWM(self.pwm_eyes,self.eyes)
-         self.set_PWM(self.pwm_hover,self.hover)
-         self.set_PWM(self.pwm_screen,self.screen)
-         self.set_PWM(self.pwm_lights,self.lights)
+         self.pwm = Adafruit_PCA9685.PCA9685()
+         self.pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
+         self.set_pwm(self.pwm_eyes,self.eyes)
+         self.set_pwm(self.pwm_hover,self.hover)
+         self.set_pwm(self.pwm_screen,self.screen)
+         self.set_pwm(self.pwm_lights,self.lights)
       print "K9 object instantiated"
 
-   def set_PWM(channel, brightness):
+   def set_pwm(channel, brightness):
       self.channel = channel
       self.brightness = brightness
       self.channel = int(self.channel)
@@ -176,7 +176,7 @@ class K9 :
       if self.channel >=0 and self.channel <=15: # check that PWM channel exists
          if self.brightness >= 0 and self.brightness <= 4095: # check that frequency is valid
             if not sim:
-               pwm.setPWM(0,self.channel,self.brightness)
+               pwm.set_pwm(0,self.channel,self.brightness)
 
    def getStatusInfo(self) :
       # retrieves status of motors and lights
@@ -244,7 +244,7 @@ class K9PythonController(WebSocketClient) :
             # and make that the value of the hover brightness
             self.k9.hover = Math.min(((Math.abs(self.leftTarget) + Math.abs(self.rightTarget))/2),100)
             # set the hover lights brightness
-            self.k9.setPWM(self.k9.pwm_hover,self.k9.hover)
+            self.k9.set_pwm(self.k9.pwm_hover,self.k9.hover)
             # set the motor speeds
             self.k9.leftMotor.setTargetSpeed(self.leftTarget)
             self.k9.rightMotor.setTargetSpeed(self.rightTarget)
