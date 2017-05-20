@@ -253,7 +253,7 @@ class K9PythonController(WebSocketClient) :
             self.rightTarget = self.k9.rightMotor.calculateTargetSpeed(self.motorspeed, self.steering,self.k9.motorctrl)
             # Calculate the magnitude of the movement calculated (0-100)
             # and make that the value of the hover brightness
-            self.k9.hover = Math.min(((Math.abs(self.leftTarget) + Math.abs(self.rightTarget))/2),100)
+            self.k9.hover = min(((abs(self.leftTarget) + abs(self.rightTarget))/2),100)
             # set the hover lights brightness
             self.k9.set_k9_pwm(self.k9.pwm_hover,self.k9.hover)
             # set the motor speeds
