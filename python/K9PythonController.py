@@ -23,7 +23,7 @@ import random  # import random numbers
 import time    # enable sleep function
 
 sys.path.append('/home/pi') # persistent import directory for K9 secrets
-sys.path.append('/home/pi/Adafruit_Python_PCA9685') # persistent directory for Adafruit driver
+sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persistent directory for Adafruit driver
 
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
@@ -167,12 +167,14 @@ class K9 :
          # side screen using MOSFETS
          print "Initialising servo driver state..."
          self.pwm = Adafruit_PCA9685.PCA9685()
+         print "pwm object created"
          self.pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
+         print "frequency set to 100Hz"
          self.set_pwm(self.pwm_eyes,self.eyes)
          self.set_pwm(self.pwm_hover,self.hover)
          self.set_pwm(self.pwm_screen,self.screen)
          self.set_pwm(self.pwm_lights,self.lights)
-         print "Servo driver initial state set..."
+         print "All servo driver initial state set..."
 
    def set_pwm(channel, brightness):
       self.channel = channel
