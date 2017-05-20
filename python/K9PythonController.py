@@ -170,16 +170,16 @@ class K9 :
          print "pwm object created"
          self.pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
          print "frequency set to 100Hz"
-         self.set_pwm(self.pwm_eyes,self.eyes)
-         self.set_pwm(self.pwm_hover,self.hover)
-         self.set_pwm(self.pwm_screen,self.screen)
-         self.set_pwm(self.pwm_lights,self.lights)
+         self.set_k9_pwm(self.pwm_eyes,self.eyes)
+         self.set_k9_pwm(self.pwm_hover,self.hover)
+         self.set_k9_pwm(self.pwm_screen,self.screen)
+         self.set_k9_pwm(self.pwm_lights,self.lights)
          print "All servo driver initial state set..."
 
-   def set_pwm(channel, brightness):
-      print "Setting channel " + str(channel) + " to " + str(brightness)
+   def set_k9_pwm(self,channel, brightness):
       self.channel = channel
       self.brightness = brightness
+      print "Setting channel " + str(channel) + " to " + str(brightness)
       self.channel = int(self.channel)
       self.brightness = int(float(self.brightness)*40.95)
       if self.channel >=0 and self.channel <=15: # check that PWM channel exists
@@ -255,7 +255,7 @@ class K9PythonController(WebSocketClient) :
             # and make that the value of the hover brightness
             self.k9.hover = Math.min(((Math.abs(self.leftTarget) + Math.abs(self.rightTarget))/2),100)
             # set the hover lights brightness
-            self.k9.set_pwm(self.k9.pwm_hover,self.k9.hover)
+            self.k9.set_k9_pwm(self.k9.pwm_hover,self.k9.hover)
             # set the motor speeds
             self.k9.leftMotor.setTargetSpeed(self.leftTarget)
             self.k9.rightMotor.setTargetSpeed(self.rightTarget)
