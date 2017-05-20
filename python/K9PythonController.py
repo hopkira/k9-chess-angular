@@ -42,10 +42,13 @@ if ( len(sys.argv) > 1 ) :
 
 # If running for real initialise remote socket, roboclaw driver and GPIO
 if not sim :
+   print "Importing servo driver library..."
    import Adafruit_PCA9685 # enable control of devices
    from k9secrets import K9PyContWS # gets the node-RED websocket address
    address = K9PyContWS
+   print "Node-RED address is: " + str(address)
    # Initialise the roboclaw motorcontroller
+   print "Initialising roboclaw driver..."
    from roboclaw import Roboclaw
    rc = Roboclaw("/dev/roboclaw",115200)
    rc.Open()
@@ -62,6 +65,7 @@ if not sim :
       rc.SetM2VelocityPID(rc_address,3000,300,0,m2_qpps)
       # Zero the motor encoders
       rc.ResetEncoders(rc_address)
+      print "PID variables set on roboclaw"
    import RPi.GPIO as GPIO # enables manipulation of GPIO ports
    GPIO.setmode(GPIO.BOARD) # use board numbers rather than BCM numbers
    GPIO.setwarnings(False) # remove duplication warnings
@@ -140,6 +144,7 @@ class Motor :
 
 class K9 :
    def __init__(self) :
+      print "K9 object initialising"
       # Create names for each PWM channel
       self.pwm_eyes = 0
       self.pwm_hover = 1
@@ -160,13 +165,14 @@ class K9 :
          # neck and ears move; it also is used to turn control the various
          # lights and devices such as the eye and hover lights and the
          # side screen using MOSFETS
+         print "Initialising servo driver state..."
          self.pwm = Adafruit_PCA9685.PCA9685()
          self.pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
          self.set_pwm(self.pwm_eyes,self.eyes)
          self.set_pwm(self.pwm_hover,self.hover)
          self.set_pwm(self.pwm_screen,self.screen)
          self.set_pwm(self.pwm_lights,self.lights)
-      print "K9 object instantiated"
+         print "Servo driver initial state set..."
 
    def set_pwm(channel, brightness):
       self.channel = channel
@@ -195,18 +201,19 @@ class K9 :
 class K9PythonController(WebSocketClient) :
 
    def opened(self) :
-      self.k9 = K9()
       print "K9 Python Controller connected to node-RED server"
+      self.k9 = K9()
       #self.timeout = Timer (50, self.closed(None,None) )
       #self.timeout.start()
 
    def closed(self, code, reason=None) :
-      if not sim :
-         self.leftMotor.setTargetSpeed(0)
-         self.rightMotor.setTargetSpeed(0)
-         #PBR.SetMotor1(0)
-         #PBR.SetMotor2(0)
       print "K9 Python Controller disconnected from node-RED server: ", code, reason
+      self.k9.leftMotor.setTargetSpeed(0)
+      self.k9.rightMotor.setTargetSpeed(0)
+      self.k9.leftMotor.setMotorSpeed()
+      self.k9.rightMotor.setMotorSpeed()
+      #PBR.SetMotor1(0)
+      #PBR.SetMotor2(0)
       # browser commands with type 'navigation' are automatically routed by node-RED to this socket
       # the navigation 'alive' command (basically a heartbeat)
       # is sent automatically by the browser and relayed via node-RED.
