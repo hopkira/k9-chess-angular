@@ -197,7 +197,7 @@ class K9 :
       # Convert currents tuple in mAs to Amps
       self.m1current = self.currents[1]/100
       self.m2current = self.currents[2]/100
-      self.temp = rc.ReadTemp(rc_address)/10
+      self.temp = (rc.ReadTemp(rc_address)[1])/10
       result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl, "main_volt": self.main_volt, "brain_volt": self.brain_volt, "motor_l_amp": self.m1current, "motor_r_amp": self.m2current, "temp": self.temp }, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
       return result
 
