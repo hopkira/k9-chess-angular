@@ -177,6 +177,7 @@ class K9 :
          print "All servo driver initial state set..."
 
    def set_pwm(channel, brightness):
+      print "Setting channel " + str(channel) + " to " + str(brightness)
       self.channel = channel
       self.brightness = brightness
       self.channel = int(self.channel)
@@ -185,6 +186,7 @@ class K9 :
          if self.brightness >= 0 and self.brightness <= 4095: # check that frequency is valid
             if not sim:
                pwm.set_pwm(0,self.channel,self.brightness)
+               print "Channel " + str(channel) + "set to " + str(brightness)
 
    def getStatusInfo(self) :
       # retrieves status of motors and lights
