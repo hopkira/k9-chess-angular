@@ -191,10 +191,10 @@ class K9 :
       self.result = []
       self.left = self.leftMotor.getActualSpeed()
       self.right = self.rightMotor.getActualSpeed()
-      self.main_volt = rc.ReadMainBatteryVoltage(rc_address)/10
-      self.brain_volt = rc.ReadLogicBatteryVoltage(rc_address)/10
+      self.main_volt = (rc.ReadMainBatteryVoltage(rc_address))/10
+      self.brain_volt = (rc.ReadLogicBatteryVoltage(rc_address))/10
       self.currents = rc.ReadCurrents(rc_address)
-      # Convert currrents tuple in mAs to Amps
+      # Convert currents tuple in mAs to Amps
       self.m1current = self.currents[1]/100
       self.m2current = self.currents[2]/100
       self.temp = rc.ReadTemp(rc_address)/10
