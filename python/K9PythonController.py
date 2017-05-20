@@ -191,10 +191,10 @@ class K9 :
       self.result = []
       self.left = self.leftMotor.getActualSpeed()
       self.right = self.rightMotor.getActualSpeed()
-      self.main_volt = self.ReadMainBatteryVoltage(rc_address)/10
-      self.brain_volt = self.ReadLogicBatteryVoltage(rc_address)/10
-      self.currents = self.ReadCurrents(rc_address)/100
-      self.temp = self.ReadTemp(rc_address)/10
+      self.main_volt = rc.ReadMainBatteryVoltage(rc_address)/10
+      self.brain_volt = rc.ReadLogicBatteryVoltage(rc_address)/10
+      self.currents = rc.ReadCurrents(rc_address)/100
+      self.temp = rc.ReadTemp(rc_address)/10
       result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl, "main_volt": self.main_volt, "brain_volt": self.brain_volt, "motor_l_amp": self.currents[1], "motor_r_amp": self.currents[2], "temp": self.temp }, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
       return result
 
