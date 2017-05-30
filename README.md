@@ -1,47 +1,49 @@
 # K9 Controller
 Code and configuration files for a chess playing enhancement to a remote presence robot!
 
+The root directory contains some frequently requested design documents and plans as PDFs, plus the index.html that defines the HTML that is the root page of the end user app.
+
 # Directory Structure
 
-## node-RED
-This directory contains the flows to control K9.
+## css
+CSS files for end user interface largely generated and maintained by Ionic
 
-## python
-This directory contains the python programs that use the Adafruit PWM Servo Driver to make K9 move.
+## espruino
+Embedded JavaScript routines that run on Espruino picos to offload the overhead of working with low level sensors from the Pi.  
 
-Program | Description
----  | ---
-servocontroller.py | Manipulates K9s steering and motors with failsafe reliant upon heartbeat
-scanning.py | Controls K9s ears
-head_down.py | Moves head to down position
-head_up.py | Moves head to up position
-wag_h.py | Wags tail horizontally
-wag_v.py | Wags tail verticslly
-servotuner.py | Can drive any PWM servo to any value (for callibration)
-tail_up.py | Moves tail to up position
-tail_down.py | Moves tail to down position
+## img
+Visuals for end user interface, includes default camera image and K9.SVG for Sensors tab.
 
-## www
-This directory contains the HTML, CSS and JavaScript files used to provide the K9 user interface.
-
-Directory | Description
----  | ---
-k9.html | JQuery Mobile HTML5 pages for user interface
-k9stage1.js | JavaScript program that captures user events and passes them and a control heartbeat to node-RED
-jquery | Supporting JavaScript libraries
-themes | Custom JQuery Mobile CSS Theme for K9
-
-## PiAUISuite modified files
-
-These are new or modified versions of files for Steve Hickson’s
-Voicecommand v3 for Raspberry Pi.
+## js
+The AngularJS JavaScript that is the bulk of the end user application function
 
 File | Description
 ---  | ---
-chat | The new chat file enables K9 to enter into a conversation using Pandorabots.
-tts | The modified tts file means that K9 uses male computer generated voice rather than the female Google version used by Voicecommand.
-urlencode | The urlencode script enables reserved characters to be passed to the Padorabots web service.
+app.js | Basic structure of the application modules plus some low level functions
+controllers.js | Each tab has its own controller in this file that respondes to user events and manipulates the model.  This separation of event handling and model manipulation makes maintenance and problem diagnosis easier.
+directives.js | There are custom directives for the locked/unlocked icon on each tab (that shows whether communications between browser and dog are working in both directions) and the joystick on the Motors tab.  These directives make the HTML much easier to understand and maintain.
+services.js | The shared services maintain a model of the state of the dog in the front end app; they also support the creation of sockets between the app and dog and the standardisation of messages flowing over that connection.  The translation between sensor readings and the SVG world are also calculated here for display on the sensors page.
+  
+# lib
+Standard JavaScript library files for AngularJS, Ionic etc.
 
-## Pandorabots Personality Files
+## node-RED
+This directory contains the flows to control K9.  It provides the means to flow information between the various elements of the dog and co-ordinates movement and speech.  It also contains the definition of the dashboard to show on K9's screen.
 
-The files in the files directory define the on-line behaviour of the K9 Pandorabot.  The K9 files are based on Rosie, which is a fork of the ALICE2 brain.  The Pandorabot CLI can be used to upload the brain to your own Pandorabots instance.
+## python
+This directory contains the python programs that use the Adafruit PWM Servo Driver and RoboClaw PID MotorController to make K9 move. There are also some simple scripts to interface to Watson Conversation and STT (and to K9's espeak TTS)
+
+Program | Description
+---  | ---
+K9PIDController.py | RoboClaw based Motor Controller
+K9_roboclaw_init.py | Stores PID and motor settings in Roboclaw NVRAM
+watsonsnow.py | Uses Snowboy, STT, Conversation, TTS - a bit Alexa like :+)
+
+## script
+Simple deployment scripts to move code into right place on the Pi
+
+## snap
+Standard JavaScript library used to integrate SVG and AngularJS on the Sensors page
+
+## templates
+This directory contains the HTML for each of the tabs of the user interface (including the definition of the tabs themselves!).  Keeping the html for each tab separately simplifies testing and maintenance.
