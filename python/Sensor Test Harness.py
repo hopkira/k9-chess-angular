@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 #
 # K9 Python Sensor Data Test Harness
 #
-# authored by Richard Hopkins May 2017 for Autonomy Team
+# authored by Richard Hopkins May 2017 for AoT Autonomy Team
 #
 # Licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
 #
@@ -27,16 +28,33 @@ import time    # enable sleep function
 
 sys.path.append('/home/pi') # persistent import directory for K9 secrets
 
-from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
+from ws4py.client.threadedclient import WebSocketClient # enabling web sockets
 
+# RANGE represents the maximum range of the sensors in mm
 RANGE = 1200
+
+# num_tests is the number of tests to be run, default is 200
+num_tests = 200
 
 # sim is a program wide flag to allow the program to run using localhost
 # rather than the real robot environment
-# this can be enabled by appending the word "test" to the command line
+# this can be enabled by appending the word "local" to the command line
+#
+# usage: harness [num_tests...] [<local>]
+#   options:
+#       num_tests   Changes the number of tests that are run, defaults to 200
+#       local       Points the websocket to the localhost
+#
+#  e.g. "harness 350 local"
 
 if ( len(sys.argv) > 1 ) :
-   if ( sys.argv[1] == "test" ) :
+   if ( sys.argv[1] == "local" ) :
+      sim = True
+      print "Executing in local mode" # let the user know they are in sim mode
+   else num_tests = int(sys.argv[1])
+
+if ( len(sys.argv) > 2 ) :
+   if ( sys.argv[2] == "local" ) :
       sim = True
       print "Executing in local mode" # let the user know they are in sim mode
 
@@ -49,23 +67,37 @@ else :
    # otherwise use local host as node-RED server
    address = "ws://127.0.0.1:1880/ws/k9"
 
+def do_tests(num_tests):
+   test_num = 0
+   sensor_readings = []
+   while (test_num<100)
+      dog_x = random.randint(-63,63)¶
+      dog_y = random.randint(-63,63)
+      start_time = time()
+      step = 0
+      max_sensor_readings = int(22-(math.hypot(dog_x, dog_y)/5))
+      # initalise sensors
+      new_static_sensor(name, x, y, angle, time, RANGE)
+      new_static_sensor(name, x, y, angle, time, RANGE)
+      new_static_sensor(name, x, y, angle, time, RANGE)
+      new_rotating_sensor(name, x, y, angle, time, RANGE)
+      new_rotating_sensor(name, x, y, angle, time, RANGE)
+      # change the readings until collision occurs
+      while no_collision()
+         message = '{"readings": ['
+         for reading in sensor_readings:
+            sensor_readings[reading][3] = new_dist(sensor_readings[reading][3]
+            message = message + "sensor:" + sensor_readings[reading][0] + ",x:" + dog_x + ",y:" + dog_y + ",angle:" + sensor_readings[reading][3] + ",time:" + sensor_readings[reading][4] + ",dist:" + sensor_readings[reading][5] + ","
+         message = message[:-1] + "]}"
+         print message
+         ws.send(message)
+         message = json.dumps(message, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ':'), encoding="utf-8", default=None, sort_keys=False)
+      print "************* COLLISION **************"
 
-test_num = 0
-
-random.seed(42)
-
-sensor_readings = []
-
-while (test_num<100)
-   dog_x = random.randint(-63,63)¶
-   dog_y = random.randint(-63,63)
-   start_time = time()
-   step = 0
-   max_sensor_readings = int(22-(math.hypot(dog_x, dog_y)/5))
-   # initalise fixed sensors
+def new_static_sensor(name, x, y, angle, time, RANGE):
    sensor_readings.append([name, x, y, angle, time, RANGE])
-   sensor_readings.append([name, x, y, angle, time, RANGE])
-   sensor_readings.append([name, x, y,angle, time, RANGE])
+                                                   
+def new_rotating_sensor(name, x, y, angle, time, RANGE):
    # initialise rotating sensors
    angle = -0.1745
    delta = 10/9*math.PI()
@@ -80,104 +112,37 @@ while (test_num<100)
       if angle >= math.PI()
          angle = math.PI()
          direction = direction * -1
-      
-   while no_collision()
-      message = "{"readings": ["
-      for reading in sensor_readings:
-         sensor_readings[reading][3] = new_dist(sensor_readings[reading][3], sensor_readings[reading][1],dog_x,dog_y)
-         message = message + "big string of content" + ","
-      message = message[less one character] + "]}"
-   
-   for reading in range(1,3):     
-      sensor_readings[reading][3] = random.randint
-   
-   del sensor_readings[:]
-   for sensors in range(0, 2):
-      if sensor_readings[sensor][4]
-   while 
 
 def new_dist(old_dist,sensor_angle, dog_x,dog_y):
-   # calculate components of x and y and modify distance accordingly
-   # modify by +-10% up to a max of 1200 to simulate noise
-   # calculate old_pos
+   """Calculate how the dog's motion will change sensor readings and return new distance
+   This includes addding an 10% of simulated noise to the readings
+   
+   Keyword arguments:
+   old_dist -- the existing sensor reading
+   sensor_angle -- the direction the sensor is facing
+   dog_x -- the x component of the dog's motion
+   dog_y -- the y component of the dog's motion
+   """
+   # calculate direction of dog's movement
    ang_mov =math.atan2(dog_y,dog_x)
+   # calcualte difference between movement and sensor angle
    ang_diff = ang_mov - sensor_angle
+   # calculate speed of movement using Pythagoras Theorem                                               
    mag = math.hypot(dog_x, dog_y)
+   # calculate new distance and multiply by a noise factor
    new_dist = old_dist - (mag*cos(ang_diff)*random.randfloat(0.9,1.1))
+   # limit the sensor reading to its maximum but no more
    if new_dist > RANGE
       new_dist = RANGE
    return new_dist
 
 def no_collision():
+   """ Detect a collision by calculating the minimum sensor distance for all sensors"""
    min_dist = RANGE
    for reading in sensor_readings:
      if sensor_readings[reading][4] < min_dist
         min_dist = sensor_readings[reading][4]
-   return (min_dist>127)
-
-   
-
-   for readings in range(0, max):
-      sensor_readings.append([])
-
-
-
-
-
-class Sensor:
-   def __init__(self, name, direction) :
-   self.name = name
-   self.direction = direction
-   print str(name) + " sensor created."
-   
-   def resetSensor(self):
-      self.reading = random(902 MINUS A BIT)
-        
-   def getReading(self, time) :
-      self.time = time
-      self.reading = random(902 MINUS A BIT)
-
-class RotatingSensor(Sensor):
-   def __init__(self, name, direction) :
-      Sensor.__init__(self, name, direction)
-      
-   def getReading(self,time) :
-      do something more complex  
-
-class SensorArray :
-   def __init__(self) :
-      print "Sensor array initialising"
-      self.tailSensor = Sensor("name",x,y,min,max,angle)
-
-
-
-class Scenario :
-   def __init__(self)
-      initialise array that defines sensors
-      self.number = 0
-   
-   def startTest(self,number) :
-     self.number = self.number + 1
-     self.x_speed = random +-90
-     self.y_speed = random +-90
-     self.start = START TIME
-     initialise each sensor
-     while self.collision() == False
-        self.getReadings()
-        self.transmitReadings()
-               
-   def getReadings(self):
-    calculate the new world by contracting each of the measures
-    store in sensor array
-
-   def transmitReadings(self):
-    self.message = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl, "main_volt": self.main_volt, "brain_volt": self.brain_volt, "motor_l_amp": self.m1current, "motor_r_amp": self.m2current, "temp": self.temp }, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
-    ws.send(self.message)
-
-   def getSensorData(self) :
-      # retrieves status of motors and lights
-      # lights are part of the k9 state object anyway
-      
+   return (min_dist>127)   
 
 # manages the ws socket connection from this Controller to local node-RED server
 class HarnessSocket(WebSocketClient) :
@@ -188,14 +153,13 @@ class HarnessSocket(WebSocketClient) :
    def closed(self, code, reason=None) :
       print "Test harness disconnected from node-RED server: ", code, reason
 
+random.seed(42)
 
 try:
    ws = HarnessSocket(address)
    ws.connect()
-   test = Scenario()
-   while test.number < 100
-      test.startTest()       
-   # ws.run_forever()
+   do_tests(num_tests)          
+   ws.run_forever()
 except KeyboardInterrupt:
    ws.close()
    print "Exiting harness after closing socket."
