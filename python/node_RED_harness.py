@@ -48,6 +48,8 @@ max_tests = 200
 # array of objects containing the sensor readings
 sensor_readings = []
 
+total=0
+
 # sim is a program wide flag to allow the program to run using localhost
 # rather than the real robot environment
 # this can be enabled by appending the word "local" to the command line
@@ -87,6 +89,7 @@ def do_tests(max_tests):
    Keyword arguments:
    max_tests - number of collisions to simulate
    """
+   global total
    test_num = 0
    while (test_num < max_tests):
       del sensor_readings[:]
@@ -106,22 +109,19 @@ def do_tests(max_tests):
       #print str(sensor_readings)
       # change the readings until collision occurs
       while no_collision():
-         message = '{"readings'+ str(test_num) +'":{'
+         #message = '{"readings'+ str(test_num) +'":{'
          index = 0
          while (index < len(sensor_readings)):
             sensor_readings[index][5] = new_dist(sensor_readings[index][5], sensor_readings[index][3], dog_x, dog_y)
-            message = message + '"reading'+ str(index) +'":{"sensor":"' + sensor_readings[index][0] + '","x":' + str(dog_x) + ',"y":' + str(dog_y) + ',"angle":' + str(sensor_readings[index][3]) + ',"time":' + str(sensor_readings[index][4]) + ',"dist":' + str(sensor_readings[index][5]) + "},"
+            message = '{"sensor":"' + sensor_readings[index][0] + '","x":' + str(sensor_readings[index][1]) + ',"y":' + str(sensor_readings[index][2]) + ',"angle":' + str(sensor_readings[index][3]) + ',"time":' + str(sensor_readings[index][4]) + ',"dist":' + str(sensor_readings[index][5]) + "}"
             index = index +1
-         message = message[:-1] + "}}"
-         #print message
-         ws.send(message)
-         message = json.dumps(message, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ':'), encoding="utf-8", default=None, sort_keys=False)
+            #message = json.dumps(message, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ':'), encoding="utf-8", default=None, sort_keys=False)
+            ws.send(message)
+            time.sleep(0.017)
+            total=total+1
+            #print str(message)
          step = step + 1
-      #print "========================COLLISION======================="
-      #print "TEST" + str(test_num) + " - time for " + str(step) + " sensor passes: " + str(int((time.time() - start_time)*1000)) + "ms"
-      #print "========================================================"
       test_num = test_num + 1
-      print str(message)
 
 def new_static_sensor(name, x, y, angle, time, RANGE):
    """
@@ -227,7 +227,7 @@ try:
    ws = HarnessSocket(address)
    ws.connect()  
    do_tests(max_tests)
-   print "Test messages transmitted in " + str(int(time.time()-total_start_time)) + " seconds"
+   print str(total) + " sensor messages transmitted in " + str(int(time.time()-total_start_time)) + " seconds"
 except KeyboardInterrupt:
    ws.close()
    print "Exiting harness after closing socket."
