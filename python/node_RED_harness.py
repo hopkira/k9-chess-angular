@@ -165,7 +165,7 @@ def new_rotating_sensor(name, x, y, max, time, RANGE):
       index = len(sensor_readings)
       sensor_readings.append([name,x,y,angle,time,RANGE])
       angle = angle + (delta*direction)
-      time = time + (20/max)
+      time = time + (0.02/max)
       if angle <= -0.1745:
          angle = -0.1745
          direction = direction * -1
