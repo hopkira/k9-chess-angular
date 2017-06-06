@@ -13,7 +13,7 @@
 # a websocket as a JSON string. The initial destination is assumed to be node-RED,
 # but it could be any runtime platform that supports websockets.
 #
-# The sensor data will always begin at the extremities of the sensors and then 
+# The sensor data will always begin at the extremities of the sensors and then
 # modified in line with the expected movement of the robot and a random element.
 # Once it is clear a collision has occurred the harness will reset with another
 # scenario.  Each message will have an identifier enabling the message to be correlated
@@ -85,7 +85,7 @@ else :
 def do_tests(max_tests):
    """
    Intialises sensors and sends readings to node-RED until collision occurs
-      
+
    Keyword arguments:
    max_tests - number of collisions to simulate
    """
@@ -99,11 +99,11 @@ def do_tests(max_tests):
       step = 0
       max_sensor_readings = int(22-(math.hypot(dog_x, dog_y)/5))
       # initalise sensors
-      new_static_sensor("left", -143, 95, math.pi/2, start_time, RANGE)
+      new_static_sensor("left", -143, 95, math.pi*1/2, start_time, RANGE)
       new_static_sensor("bl_corner", -190, 48, math.pi*3/4, start_time, RANGE)
       new_static_sensor("tail", -237, 0, math.pi, start_time, RANGE)
-      new_static_sensor("br_corner", -190, -48, math.pi*5/4, start_time, RANGE)
-      new_static_sensor("right", -143, -95, math.pi*3/2, start_time, RANGE)
+      new_static_sensor("br_corner", -190, -48, math.pi*-3/4, start_time, RANGE)
+      new_static_sensor("right", -143, -95, math.pi*-1/2, start_time, RANGE)
       new_rotating_sensor("l_ear", 343, 42, max_sensor_readings, start_time, RANGE)
       new_rotating_sensor("r_ear", 343, -42, max_sensor_readings,start_time, RANGE)
       #print str(sensor_readings)
@@ -126,7 +126,7 @@ def do_tests(max_tests):
 def new_static_sensor(name, x, y, angle, time, RANGE):
    """
    Simulates a sensor reading from a static sensor
-   
+
    Keyword arguments:
    name - name of sensor
    x - x position of sensor
@@ -137,17 +137,17 @@ def new_static_sensor(name, x, y, angle, time, RANGE):
    """
    index = len(sensor_readings)
    sensor_readings.append([name,x,y,angle,time,RANGE])
-                                                   
+
 def new_rotating_sensor(name, x, y, max, time, RANGE):
    """
    Simulates sensor readings from a rotating sensor
-   
+
    Appends a number of readings according to a sweeep front to back of a
    rotating sensor (LIDAR on the real dog).  The angle covered by the sweep is
    dependent upon the speed of the dog - the faster the dog goes, the shorter
    the sweep and the fewer the readings.  This is to ensure that at higher speeds the
    sensors are looking sufficiently forward to avoid a head on collision.
-   
+
    Keyword arguments:
    name - name of sensor
    x - x position of sensor
@@ -177,10 +177,10 @@ def new_rotating_sensor(name, x, y, max, time, RANGE):
 def new_dist(old_dist,sensor_angle, dog_x,dog_y):
    """
    Calculate how motion and noise will change sensor readings
-   
+
    The function returns the new distance sensed; this his includes
    addding 10% of simulated noise to the readings
-   
+
    Keyword arguments:
    old_dist -- the existing sensor reading
    sensor_angle -- the direction the sensor is facing
@@ -191,11 +191,11 @@ def new_dist(old_dist,sensor_angle, dog_x,dog_y):
    ang_mov =math.atan2(dog_y,dog_x)
    # calcualte difference between movement and sensor angle
    ang_diff = ang_mov - sensor_angle
-   # calculate speed of movement using Pythagoras Theorem                                               
+   # calculate speed of movement using Pythagoras Theorem
    mag = math.hypot(dog_x, dog_y)
    # calculate new distance and multiply by a noise factor
    new_dist = old_dist - (mag*math.cos(ang_diff)*random.uniform(0.9,1.1))
-   # limit the sensor reading to its maximum but no more   hji 
+   # limit the sensor reading to its maximum but no more   hji
    if new_dist > RANGE:
       new_dist = RANGE
    return new_dist
@@ -211,7 +211,7 @@ def no_collision():
       if sensor_readings[index][5] < min_dist:
          min_dist = sensor_readings[index][5]
       index = index + 1
-   return (min_dist>COLLISION)  
+   return (min_dist>COLLISION)
 
 
 # manages the ws socket connection from this Controller to local node-RED server
