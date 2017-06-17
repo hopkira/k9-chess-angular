@@ -25,8 +25,7 @@ Apart from this, you may have to install the following nodes
   <tr>
     <td>node_red_dashboard</td>
     <td>v2.3.11</td>
-    <td>Communication over Serial Port</td>
+    <td>Dashboard in Node-RED</td>
   </tr>
 </table>
 </pre>
-Additional node node-red-node-serialport v0.4.2 and above
