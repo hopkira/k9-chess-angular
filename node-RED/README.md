@@ -20,7 +20,7 @@ Apart from this, you may have to install the following nodes
   <tr>
     <td>node-red-node-smooth</td>
     <td>v0.0.10</td>
-    <td>Communication over Serial Port</td>
+    <td>Provides several simple smoothing algorithms</td>
   </tr>
   <tr>
     <td>node_red_dashboard</td>
