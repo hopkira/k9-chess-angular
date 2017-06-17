@@ -29,3 +29,10 @@ Apart from this, you may have to install the following nodes
   </tr>
 </table>
 </pre>
+
+## Running Instance ##
+To run the Node-RED flow, execute `node-red flows_k9.json` in the shell / command prompt.
+
+## Node-RED Dashboard ##
+If the Node-RED is running fine, you should see the following display
+<figure><img src = "k9chessnodereddashboard.png"><figurecaption>Node-RED flow dashboard</figurecaption><figure>
