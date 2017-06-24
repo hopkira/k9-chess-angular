@@ -10,22 +10,25 @@ _(Lower versions may work, but I have tested on these versions and so am conside
 Apart from this, you may have to install the following nodes
 <pre>
 <table>
-  <tr><th>Node</th><th>Version</th><th>Purpose</th></tr>
+  <tr><th>Node</th><th>Version</th><th>Purpose</th><th>Installation</th></tr>
 
   <tr>
     <td>node-red-node-serialport</td>
     <td>v0.4.2</td>
     <td>Communication over Serial Port</td>
+    <td></td>
   </tr>
   <tr>
     <td>node-red-node-smooth</td>
     <td>v0.0.10</td>
     <td>Provides several simple smoothing algorithms</td>
+    <td>npm install -g node-red-node-smooth</td>
   </tr>
   <tr>
-    <td>node_red_dashboard</td>
+    <td>node-red-dashboard</td>
     <td>v2.3.11</td>
     <td>Dashboard in Node-RED</td>
+    <td>npm install -g node-red-dashboard</td>	
   </tr>
 </table>
 </pre>
