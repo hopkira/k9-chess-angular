@@ -246,7 +246,7 @@ angular.module('K9.services', [])
     // holds K9 sensorArray state
     // initialisation of service
     var thisService=this;
-    var sensorList = '[{"sensorName":"leftear","x": 306,"y":452,"angle":999},{"sensorName":"rightear","x": 335,"y":452,"angle":999},{"sensorName":"front","x": 320,"y":463,"angle":90},{"sensorName":"back1","x": 291,"y":593,"angle":180},{"sensorName":"back6","x": 350,"y":593,"angle":360},{"sensorName":"back2","x": 298,"y":612,"angle":216},{"sensorName":"back5","x": 346,"y":612,"angle":324},{"sensorName":"back3","x": 310,"y":620,"angle":252},{"sensorName":"back4","x": 333,"y":620,"angle":288},{"sensorName":"back","x": 320,"y":740,"angle":270}]';
+    var sensorList = '[{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
     var sensorLocations = JSON.parse(sensorList);
     var sensorArray = JSON.parse(sensorList);
     // function called as a result of receiving a sensor type message
@@ -277,7 +277,7 @@ angular.module('K9.services', [])
     this.dist2SVG = function (metres) {
       // convert distance in metres to SVG
       // points
-      var SVGpoints = 190 * metres;
+      var SVGpoints = 1000 * metres;
       return SVGpoints;
       }
     this.sensorPlot = function (sensorName,distance,angle) {
@@ -290,8 +290,8 @@ angular.module('K9.services', [])
       // Assign default and safe values to mySensorLocation
       var mySensorLocation = {};
       mySensorLocation.name = sensorName;
-      mySensorLocation.x = 320;
-      mySensorLocation.y = 568;
+      mySensorLocation.x = 1200;
+      mySensorLocation.y = 1200;
       mySensorLocation.angle = 999;
       // search for matching sensor location and modify values if
       // a match is found

@@ -117,7 +117,7 @@ def do_tests(max_tests):
             index = index +1
             #message = json.dumps(message, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ':'), encoding="utf-8", default=None, sort_keys=False)
             ws.send(message)
-            time.sleep(0.017)
+            time.sleep(0.1)
             total=total+1
             #print str(message)
          step = step + 1
@@ -225,7 +225,7 @@ class HarnessSocket(WebSocketClient) :
 
 try:
    ws = HarnessSocket(address)
-   ws.connect()  
+   ws.connect()
    do_tests(max_tests)
    print str(total) + " sensor messages transmitted in " + str(int(time.time()-total_start_time)) + " seconds"
 except KeyboardInterrupt:

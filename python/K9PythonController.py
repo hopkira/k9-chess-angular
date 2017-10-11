@@ -1,7 +1,7 @@
 #
 # K9 Python Controller
 #
-# authored by Richard Hopkins, May 2017
+# authored by Richard Hopkins, October 2017
 #
 # Licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
 #
@@ -73,7 +73,7 @@ if not sim :
    GPIO.setup(chan_list, GPIO.IN) # set GPIO to low at initialise
 else :
    # otherwise use local host as node-RED server and don't initialise GPIO or Roboclaw
-   address = "ws://127.0.0.1:1880/ws/k9"
+   address = "ws://127.0.0.1:1880/ws/motors"
 
 class Motor :
    def __init__(self,name,QPPS) :
@@ -191,13 +191,19 @@ class K9 :
       self.result = []
       self.left = self.leftMotor.getActualSpeed()
       self.right = self.rightMotor.getActualSpeed()
-      self.main_volt = float(rc.ReadMainBatteryVoltage(rc_address)[1])/10.0
-      self.brain_volt = float(rc.ReadLogicBatteryVoltage(rc_address)[1])/10.0
-      self.currents = rc.ReadCurrents(rc_address)
+      if sim :
+          self.main_volt = float(random.uniform(12,28))
+          self.brain_volt = float(random.uniform(10,13))
+          self.currents = [100.0,random.uniform(100,500),random.uniform(100,500)]
+          self.temp = float(random.uniform(20,85))
+      else :
+          self.main_volt = float(rc.ReadMainBatteryVoltage(rc_address)[1])/10.0
+          self.brain_volt = float(rc.ReadLogicBatteryVoltage(rc_address)[1])/10.0
+          self.currents = rc.ReadCurrents(rc_address)
+          self.temp = float(rc.ReadTemp(rc_address)[1])/10.0
       # Convert currents tuple in mAs to Amps
       self.m1current = float(self.currents[1]/100.0)
       self.m2current = float(self.currents[2]/100.0)
-      self.temp = float(rc.ReadTemp(rc_address)[1])/10.0
       result = json.dumps({"type":"status","command":"update","left": self.left,"right": self.right,"lights": self.lights,"eyes": self.eyes,"hover": self.hover,"screen": self.screen, "motorctrl": self.motorctrl, "main_volt": self.main_volt, "brain_volt": self.brain_volt, "motor_l_amp": self.m1current, "motor_r_amp": self.m2current, "temp": self.temp }, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=(',', ': '), encoding="utf-8", default=None, sort_keys=False)
       return result
 

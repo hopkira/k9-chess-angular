@@ -8,3 +8,7 @@ node_modules
 *.swo
 *.log
 *.DS_Store
+
+.DS_Store
+
+.DS_Store

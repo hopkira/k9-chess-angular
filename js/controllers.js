@@ -136,7 +136,7 @@ angular.module('K9.controllers', [])
     var s = Snap("#k9sensors")
     var mySensorArray=[];
     var bigline;
-    Snap.load("img/K9 m2-01.svg", onSVGLoaded );
+    Snap.load("img/K9 sensors.svg", onSVGLoaded );
     // view needs to be kept in line with the sensorArray object
     // ideally back1 to back6 will have a line joining them
     // perhaps a setInterval refresh of
@@ -147,7 +147,7 @@ angular.module('K9.controllers', [])
       var y_pos;
       var sensor_name;
       // Centrepoint {"sensorName":"centre","x": 320,"y":568},
-      var readingsData = '[{"sensorName":"leftear","x": 306,"y":452},{"sensorName":"rightear","x": 335,"y":452},{"sensorName":"front","x": 320,"y":463},{"sensorName":"back1","x": 291,"y":593},{"sensorName":"back6","x": 350,"y":593},{"sensorName":"back2","x": 298,"y":612},{"sensorName":"back5","x": 346,"y":612},{"sensorName":"back3","x": 310,"y":620},{"sensorName":"back4","x": 333,"y":620},{"sensorName":"back","x": 320,"y":740}]';
+      var readingsData = '[{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
       var readings = JSON.parse(readingsData);
       // indexed iteration
       for (var key in readings) {
@@ -159,27 +159,29 @@ angular.module('K9.controllers', [])
         x_pos = readings[key].x;
         y_pos = readings[key].y;
         sensor_name = readings[key].sensorName;
-        plot = s.circle(x_pos,y_pos,5);
-        plot.attr({fill: "#33CD5F",});
+        plot = s.circle(x_pos,y_pos,10);
+        plot.attr({fill: "#000000",});
         // console.log(sensor_name + ": x-"+ x_pos + " y-" + y_pos);
       }
       mySensorArray=msgtoPoint.getSensorArray();
-      $scope.line1 = s.line(parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y),parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y));
-      $scope.line2 = s.line(parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y),parseInt(mySensorArray[7].x),parseInt(mySensorArray[7].y));
-      $scope.line3 = s.line(parseInt(mySensorArray[7].x),parseInt(mySensorArray[7].y),parseInt(mySensorArray[8].x),parseInt(mySensorArray[8].y));
+      $scope.line1 = s.line(parseInt(mySensorArray[2].x),parseInt(mySensorArray[2].y),parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y));
+      $scope.line2 = s.line(parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y),parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y));
+      $scope.line3 = s.line(parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y),parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y));
+      $scope.line3 = s.line(parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y),parseInt(mySensorArray[6].x),parseInt(mySensorArray[6].y));
       $scope.bigline = s.group($scope.line1, $scope.line2, $scope.line3);
       $scope.bigline.attr({
-        stroke: "#33CD5F",
-        strokeWidth: 5
+        stroke: "#000000",
+        strokeWidth: 10
         });
       $scope.rdtime=setInterval(function() {$scope.reDraw();},200);
     }
     $scope.reDraw = function () {
       // method to reDraw sensor screen
       mySensorArray=msgtoPoint.getSensorArray();
-      $scope.line1.animate({ x1: mySensorArray[3].x, x2: mySensorArray[5].x, y1: mySensorArray[3].y, y2: mySensorArray[5].y},100);
-      $scope.line2.animate({ x1: mySensorArray[5].x, x2: mySensorArray[7].x, y1: mySensorArray[5].y, y2: mySensorArray[7].y},100);
-      $scope.line3.animate({ x1: mySensorArray[7].x, x2: mySensorArray[8].x, y1: mySensorArray[7].y, y2: mySensorArray[8].y},100);
+      $scope.line1.animate({ x1: mySensorArray[2].x, x2: mySensorArray[2].x, y1: mySensorArray[3].y, y2: mySensorArray[3].y},100);
+      $scope.line2.animate({ x1: mySensorArray[3].x, x2: mySensorArray[3].x, y1: mySensorArray[4].y, y2: mySensorArray[4].y},100);
+      $scope.line3.animate({ x1: mySensorArray[4].x, x2: mySensorArray[4].x, y1: mySensorArray[5].y, y2: mySensorArray[5].y},100);
+      $scope.line3.animate({ x1: mySensorArray[5].x, x2: mySensorArray[5].x, y1: mySensorArray[6].y, y2: mySensorArray[6].y},100);
       // console.log("Sensor array: " + JSON.stringify(mySensorArray));
       }
   }])
