@@ -9,10 +9,10 @@ The root directory contains some frequently requested design documents and plans
 CSS files for end user interface largely generated and maintained by Ionic
 
 ## espruino
-Embedded JavaScript routines that run on Espruino picos to offload the overhead of working with low level sensors from the Pi.  
+Embedded JavaScript routines that run on Espruino picos to offload the overhead of working with low level sensors from the Pi.  This includes a neural net implementation for combining five ultrasonic sensor readings into a position vector.  
 
 ## img
-Visuals for end user interface, includes default camera image and K9.SVG for Sensors tab.
+Visuals for end user interface, includes default camera image and SVG for Sensors tab.  Some reference images of the hero prop are also included.
 
 ## js
 The AngularJS JavaScript that is the bulk of the end user application function
@@ -31,12 +31,13 @@ Standard JavaScript library files for AngularJS, Ionic etc.
 This directory contains the flows to control K9.  It provides the means to flow information between the various elements of the dog and co-ordinates movement and speech.  It also contains the definition of the dashboard to show on K9's screen.
 
 ## python
-This directory contains the python programs that use the Adafruit PWM Servo Driver and RoboClaw PID MotorController to make K9 move. There are also some simple scripts to interface to Watson Conversation and STT (and to K9's espeak TTS)
+This directory contains the python programs that use the Adafruit PWM Servo Driver and RoboClaw PID MotorController to make K9 move. A harness is included to generate sensor data to simulare collisions.  There are also some simple scripts to interface to Watson Conversation and STT (and to K9's espeak TTS)
 
 Program | Description
 ---  | ---
 K9PIDController.py | RoboClaw based Motor Controller
 K9_roboclaw_init.py | Stores PID and motor settings in Roboclaw NVRAM
+node_RED_harness.py | Creates simulated LIDAR and IR sensor readings to simulate collisions
 watsonsnow.py | Uses Snowboy, STT, Conversation, TTS - a bit Alexa like :+)
 
 ## script
