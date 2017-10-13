@@ -1,4 +1,4 @@
-/* 
+/*
 
 Ultrasonic training set generator
 for Espruino and Synaptic neural net
@@ -85,7 +85,7 @@ function record_loop(actual_view){
   }
   else {
     SERVO.move(0,8000); // slowly reset servo if end of loop
-  }  
+  }
 }
 
 // Takes reading from sensors and sends it to console
@@ -93,11 +93,11 @@ function take_reading(actual_view,actual_pwm){
   // Red LED will flash when readings are being taken
   digitalWrite(LED1, ON);
   for (var read=0; read<READINGS; read++){
-    front_left = digitalRead(FRONT_LEFT);
-    front_right = digitalRead(FRONT_RIGHT);
-    left = digitalRead(LEFT);
-    right = digitalRead(RIGHT);
-    back = digitalRead(BACK);
+    front_left = analogueRead(FRONT_LEFT);
+    front_right = analogueRead(FRONT_RIGHT);
+    left = analogueRead(LEFT);
+    right = analogueRead(RIGHT);
+    back = analogueRead(BACK);
     time = Math.round(getTime()-start_time);
     angle = ((actual_view-1)*Math.PI/2) + (actual_pwm*Math.PI/2);
     // calculate values for sine and cosine
