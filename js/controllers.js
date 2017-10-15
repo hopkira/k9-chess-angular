@@ -147,7 +147,7 @@ angular.module('K9.controllers', [])
       var y_pos;
       var sensor_name;
       // Centrepoint {"sensorName":"centre","x": 320,"y":568},
-      var readingsData = '[{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
+      var readingsData = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
       var readings = JSON.parse(readingsData);
       // indexed iteration
       for (var key in readings) {
@@ -160,17 +160,22 @@ angular.module('K9.controllers', [])
         y_pos = readings[key].y;
         sensor_name = readings[key].sensorName;
         plot = s.circle(x_pos,y_pos,10);
-        plot.attr({fill: "#000000",});
+        plot.attr({fill: "#00ff00",});
         // console.log(sensor_name + ": x-"+ x_pos + " y-" + y_pos);
       }
       mySensorArray=msgtoPoint.getSensorArray();
+      $scope.ultrasonic = s.line(1200,1200,parseInt(mySensorArray[0].x),parseInt(mySensorArray[0].y));
+      $scope.ultrasonic.attr({
+        stroke: "#ff0000",
+        strokeWidth: 10
+        });
       $scope.line1 = s.line(parseInt(mySensorArray[2].x),parseInt(mySensorArray[2].y),parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y));
       $scope.line2 = s.line(parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y),parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y));
       $scope.line3 = s.line(parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y),parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y));
       $scope.line3 = s.line(parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y),parseInt(mySensorArray[6].x),parseInt(mySensorArray[6].y));
       $scope.bigline = s.group($scope.line1, $scope.line2, $scope.line3);
       $scope.bigline.attr({
-        stroke: "#000000",
+        stroke: "#00ff00",
         strokeWidth: 10
         });
       $scope.rdtime=setInterval(function() {$scope.reDraw();},200);
@@ -178,11 +183,12 @@ angular.module('K9.controllers', [])
     $scope.reDraw = function () {
       // method to reDraw sensor screen
       mySensorArray=msgtoPoint.getSensorArray();
+      $scope.ultrasonic.animate({ x1: 1200, x2: mySensorArray[0].x, y1: 1200, y2: mySensorArray[0].y},100);
       $scope.line1.animate({ x1: mySensorArray[2].x, x2: mySensorArray[2].x, y1: mySensorArray[3].y, y2: mySensorArray[3].y},100);
       $scope.line2.animate({ x1: mySensorArray[3].x, x2: mySensorArray[3].x, y1: mySensorArray[4].y, y2: mySensorArray[4].y},100);
       $scope.line3.animate({ x1: mySensorArray[4].x, x2: mySensorArray[4].x, y1: mySensorArray[5].y, y2: mySensorArray[5].y},100);
       $scope.line3.animate({ x1: mySensorArray[5].x, x2: mySensorArray[5].x, y1: mySensorArray[6].y, y2: mySensorArray[6].y},100);
-      // console.log("Sensor array: " + JSON.stringify(mySensorArray));
+      //console.log("Sensor array: " + JSON.stringify(mySensorArray));
       }
   }])
 

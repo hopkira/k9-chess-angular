@@ -29,17 +29,29 @@ usage: node moving_average_net [-s]
 	options:
 		-s 		run in simulation mode
 
+You will need to comment out the process.argv if clause to get
+the program to run on an Espruino.
+
 Published under Creative Commons
-Richard Hopkins, 14th October 2017
+Richard Hopkins, 15th October 2017
 
 */
-
 // if -s is used to start script, then run in simulation mode
 var sim = false;
+/*
 if(process.argv.indexOf("-s") != -1){
 	sim = true;
 	console.log("Simulating sensors");
 	}
+*/
+// set up USB serial port
+if (!sim){
+USB.setup(57600,{
+	  bytesize:8,    // How many data bits - 7 or 8
+	  parity:'none', // Parity bit
+	  stopbits:1,    // Number of stop bits to use
+	});
+;}
 
 var sensor_data = [];  // initialise sensor array that will hold objects
 // list of sensor names
@@ -78,8 +90,8 @@ for (i=0;i<sensors;i++){
   	reading: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], // initialise readings array
   	mov_avg: function() {
   		var sum = 0;
-  		for (var j in this.reading) sum += this.reading[j];  // calculate array total
-  		return sum/readings  // return the moving average
+  		for (var j in this.reading) {sum += this.reading[j];}  // calculate array total
+  		return sum/readings;  // return the moving average
   		},
   	make_reading: function(value) {
   		this.reading.push(value);  // push new value onto end of array
@@ -87,7 +99,7 @@ for (i=0;i<sensors;i++){
   	}
   }
 //  for (j=0;j<readings;j++){sensor_data[i].reading[j] = i*j;}
-}
+;}
 
 // neural net function that returns an x,y co-ordinates object
 // based on the moving average readings from five sensors
@@ -196,14 +208,13 @@ var output = [];
 output[0] = F[63];
 output[1] = F[73];
 output[2] = F[83];
-sine = 2*Math.PI*((2*output[0])-1);   // convert the 0-1 output_0 to sine value
-cosine = 2*Math.PI*((2*output[1])-1); // convert the 0-1 output_1 to cosine value
-distance = output[2]*20;  // convert the 0-1 output_2 to actual distance
-var coordinates={
-	x: cosine * distance,  // calculate the x co-ordinate
-	y: sine * distance // calculate the y co-ordinate
+sine = 2*Math.PI*((2*output[0])-1);   // convert the 0-1 output_0 back to original sine value
+cosine = 2*Math.PI*((2*output[1])-1); // convert the 0-1 output_1 back to original cosine value
+var bearings={
+	distance: output[2]*20,  // convert the 0-1 output_2 to actual distance in metres
+	angle: Math.atan2(sine,cosine)			 // conver sine/cosine back into angle in radians
 	};
-return coordinates;
+return bearings;
 }
 
 function takeSensorReadings(){
@@ -213,23 +224,25 @@ function takeSensorReadings(){
 		}
 }
 
-function sendNRMsg(type,sensor,reading) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","reading":"'+reading+'"}!');
-  if (!sim){USB.print(message);}
+function sendNRMsg(type,sensor,distance,angle) {
+  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}');
+  if (!sim){USB.println(message);}
   else {console.log(message);}
 }
 
 function sendXYtoNR(){
 	var input=[];
-	var transmitting=false
+	var transmitting=false;
+    var bearings = {
+      distance: 0,
+      angle: 0};
 	for (i=0;i<sensors;i++){
 		input[i] = sensor_data[i].mov_avg();
-		if (input[i]>0.2) {transmitting=true};
+		if (input[i]>0.2) {transmitting=true;}
 		}
-	if (transmitting==true){
-		xy=calculate(input); // call the neural net
-		sendNRMsg("sensor","ultrasonic",xy.x + "|" + xy.y);
-		}
+	if (transmitting===true){
+		bearings=calculate(input); // call the neural net to retried distance and angle
+    }   sendNRMsg("sensor","ultrasonic",bearings.distance.toString(),bearings.angle.toString());
 }
 
 // take sensor readings every 6ms

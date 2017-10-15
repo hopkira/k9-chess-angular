@@ -246,7 +246,7 @@ angular.module('K9.services', [])
     // holds K9 sensorArray state
     // initialisation of service
     var thisService=this;
-    var sensorList = '[{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
+    var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
     var sensorLocations = JSON.parse(sensorList);
     var sensorArray = JSON.parse(sensorList);
     // function called as a result of receiving a sensor type message
@@ -324,8 +324,17 @@ angular.module('K9.services', [])
       var endpoint={};
       endpoint.index = i;
       endpoint.sensor = mySensorLocation.name;
-      endpoint.x = Math.round(mySensorLocation.x + ( thisService.dist2SVG(distance) * (Math.cos(thisService.deg2Rad(mySensorLocation.angle)))),0);
-      endpoint.y = Math.round(mySensorLocation.y - ( thisService.dist2SVG(distance) * (Math.sin(thisService.deg2Rad(mySensorLocation.angle)))),0);
+      // calculate co-ordinates in dog orientation
+      var x_real;
+      var y_real;
+      var realtoSVG = 1000;
+      x_real = Math.cos(angle)*distance*realtoSVG;
+      y_real = Math.sin(angle)*distance*realtoSVG;
+      endpoint.x = Math.round(1200-y_real,0);
+      endpoint.y= Math.round(1200-x_real,0);
+      //endpoint.x = Math.round(mySensorLocation.x + ( thisService.dist2SVG(distance) * Math.cos(mySensorLocation.angle)),0);
+      //endpoint.y = Math.round(mySensorLocation.y + ( thisService.dist2SVG(distance) * Math.sin(mySensorLocation.angle)),0);
+      //console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);
       return endpoint
       }
 }])
