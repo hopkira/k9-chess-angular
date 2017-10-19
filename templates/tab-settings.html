@@ -12,22 +12,27 @@
     <label class="item item-input item-floating-label">
       <span class="input-label">K9 base URL</span>
       <input ng-model="K9settings.URL" type="text" autocorrect="off" autocapitalize="none" placeholder="Please enter K9 web server e.g. www.k9.com">
+    </input>
     </label>
     <label class="item item-input item-floating-label">
       <span class="input-label">Node-RED base directory</span>
       <input ng-model="K9settings.dir" type="text" autocorrect="off" autocapitalize="none" placeholder="Please enter node-RED directory e.g. admin">
+      </input>
     </label>
     <label class="item item-input item-floating-label">
       <span class="input-label">Node-RED Port Number</span>
       <input ng-model="K9settings.port" type="number" placeholder="Please enter node-RED port number e.g. 1880">
+      </input>
     </label>
     <label class="item item-input item-floating-label">
       <span class="input-label">Password</span>
       <input ng-model="K9settings.password" type="password" autocorrect="off" autocapitalize="none" placeholder="Please enter password to use K9">
+        </input>
     </label>
   </div>
   <button class="button button-block button-balanced" type="submit" ng-click="connect(K9settings)">
   Save and Connect
   </button>
+</form>
   </ion-content>
 </ion-view>

@@ -1,6 +1,7 @@
 node_modules/
 platforms/
 plugins/
+bower_components/
 node_modules
 .tmp
 .sass-cache
@@ -8,7 +9,12 @@ node_modules
 *.swo
 *.log
 *.DS_Store
+python/roboclaw_*
 
 .DS_Store
 
 .DS_Store
+
+lib/ionic/.DS_Store
+
+lib/ionic/.DS_Store

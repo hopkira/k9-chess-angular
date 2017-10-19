@@ -27,6 +27,40 @@ angular.module('K9.controllers', [])
        }
 }])
 
+// Controller for K9 Follow Me Tab
+.controller('FollowCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
+    // SVG
+    var f = Snap("#k9sensors2")
+    Snap.load("img/K9 sensors.svg", onSVGLoaded );
+    function onSVGLoaded( data ){
+      f.append( data );
+    };
+    // initialise joystick
+    $scope.position = {
+        x: 0,
+        y: 0
+        };
+    $scope.k9 = K9;
+    $scope.changeMotorCtrl = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.motorctrl==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("FollowCtrl button sent "+value);
+        NRInstruction.send('navigation', "followctrl", value);
+    }    
+  // listens for and event from the Node Red Instruction service that
+  // indicates that a k9 status message has been received from the
+  // Python Controller websocket.  As a result, this function updates the
+  // k9 object held in $scope, enabling the gauges to be updated
+  $scope.$on("event:k9state", function(evt,data){
+         $scope.k9.setStatus(data);
+       });
+}])
+
 // Controller for K9 On/Off Tab
 .controller('PowerCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
     $scope.k9 = K9;
@@ -73,6 +107,17 @@ angular.module('K9.controllers', [])
           };
         console.log("Screen button sent "+value);
         NRInstruction.send('toggle', "screen", value);
+    }
+    $scope.changeFollow = function (status) {
+        // console.log(status);
+        var value;
+        if ($scope.k9.follow==true) {
+            value="on";
+          } else {
+            value="off";
+          };
+        console.log("Follow button sent "+value);
+        NRInstruction.send('toggle', "follow", value);
     }
 }])
 

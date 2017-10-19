@@ -1,0 +1,68 @@
+<ion-view view-title="Follow Me">
+  <ion-nav-buttons side="right">
+      <x-nr-status-icon></x-nr-status-icon>
+   </ion-nav-buttons>
+  <ion-content class="padding" scroll="false">
+      <div class="row">
+        <div class="col"><just-gage id="mot_bat_gage" min=12 max=29 value="k9.main_volt"
+          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradient: false}" title="Motor Battery"></just-gage></div>
+        <div class="col"><just-gage id="brain_bat_gage" min=10 max=15 value="k9.brain_volt"
+          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradient: false}" title="Brain Battery"></just-gage></div>
+        <div class="col col-30"><img id="mjpeg_dest2" src="img/K9-Camera-Image.png"
+width="256" height="144" alt="K9 camera"></img></div>
+        <div class="col"><just-gage id="temp_gage" min=10 max=100 value="k9.temp"
+          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradiant: false}" title="Temperature"></just-gage></div>
+        <div class="col"><just-gage id="speedometer" min=0 max=15 value="k9.speed"
+          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradiant: false}" title="Speed"></just-gage></div>
+      </div>
+      <div class="row row-center">
+        <div class="col text-center col-30">
+          <ion-toggle style="border:0"
+          ng-model="k9.follow"
+          ng-checked="k9.follow"
+          id="follow"
+          ng-change="k9.toggleValue('follow',k9.follow)">
+          Autopilot
+          </ion-toggle>
+          <joystick position="position"></joystick>
+          <ion-toggle style="border:0"
+          ng-model="k9.motorctrl"
+          ng-checked="k9.motorctrl"
+          id="motorctrl"
+          ng-change="changeMotorCtrl(k9.motorctrl)">
+          Turbo
+        </ion-toggle>
+        </div>
+        <div class="col col-40">
+          <svg id="k9sensors2" viewBox="0 0 2400 2400"></svg>
+        </div>
+        <div class="col col-30">
+        <ion-toggle style="border:0"
+        id="lights"
+        ng-model="k9.lights"
+        ng-checked="k9.lights"
+        ng-change="k9.toggleValue('lights',k9.lights)">
+        Back panel lights
+        </ion-toggle>
+        <ion-toggle style="border:0"
+        ng-model="k9.screen"
+        ng-checked="k9.screen"
+        id="screen"
+        ng-change="k9.toggleValue('screen',k9.screen)">
+        Side monitor
+        </ion-toggle>
+        <ion-toggle style="border:0"
+        ng-model="k9.eyes"
+        ng-checked="k9.eyes"
+        id="eyes"
+        ng-change="k9.toggleValue('eyes',k9.eyes)">
+        Eye lights
+        </ion-toggle>
+        <button id="wake_up" ng-click="buttonClick($event)" class="button button-block button-balanced">All systems operational</button>
+        <button id="sleep" ng-click="buttonClick($event)" class="button button-block button-balanced">Conserving battery power</button>
+        <button id="excuse_me" ng-click="buttonClick($event)" class="button button-block button-balanced">Get out of the way!</button>
+        </div>
+        </div>
+        </div>
+  </ion-content>
+</ion-view>

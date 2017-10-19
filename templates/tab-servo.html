@@ -11,11 +11,13 @@
        <div class="track">
          <div class="handle"></div>
        </div>
+     </input>
      </label>
     </li>
       <div class="item range range-balanced">
         <i class="icon ion-arrow-up-a"></i>
         <input type="range" ng-model="dogstatus.pwmhead" ng-change="setHeadPWM()" name="neck" min="220" max="430" step="10">
+         </input>
         <i class="icon ion-arrow-down-a"></i>
       </div>
     <li class="item item-toggle">
@@ -25,14 +27,18 @@
        <div class="track">
          <div class="handle"></div>
        </div>
+        </input>
      </label>
     </li>
       <div class="item range range-balanced">
         <i class="icon ion-arrow-up-a"></i>
         <input type="range" ng-model="dogstatus.pwmverttail" ng-change="setTailVPWM()" name="tailvertical" min="270" max="370" step="5">
+                </input>
         <i class="icon ion-arrow-down-a"></i>
       </div>
 </ul>
+</ion-content>
+</ion-view>
 <!--
   <div class="item item-divider">
     Left Ear
@@ -50,7 +56,7 @@
         <input type="range" ng-model="dogstatus.pwmrightear" ng-change="setEarRPWM()" name="rightear" min="400" max="600" step="10">
         <i class="icon ion-arrow-right-a"></i>
       </div>
---!>
+
         <div class="item item-divider">
     Tail horizontal
   </div>
@@ -59,5 +65,4 @@
         <input type="range" ng-model="dogstatus.pwmhoriztail" ng-change="setTailHPWM()" name="tailhorizontal" min="325" max="440" step="5">
         <i class="icon ion-arrow-right-a"></i>
       </div>
-  </ion-content>
-</ion-view>
+-->

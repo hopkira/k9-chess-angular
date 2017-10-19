@@ -44,10 +44,15 @@ angular.module('K9.services', [])
 }])
 */
 
-.service('K9', ['$rootScope', function($rootScope) {
+.service('K9', ['$rootScope','NRInstruction', function($rootScope,NRInstruction) {
     // holds K9 state for all controllers
     // initialisation of service
     //var k9state = {};
+    this.main_volt=0;
+    this.temp=0;
+    this.brain_volt=0;
+    this.speed=0;
+
     this.setStatus = function (status) {
       // set overall dog status based on received object
       // set overall status via series of calls to set function
@@ -74,13 +79,19 @@ angular.module('K9.services', [])
         {
            this[key]=status[key];
         }
+        this.speed = Math.abs(this.left) + Math.abs(this.right);
         $rootScope.$apply();
       }
     }
-    this.setValue = function (key, value) {
-      this[key]=value;
-      $rootScope.$apply();
-    }
+    this.toggleValue = function (key,value) {
+      console.log("Key: "+key+" Value: "+value);
+      var text;
+      var value;
+      console.log("This key: "+this.key);
+      if (value==true) {text="on";} else {text="off";}
+      console.log("Browser sent "+key+" "+text);
+      NRInstruction.send('toggle',key,text);
+      }
 }])
 
 .service('NRInstruction', ['NodeREDWebSocket' ,function(NodeREDWebSocket) {
@@ -112,7 +123,7 @@ angular.module('K9.services', [])
   }
 }])
 
-.factory('NodeREDWebSocket', ['$rootScope','K9','msgtoPoint', function($rootScope,K9,msgtoPoint) {
+.factory('NodeREDWebSocket', ['$rootScope','msgtoPoint', function($rootScope,msgtoPoint) {
     // returns a Web Socket to send instructions over
     var NodeREDWebSocket = function(destinationURL) {
     ws = new WebSocket(destinationURL);
@@ -150,8 +161,7 @@ angular.module('K9.services', [])
             $rootScope.timeout=setTimeout(function() {NodeREDWebSocket.timeout();},1500);
             // ensure the various switches are set to their correct value if transmitted
             // "type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes
-            // console.log("Status message received")
-            K9.setStatus(messageObj);
+            $rootScope.$broadcast("event:k9state",messageObj);
             break;
           case 'sensor':
             // sensor message has been received

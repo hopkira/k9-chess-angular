@@ -53,7 +53,7 @@ window.requestAnimFrame = (function ( ){
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('K9', ['ionic', 'K9.controllers', 'K9.services', 'K9.directives'])
+angular.module('K9', ['ionic','ngJustGage', 'K9.controllers', 'K9.services', 'K9.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -134,6 +134,16 @@ angular.module('K9', ['ionic', 'K9.controllers', 'K9.services', 'K9.directives']
       'tab-motor': {
         templateUrl: 'templates/tab-motor.html',
         controller: 'MotorCtrl'
+      }
+    }
+  })
+
+  .state('tab.follow', {
+    url: '/follow',
+    views: {
+      'tab-follow': {
+        templateUrl: 'templates/tab-follow.html',
+        controller: 'FollowCtrl'
       }
     }
   })

@@ -3,8 +3,8 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 2400 2400" style="enable-background:new 0 0 2400 2400;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:url(#SVGID_1_);}
-	.st1{fill:url(#SVGID_2_);}
+	.st0{fill:none;stroke:#33C433;stroke-width:25;stroke-miterlimit:10;stroke-dasharray:50;}
+	.st1{fill:none;stroke:#FF4500;stroke-width:25;stroke-miterlimit:10;stroke-dasharray:49.6098,49.6098;}
 	.st2{fill:#FEFEFE;}
 	.st3{fill:#BFBFBF;}
 	.st4{fill:#848484;}
@@ -76,34 +76,10 @@
 	.st70{fill:#464646;}
 	.st71{fill:#575757;}
 </style>
-<radialGradient id="SVGID_1_" cx="1197" cy="1196.2533" r="1200" gradientUnits="userSpaceOnUse">
-	<stop  offset="0.4403" style="stop-color:#FFFF00"/>
-	<stop  offset="0.551" style="stop-color:#FCFF00;stop-opacity:0.8022"/>
-	<stop  offset="0.6265" style="stop-color:#F3FF02;stop-opacity:0.6673"/>
-	<stop  offset="0.6915" style="stop-color:#E4FF04;stop-opacity:0.5512"/>
-	<stop  offset="0.7505" style="stop-color:#CEFF07;stop-opacity:0.4457"/>
-	<stop  offset="0.8056" style="stop-color:#B2FF0B;stop-opacity:0.3473"/>
-	<stop  offset="0.8577" style="stop-color:#90FF10;stop-opacity:0.2542"/>
-	<stop  offset="0.9075" style="stop-color:#67FF16;stop-opacity:0.1652"/>
-	<stop  offset="0.9542" style="stop-color:#39FF1D;stop-opacity:8.189589e-02"/>
-	<stop  offset="0.9991" style="stop-color:#05FF25;stop-opacity:1.598179e-03"/>
-	<stop  offset="1" style="stop-color:#04FF25;stop-opacity:0"/>
-</radialGradient>
-<circle class="st0" cx="1197" cy="1196.3" r="1200"/>
-<radialGradient id="SVGID_2_" cx="1199.3495" cy="1208.7994" r="600" gradientUnits="userSpaceOnUse">
-	<stop  offset="0" style="stop-color:#FF0000;stop-opacity:0.5"/>
-	<stop  offset="0.3808" style="stop-color:#FF0200;stop-opacity:0.6904"/>
-	<stop  offset="0.518" style="stop-color:#FF0900;stop-opacity:0.759"/>
-	<stop  offset="0.6158" style="stop-color:#FF1400;stop-opacity:0.8079"/>
-	<stop  offset="0.6949" style="stop-color:#FF2500;stop-opacity:0.8474"/>
-	<stop  offset="0.7626" style="stop-color:#FF3B00;stop-opacity:0.8813"/>
-	<stop  offset="0.8226" style="stop-color:#FF5700;stop-opacity:0.9113"/>
-	<stop  offset="0.8769" style="stop-color:#FF7700;stop-opacity:0.9385"/>
-	<stop  offset="0.9268" style="stop-color:#FF9D00;stop-opacity:0.9634"/>
-	<stop  offset="0.9711" style="stop-color:#FFC600;stop-opacity:0.9856"/>
-	<stop  offset="1" style="stop-color:#FFE500"/>
-</radialGradient>
-<circle class="st1" cx="1199.3" cy="1208.8" r="600"/>
+<circle class="st0" cx="1197.3" cy="1196.5" r="1159"/>
+<g>
+	<circle class="st1" cx="1199.3" cy="1208.8" r="600"/>
+</g>
 <path class="st2" d="M767,1199.1"/>
 <g>
 	<path class="st3" d="M1374.9,1721.8c-1.3,0-2.6,0.3-4,0.3c-55.1,0-110.1,0-165.2,0c-3.4,0-4.5,1.1-4.4,4.4c0.4,22,0.6,44,1,66
