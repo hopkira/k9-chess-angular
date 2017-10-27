@@ -254,6 +254,7 @@ class K9PythonController(WebSocketClient) :
                self.k9.motorctrl = 0.0
          elif self.driveinfo["object"] == "motors":
             # change the motor speeds
+            # print "I heard:" + str(self.driveinfo);
             self.motorspeed = float(self.driveinfo["motorspeed"])
             self.steering = float(self.driveinfo["steering"])
             self.leftTarget = self.k9.leftMotor.calculateTargetSpeed(self.motorspeed, self.steering,self.k9.motorctrl)

@@ -4,19 +4,20 @@
    </ion-nav-buttons>
   <ion-content class="padding" scroll="false">
       <div class="row">
-        <div class="col"><just-gage id="mot_bat_gage" min=12 max=29 value="k9.main_volt"
-          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradient: false}" title="Motor Battery"></just-gage></div>
-        <div class="col"><just-gage id="brain_bat_gage" min=10 max=15 value="k9.brain_volt"
-          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradient: false}" title="Brain Battery"></just-gage></div>
+        <div class="col"><just-gage id="mot_bat_gage" min=12 max=29 value="k9.main_volt" title="Motor Battery"
+          options="{levelColors: ['#ef473a', '#ef473a', '#7a7a7a', '#33cd5f'],'noGradient':'True','symbol':' V'}"></just-gage></div>
+        <div class="col"><just-gage id="brain_bat_gage" min=10 max=15 value="k9.brain_volt" title="Brain Battery"
+          options="{levelColors: ['#ef473a', '#ef473a', '#7a7a7a', '#33cd5f'],'noGradient':'true','symbol':' V'}"></just-gage></div>
         <div class="col col-30"><img id="mjpeg_dest2" src="img/K9-Camera-Image.png"
 width="256" height="144" alt="K9 camera"></img></div>
-        <div class="col"><just-gage id="temp_gage" min=10 max=100 value="k9.temp"
-          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradiant: false}" title="Temperature"></just-gage></div>
-        <div class="col"><just-gage id="speedometer" min=0 max=15 value="k9.speed"
-          options="{levelColors: ['#6DC45E', '#6DC45E', '#6DC45E', '#6DC45E'],levelGradiant: false}" title="Speed"></just-gage></div>
+        <div class="col"><just-gage id="temp_gage" min=10 max=100 value="k9.temp" title="Temperature"
+          options="{levelColors: ['#33cd5f', '#7a7a7a', '#7a7a7a', '#ef473a'],'noGradient':'true','symbol':' C'}"></just-gage></div>
+        <div class="col"><just-gage id="speedometer" min=0 max=10 value="k9.speed" title="Speed"
+          options="{levelColors: ['#33cd5f', '#7a7a7a', '#6DC45E', '#ef473a'],'noGradient':'true','symbol':' mph'}"></just-gage></div>
       </div>
       <div class="row row-center">
         <div class="col text-center col-30">
+
           <ion-toggle style="border:0"
           ng-model="k9.follow"
           ng-checked="k9.follow"

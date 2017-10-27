@@ -41,6 +41,7 @@ angular.module('K9.controllers', [])
         y: 0
         };
     $scope.k9 = K9;
+
     $scope.changeMotorCtrl = function (status) {
         // console.log(status);
         var value;
@@ -49,9 +50,10 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("FollowCtrl button sent "+value);
-        NRInstruction.send('navigation', "followctrl", value);
-    }    
+        console.log("MotorCtrl button sent "+value);
+        NRInstruction.send('navigation', "motorctrl", value);
+    }
+   
   // listens for and event from the Node Red Instruction service that
   // indicates that a k9 status message has been received from the
   // Python Controller websocket.  As a result, this function updates the

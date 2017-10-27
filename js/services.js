@@ -79,7 +79,7 @@ angular.module('K9.services', [])
         {
            this[key]=status[key];
         }
-        this.speed = Math.abs(this.left) + Math.abs(this.right);
+        this.speed = (Math.abs(this.left) + Math.abs(this.right))/13.7;
         $rootScope.$apply();
       }
     }
