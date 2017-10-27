@@ -118,16 +118,6 @@ angular.module('K9', ['ionic','ngJustGage', 'K9.controllers', 'K9.services', 'K9
       }
     })
 
-  .state('tab.sensors', {
-    url: '/sensors',
-    views: {
-      'tab-sensors': {
-        templateUrl: 'templates/tab-sensors.html',
-        controller: 'SensorsCtrl'
-      }
-    }
-  })
-
   .state('tab.motor', {
     url: '/motor',
     views: {
