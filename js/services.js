@@ -259,21 +259,22 @@ angular.module('K9.services', [])
     var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
     var sensorLocations = JSON.parse(sensorList);
     var sensorArray = JSON.parse(sensorList);
-    // function called as a result of receiving a sensor type message
+    // this function returns the current Sensor Array
     this.getSensorArray = function () {
       return sensorArray;
     }
     this.recordReading = function (sensorName, distance, angle) {
-      // calculate where to plot the sensor reading on the SVG
-      //console.log("sA.rR parameters: " + sensorName +", "+distance+", "+angle);
+      // Receives a sensor reading as natively formatted from the Python controller
+      // which means metres and degrees, where the positive x axis
+      // is aligned to the forward direction of the dog.
+      // It calculates where to plot the sensor reading on the SVG.
+      // The SVG is aligned 90 degrees counter clockwise and each
+      // point equals 1mm (the overall size is 2.4m x 2.4m)
+      //
       var plotPoint = {};
       plotPoint = thisService.sensorPlot (sensorName, distance, angle);
       // store the x, y co-ordinate object in sensorArray
-      // this.sensorName.coord = plotPoint;
-      // the below line may be necessary but SVG will refresh its own
-      // view and hopefully take the latest data...
-      // $rootScope.$apply();
-      //console.log("sA.rR point: " + JSON.stringify(plotPoint));
+      // this.sensorName.coord = plotPoint
       sensorArray[plotPoint.index].x = plotPoint.x;
       sensorArray[plotPoint.index].y = plotPoint.y;
       //console.log("Sensor array: " + JSON.stringify(sensorArray));
@@ -291,20 +292,23 @@ angular.module('K9.services', [])
       return SVGpoints;
       }
     this.sensorPlot = function (sensorName,distance,angle) {
-      // positions are determined using Adobe Illustrator
-      // angles are determined using trigonometry; zero degrees
-      // is along the x axis, measured anticlockwise
-      // degrees are used rather than radians to assist with
-      // comprehension
+      // Returns the calculated SVG x,y co-ordinates
+      // from the dog oriented distance and angle.
+      // The x,y SVG endpoint position is calculated as an offset from
+      // a point held in the sensorLocations array which
+      // describes in SVG terms where the sensor is.
       //
-      // Assign default and safe values to mySensorLocation
+      // Assign default and safe values to mySensorLocation.  The default
+      // is for the angle to be provided by the sensor reading and for the
+      // sensor placed at the centre of the dog.
+      //
       var mySensorLocation = {};
       mySensorLocation.name = sensorName;
       mySensorLocation.x = 1200;
       mySensorLocation.y = 1200;
       mySensorLocation.angle = 999;
-      // search for matching sensor location and modify values if
-      // a match is found
+      // search for matching sensor location and modify the
+      // origin point values if a match is found
       for (var i=0, len=sensorLocations.length; i < len; i++) {
         //console.log("Comparing "+sensorLocations[i].sensorName+" with "+mySensorLocation.name);
         if (sensorLocations[i].sensorName == mySensorLocation.name)
@@ -325,23 +329,26 @@ angular.module('K9.services', [])
         break;
         }
       }
-      //console.log("sP result: " + mySensorLocation.name + " - x:" + mySensorLocation.x +" y:" + mySensorLocation.y+" angle:" + mySensorLocation.angle);
       // the endpoint object is the SVG location to plot the sensor
       // this is calculated using basic trigonometry and scaling
-      // dist2SVG is used to scale the result from real world metres to SVG points
-      // degtoRad converts the angle in degrees to radians to enable the x and y
-      // components to be calculated
+      // using mySensorLocation as the origin point
       var endpoint={};
       endpoint.index = i;
       endpoint.sensor = mySensorLocation.name;
-      // calculate co-ordinates in dog orientation
+      // calculate x,y co-ordinates in dog orientation
       var x_real;
       var y_real;
+      // scaling factor
       var realtoSVG = 1000;
-      x_real = Math.cos(angle)*distance*realtoSVG;
-      y_real = Math.sin(angle)*distance*realtoSVG;
-      endpoint.x = Math.round(1200-y_real,0);
-      endpoint.y= Math.round(1200-x_real,0);
+      // calculate x,y offset based on sensor reading
+      // and multiplies by 1,000 to get SVG points
+      x_real =  Math.cos(angle)*distance*realtoSVG;
+      y_real =  Math.sin(angle)*distance*realtoSVG;
+      // Now convert real x,y co-ordinates to SVG co-ordinates.
+      // This is done by rotating the calculated offset
+      // by 90 degrees counter clockwise.
+      endpoint.x = mySensorLocation.x + Math.round(y_real * -1,0);
+      endpoint.y = mysensorLocation.y + Math.round(x_real * -1,0);
       //endpoint.x = Math.round(mySensorLocation.x + ( thisService.dist2SVG(distance) * Math.cos(mySensorLocation.angle)),0);
       //endpoint.y = Math.round(mySensorLocation.y + ( thisService.dist2SVG(distance) * Math.sin(mySensorLocation.angle)),0);
       //console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);
