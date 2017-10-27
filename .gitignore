@@ -18,3 +18,7 @@ python/roboclaw_*
 lib/ionic/.DS_Store
 
 lib/ionic/.DS_Store
+
+d3/d3.min.js
+
+lib/*
