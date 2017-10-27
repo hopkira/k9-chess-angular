@@ -12,7 +12,7 @@ distance of the transmitter.
 Simple trigonometry is then used to translate those values
 to x and y co-ordinates.
 
-Published under Creative Commons
+Published under The Unlicense
 Richard Hopkins, 12th October 2017
 */
 function (input) {

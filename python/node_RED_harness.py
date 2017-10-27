@@ -4,7 +4,7 @@
 #
 # authored by Richard Hopkins May 2017 for AoT Autonomy Team
 #
-# Licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
+# Licensed under The Unlicense, so free for public domain use
 #
 # This program pretends to be seven sensors to enable quick evaluation tuning and
 # prototyping of a collision detection algorithm for K9

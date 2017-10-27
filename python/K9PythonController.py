@@ -3,7 +3,7 @@
 #
 # authored by Richard Hopkins, October 2017
 #
-# Licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
+# Licensed under The Unlicense, so free for public domain use
 #
 # This program performs receives two different command strings
 # of type 'navigation' routed from a local node-RED instance.

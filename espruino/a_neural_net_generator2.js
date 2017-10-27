@@ -3,7 +3,7 @@ Simple node.js app that uses Synaptic to generate
 a neural net based on the captured ground truth
 from the five sensors.
 
-Published under Creative Commons
+Published under The Unlicense
 
 Richard Hopkins, 12th October 2017
 */

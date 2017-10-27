@@ -10,7 +10,7 @@ cat /dev/cu.usbmodemXXXX > filename.csv
 
 Once green light only is lit, close file using CTRL+C
 
-Published under Creative Commons
+Published under The Unlicense
 Richard Hopkins, 7th October 2017
 
 */

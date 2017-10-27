@@ -16,7 +16,7 @@
 # Snowboy elements derived from
 # Kitt-AI/snowboy/examples/Python/demo.py
 #
-# Released under Creative Commons license
+# Released under The Unlicense license
 
 from ws4py.client.threadedclient import WebSocketClient
 from watson_developer_cloud import ConversationV1

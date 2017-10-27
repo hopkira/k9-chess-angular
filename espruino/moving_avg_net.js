@@ -32,7 +32,7 @@ usage: node moving_average_net [-s]
 You will need to comment out the process.argv if clause to get
 the program to run on an Espruino.
 
-Published under Creative Commons
+Published under The Unlicense
 Richard Hopkins, 15th October 2017
 
 */

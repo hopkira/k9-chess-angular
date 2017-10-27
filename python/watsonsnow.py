@@ -2,7 +2,7 @@
 # K9 Watson and Snowboy
 # by Richard Hopkins
 #
-# Released under Creative Commons License 2017
+# Released under The Unlicense License 2017
 #
 # TTS elements derived from
 # Joshua Rees-Jones, IBM intern
