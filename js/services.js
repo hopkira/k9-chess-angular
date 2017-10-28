@@ -167,7 +167,12 @@ angular.module('K9.services', [])
             // sensor message has been received
             sensor = messageObj.sensor;
             distance = parseFloat(messageObj.distance);
-            angle=parseInt(messageObj.angle);
+            // if there is no angle, use the default
+            if (isNaN(messageObj.angle)) {
+              angle = 1000;
+            } else {
+              angle = parseInt(messageObj.angle);
+            }
             //console.log("NRWSservice: sensor " + sensor + " reports obstruction " + String(distance) + "m away at " + String(angle) + " degrees.");
             // record the sensor reading via the sensorArray service
             msgtoPoint.recordReading(sensor,distance,angle);
@@ -256,7 +261,7 @@ angular.module('K9.services', [])
     // holds K9 sensorArray state
     // initialisation of service
     var thisService=this;
-    var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
+    var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":90},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":135},{"sensorName":"tail","x": 1200,"y":1430,"angle":180},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":225},{"sensorName":"right","x": 1280,"y":1343,"angle":270}]';
     var sensorLocations = JSON.parse(sensorList);
     var sensorArray = JSON.parse(sensorList);
     // this function returns the current Sensor Array
@@ -302,6 +307,7 @@ angular.module('K9.services', [])
       // is for the angle to be provided by the sensor reading and for the
       // sensor placed at the centre of the dog.
       //
+      // console.log("Name:"+sensorName+" Distance:"+distance+" Angle:"+angle);
       var mySensorLocation = {};
       mySensorLocation.name = sensorName;
       mySensorLocation.x = 1200;
@@ -335,20 +341,18 @@ angular.module('K9.services', [])
       var endpoint={};
       endpoint.index = i;
       endpoint.sensor = mySensorLocation.name;
-      // calculate x,y co-ordinates in dog orientation
+      // calculate x,y offset co-ordinates in dog orientation
       var x_real;
       var y_real;
-      // scaling factor
-      var realtoSVG = 1000;
       // calculate x,y offset based on sensor reading
       // and multiplies by 1,000 to get SVG points
-      x_real =  Math.cos(angle)*distance*realtoSVG;
-      y_real =  Math.sin(angle)*distance*realtoSVG;
+      x_real =  Math.cos(thisService.deg2Rad(mySensorLocation.angle))*thisService.dist2SVG(distance);
+      y_real =  Math.sin(thisService.deg2Rad(mySensorLocation.angle))*thisService.dist2SVG(distance);
       // Now convert real x,y co-ordinates to SVG co-ordinates.
       // This is done by rotating the calculated offset
       // by 90 degrees counter clockwise.
       endpoint.x = mySensorLocation.x + Math.round(y_real * -1,0);
-      endpoint.y = mysensorLocation.y + Math.round(x_real * -1,0);
+      endpoint.y = mySensorLocation.y + Math.round(x_real * -1,0);
       //endpoint.x = Math.round(mySensorLocation.x + ( thisService.dist2SVG(distance) * Math.cos(mySensorLocation.angle)),0);
       //endpoint.y = Math.round(mySensorLocation.y + ( thisService.dist2SVG(distance) * Math.sin(mySensorLocation.angle)),0);
       //console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);

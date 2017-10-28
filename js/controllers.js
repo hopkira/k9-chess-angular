@@ -1,6 +1,7 @@
 angular.module('K9.controllers', [])
 
 // Controller for K9 Motor Tab
+/*
 .controller('MotorCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
     // initialise joystick
     $scope.position = {
@@ -26,6 +27,7 @@ angular.module('K9.controllers', [])
        return value
        }
 }])
+*/
 
 // Controller for K9 Follow Me Tab
 .controller('FollowCtrl',["$scope","K9","NRInstruction","msgtoPoint", function($scope, K9, NRInstruction, msgtoPoint) {
@@ -41,10 +43,10 @@ angular.module('K9.controllers', [])
       var x_pos;
       var y_pos;
       var sensor_name;
-      // Centrepoint {"sensorName":"centre","x": 320,"y":568},
       var readingsData = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":180},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":225},{"sensorName":"tail","x": 1200,"y":1430,"angle":270},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":315},{"sensorName":"right","x": 1280,"y":1343,"angle":0}]';
       var readings = JSON.parse(readingsData);
       // indexed iteration
+      /*
       for (var key in readings) {
         if (!readings.hasOwnProperty(key)) {
         //The current property is not a direct property of p
@@ -58,31 +60,30 @@ angular.module('K9.controllers', [])
         plot.attr({fill: "#00ff00",});
         // console.log(sensor_name + ": x-"+ x_pos + " y-" + y_pos);
       }
+      */
       mySensorArray=msgtoPoint.getSensorArray();
-      $scope.ultrasonic = s.line(1200,1200,parseInt(mySensorArray[0].x),parseInt(mySensorArray[0].y));
-      $scope.ultrasonic.attr({
-        stroke: "#ff0000",
-        strokeWidth: 10
-        });
-      $scope.line1 = s.line(parseInt(mySensorArray[2].x),parseInt(mySensorArray[2].y),parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y));
-      $scope.line2 = s.line(parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y),parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y));
-      $scope.line3 = s.line(parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y),parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y));
+      //$scope.ultrasonic = s.line(1200,1200,parseInt(mySensorArray[0].x),parseInt(mySensorArray[0].y));
+      $scope.ultrasonic = s.circle(parseInt(mySensorArray[0].x),parseInt(mySensorArray[0].y),75).attr({fill:'#33cd5f',strokeWidth:35,stroke:'#7a7a7a'});
+      $scope.line1 = s.line(parseInt(mySensorArray[3].x),parseInt(mySensorArray[3].y),parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y));
+      $scope.line2 = s.line(parseInt(mySensorArray[4].x),parseInt(mySensorArray[4].y),parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y));
       $scope.line3 = s.line(parseInt(mySensorArray[5].x),parseInt(mySensorArray[5].y),parseInt(mySensorArray[6].x),parseInt(mySensorArray[6].y));
-      $scope.bigline = s.group($scope.line1, $scope.line2, $scope.line3);
+      $scope.line4 = s.line(parseInt(mySensorArray[6].x),parseInt(mySensorArray[6].y),parseInt(mySensorArray[7].x),parseInt(mySensorArray[7].y));
+      $scope.bigline = s.group($scope.line1, $scope.line2, $scope.line3, $scope.line4);
       $scope.bigline.attr({
-        stroke: "#00ff00",
-        strokeWidth: 10
+        stroke: "#7a7a7a",
+        strokeWidth: 35,
+        strokeLinecap: "round"
         });
-      $scope.rdtime=setInterval(function() {$scope.reDraw();},200);
+      $scope.rdtime=setInterval(function() {$scope.reDraw();},60);
     }
     $scope.reDraw = function () {
       // method to reDraw sensor screen
       mySensorArray=msgtoPoint.getSensorArray();
-      $scope.ultrasonic.animate({ x1: 1200, x2: mySensorArray[0].x, y1: 1200, y2: mySensorArray[0].y},100);
-      $scope.line1.animate({ x1: mySensorArray[2].x, x2: mySensorArray[2].x, y1: mySensorArray[3].y, y2: mySensorArray[3].y},100);
-      $scope.line2.animate({ x1: mySensorArray[3].x, x2: mySensorArray[3].x, y1: mySensorArray[4].y, y2: mySensorArray[4].y},100);
-      $scope.line3.animate({ x1: mySensorArray[4].x, x2: mySensorArray[4].x, y1: mySensorArray[5].y, y2: mySensorArray[5].y},100);
-      $scope.line3.animate({ x1: mySensorArray[5].x, x2: mySensorArray[5].x, y1: mySensorArray[6].y, y2: mySensorArray[6].y},100);
+      $scope.ultrasonic.animate({cx: mySensorArray[0].x,cy: mySensorArray[0].y},60,mina.easein);
+      $scope.line1.animate({ x1: mySensorArray[3].x, x2: mySensorArray[4].x, y1: mySensorArray[3].y, y2: mySensorArray[4].y},30);
+      $scope.line2.animate({ x1: mySensorArray[4].x, x2: mySensorArray[5].x, y1: mySensorArray[4].y, y2: mySensorArray[5].y},30);
+      $scope.line3.animate({ x1: mySensorArray[5].x, x2: mySensorArray[6].x, y1: mySensorArray[5].y, y2: mySensorArray[6].y},30);
+      $scope.line4.animate({ x1: mySensorArray[6].x, x2: mySensorArray[7].x, y1: mySensorArray[6].y, y2: mySensorArray[7].y},30);
       //console.log("Sensor array: " + JSON.stringify(mySensorArray));
       }
     // initialise joystick

@@ -242,6 +242,7 @@ function sendXYtoNR(){
 		}
 	if (transmitting===true){
 		bearings=calculate(input); // call the neural net to retried distance and angle
+		bearings.angle = Math.round(bearings.angle*180/Math.PI); // calculate degrees from radians
     }   sendNRMsg("sensor","ultrasonic",bearings.distance.toString(),bearings.angle.toString());
 }
 
