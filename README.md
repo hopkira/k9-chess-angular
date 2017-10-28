@@ -24,9 +24,6 @@ controllers.js | Each tab has its own controller in this file that respondes to 
 directives.js | There are custom directives for the locked/unlocked icon on each tab (that shows whether communications between browser and dog are working in both directions) and the joystick on the Motors tab.  These directives make the HTML much easier to understand and maintain.
 services.js | The shared services maintain a model of the state of the dog in the front end app; they also support the creation of sockets between the app and dog and the standardisation of messages flowing over that connection.  The translation between sensor readings and the SVG world are also calculated here for display on the sensors page.
   
-# lib
-Standard JavaScript library files for AngularJS, Ionic etc.
-
 ## node-RED
 This directory contains the flows to control K9.  It provides the means to flow information between the various elements of the dog and co-ordinates movement and speech.  It also contains the definition of the dashboard to show on K9's screen.
 
