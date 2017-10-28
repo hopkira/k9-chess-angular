@@ -45,6 +45,6 @@ Simple deployment scripts to move code into right place on the Pi
 
 ## snap
 Standard JavaScript library used to integrate SVG and AngularJS on the Sensors page
-
+ 
 ## templates
 This directory contains the HTML for each of the tabs of the user interface (including the definition of the tabs themselves!).  Keeping the html for each tab separately simplifies testing and maintenance.
