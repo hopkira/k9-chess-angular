@@ -33,6 +33,9 @@ This directory contains the flows to control K9.  It provides the means to flow 
 ## python
 This directory contains the python programs that use the Adafruit PWM Servo Driver and RoboClaw PID MotorController to make K9 move. A harness is included to generate sensor data to simulare collisions.  There are also some simple scripts to interface to Watson Conversation and STT (and to K9's espeak TTS)
 
+## tessel
+This directory contains the Tessel 2 program using to control the two LIDAR ears that are used to scan what is in front of K9.  Just like the Espruino, the Tessel 2 can run JavaScript, but as it is a more powerful device, it can also run node.js and the dog's wireless access point.
+
 Program | Description
 ---  | ---
 K9PIDController.py | RoboClaw based Motor Controller
