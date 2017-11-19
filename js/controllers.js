@@ -3,11 +3,15 @@ angular.module('K9.controllers', [])
 // Controller for K9 Follow Me Tab
 .controller('FollowCtrl',["$scope","K9","NRInstruction","msgtoPoint", function($scope, K9, NRInstruction, msgtoPoint) {
     // SVG
-    var s = Snap("#k9sensors")
-    Snap.load("img/K9 sensors.svg", onSVGLoaded );
-    // view needs to be kept in line with the sensorArray object
-    // ideally back1 to back6 will have a line joining them
-    // perhaps a setInterval refresh of
+    var j = Snap("#k9joystick");
+    var s = Snap("#k9sensors");
+    Snap.load("img/K9 sensors.svg", onSVGLoaded);
+    Snap.load("img/Joystick Turbo.svg", onJoyLoaded);
+    // Update joystick view
+    function onJoyLoaded(data){
+      j.append(data);
+    }
+    // Update sensor view
     function onSVGLoaded( data ){
       s.append( data );
       var plot;

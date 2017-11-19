@@ -3,7 +3,7 @@
       <x-nr-status-icon></x-nr-status-icon>
    </ion-nav-buttons>
   <ion-content class="padding" scroll="false">
-      <div class="row">
+      <div class="row" style="border: thin solid Gainsboro">
         <div class="col"><just-gage id="mot_bat_gage" min=12 max=29 value="k9.main_volt" title="Motor Battery"
           options="{levelColors: ['#ef473a', '#ef473a', '#7a7a7a', '#33cd5f'],'noGradient':'True','symbol':' V'}"></just-gage></div>
         <div class="col"><just-gage id="brain_bat_gage" min=10 max=15 value="k9.brain_volt" title="Brain Battery"
@@ -20,7 +20,6 @@
       </div>
       <div class="row row-center">
         <div class="col text-center col-30">
-
           <ion-toggle style="border:0"
           ng-model="k9.follow"
           ng-checked="k9.follow"
@@ -28,7 +27,8 @@
           ng-change="k9.toggleValue('follow',k9.follow)">
           Autopilot
           </ion-toggle>
-          <joystick position="position"></joystick>
+            <!--<joystick position="position"></joystick>-->
+            <svg id="k9joystick" viewBox="0 0 200 200" width=200px height=200px></svg>
           <ion-toggle style="border:0"
           ng-model="k9.motorctrl"
           ng-checked="k9.motorctrl"
