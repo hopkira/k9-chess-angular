@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# K9 Ear Sensor Driver
+# K9 Ear Controller
 #
 # authored by Richard Hopkins December 2017 for AoT Autonomy Team
 #
@@ -9,8 +9,8 @@
 # This program turns K9's radar crisps into rotating LIDAR
 # sensors that can detect what is in front of the robot dog
 # The information in the sensors is stored in a Redis database
-# in the Pi, so that the controller can transmit the current state
-# to the browser
+# in the Pi, so that the Python Motorcontroller can transmit the current state
+# to the browser via Node-RED
 #
 import sys     # allows for command line to be interpreted
 import json    # enables creation of JSON strings
@@ -55,8 +55,8 @@ class SensorArray :
         init_time = time.time()
         for ear in ['left','right']:
             for sensor in range (0, 14):
-                r.set(str(ear)+"_"+str(sensor)+"_reading",str(0))
-                r.set(str(ear)+"_"+str(sensor)+"_time",str(init_time))
+                r.set("reading_ear_"+str(ear)+":"+str(sensor),str(0))
+                r.set("time_ear_"+str(ear)+":"+str(sensor),str(init_time))
 
 class K9Ears :
     def __init__(self) :
@@ -79,7 +79,10 @@ class K9Ears :
         self.left_pwm_channel = 4
         self.right_pwm_channel = 5
 
-    def getForwardSpeed() :
+    def getForwardSpeed(self) :
+        if sim :
+            r.set("left", random.uniform(-100,100))
+            r.set("right", random.uniform(-100,100))
         # retrieve current actual robot speed from Redis
         self.left_speed=float(r.get("left"))
         self.right_speed=float(r.get("right"))
@@ -87,10 +90,10 @@ class K9Ears :
         # then convert into a percentage of maximum speed (100)
         return ((self.left_speed + self.right_speed)/200)
 
-    def makeReading() :
+    def makeReading(self) :
         """Controls the movement of the ears based on robot speed
         """
-        self.forward_speed = getForwardSpeed()
+        self.forward_speed = self.getForwardSpeed()
         # if the robot is moving forward, then work out what
         # the boundaries should be for the potentiometer and pwm
         # these boundaries should narrow the movement as the robot gets
@@ -105,27 +108,23 @@ class K9Ears :
         self.right_pwm_edge = self.mid_pwm - (self.percent*(self.mid_pwm-self.min_pwm))
         # Make a reading with the left ear to determine distance and direction
         self.left_ear.makeReading()
-        bucket = self.max_pot self.mid_pot (0 to 14) # NOT WORKING!!!
         self.left_ear.recordReading()
         # Make a reading with the right ear to determine distance and direction
         self.right_ear.makeReading()
-        bucket = low to mid (0 to 14) # NOT WORKING!!!!
         self.right_ear.recordReading()
         # If both ears are outside the boundaries over which they are meant to move
         # then reverse their direction of travel
-        if ((self.left_ear.direction < self.mid_pot) & (self.right_ear.direction > self.mid_pot)) {
+        if ((self.left_ear.direction < self.mid_pot) & (self.right_ear.direction > self.mid_pot)) :
             if not sim :
                 pwm.set_pwm(0, left_pwm_channel, self.max_pwm)
                 pwm.set_pwm(0, right_pwm_channel, self.min_pwm)
-        }
-        if ((self.left_ear.direction > self.max_pot) & (self.right_ear.direction < self.min_pot)) {
+        if ((self.left_ear.direction > self.max_pot) & (self.right_ear.direction < self.min_pot)) :
             if not sim :
                 pwm.set_pwm(0, left_pwm_channel, self.mid_pwm)
                 pwm.set_pwm(0, right_pwm_channel, self.mid.pwm)
-        }
 
 class LIDAR :
-    def __init__(self, name, adc, direction) :
+    def __init__(self, name, adc) :
         """Initialise the VL530L0X that will be used by this LIDAR instance
 
         Arguments:
@@ -135,6 +134,8 @@ class LIDAR :
         """
         self.adc = adc
         self.name = name
+        self.slot = 0
+        self.max_slots = 15
         # initialise sensor via relevant I2C bus using TCA9548A multiplexer
         if not sim :
             self.sensor = VL53L0X.VL53L0X(TCA9548A_Num=self.adc,TCA9548A_Addr=0x70)
@@ -142,11 +143,15 @@ class LIDAR :
             self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
         print str(self.name) + " LIDAR instantiated."
 
-    def recordReading() :
-        r.set(self.name+"_"+str(bucket)+"_reading",str(self.distance))
-        r.set(self.name+"_"+str(bucket)+"_time",str(time.time()))
+    def recordReading(self) :
+        r.set("reading_ear_"+self.name+":"+str(self.slot),str(self.distance))
+        r.set("time_ear_"+self.name+":"+str(self.slot),str(time.time()))
+        if self.slot < self.max_slots :
+            self.slot += 1
+        else :
+            self.slot = 0
 
-    def makeReading() :
+    def makeReading(self) :
         """Make a distance reading and update the sensors internal state
 
         Gets the latest distance reading from the LIDAR sensor
@@ -162,12 +167,18 @@ class LIDAR :
         else :
             self.distance = random.uniform(0,1200)
             self.direction = random.uniform(0,5)
-        print str(self.name) + " reads: " + self.distance + " at an angle of" + self.direction
+        # print str(self.name) + " reads: " + str(self.distance) + " at an angle of " + str(self.direction)
 
 try :
     k9ears = K9Ears()
-    while True
+    max_time = 0
+    while True :
         k9ears.makeReading()
+        elapsed_time = time.time()-float(r.get("time_ear_left:0"))
+        if elapsed_time > max_time :
+            max_time = elapsed_time
+            print str((max_time)*1000) + " ms "
+
 except KeyboardInterrupt :
     k9ears.left_ear.sensor.stop_ranging()
     k9ears.right_ear.sensor.stop_ranging()
