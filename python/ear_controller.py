@@ -30,6 +30,7 @@ print "Importing Redis library..."
 import redis
 # Connect to a local Redis server
 r = redis.Redis(host='127.0.0.1',port=6379)
+MAX_SLOTS = 15
 
 # If running for real initialise servo driver, LIDARs and ADC
 if not sim :
@@ -54,7 +55,7 @@ class SensorArray :
         print "Resetting Redis state..."
         init_time = time.time()
         for ear in ['left','right']:
-            for sensor in range (0, 14):
+            for sensor in range (0, MAX_SLOTS):
                 r.set("reading_ear_"+str(ear)+":"+str(sensor),str(0))
                 r.set("time_ear_"+str(ear)+":"+str(sensor),str(init_time))
 
@@ -135,7 +136,6 @@ class LIDAR :
         self.adc = adc
         self.name = name
         self.slot = 0
-        self.max_slots = 15
         # initialise sensor via relevant I2C bus using TCA9548A multiplexer
         if not sim :
             self.sensor = VL53L0X.VL53L0X(TCA9548A_Num=self.adc,TCA9548A_Addr=0x70)
@@ -146,7 +146,7 @@ class LIDAR :
     def recordReading(self) :
         r.set("reading_ear_"+self.name+":"+str(self.slot),str(self.distance))
         r.set("time_ear_"+self.name+":"+str(self.slot),str(time.time()))
-        if self.slot < self.max_slots :
+        if self.slot < (MAX_SLOTS-1) :
             self.slot += 1
         else :
             self.slot = 0
