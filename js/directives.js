@@ -19,7 +19,7 @@ angular.module('K9.directives', [])
       }
 }])
 
-.directive('joystick',['NRInstruction', function(NRInstruction) {
+.directive('joystick',['NRInstruction','K9' function(NRInstruction,K9) {
 
     function joystickController ($scope) {
     }
@@ -33,8 +33,10 @@ angular.module('K9.directives', [])
             // the equals on its own denotes the same name
             position : '='
         },
-        template : '<svg id="joystick" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>',
+        template : '<svg id="joystick" version="1.1" xmlns="http://www.w3.org/2000/svg" height="200" width="200"></svg>',
         link : function(scope, element) {
+            // bring the K9 object into directive scope
+            $scope.k9 = K9;
             // declare rest position for joystick
             CENTRE_X = 100
             CENTRE_Y = 100
@@ -66,17 +68,41 @@ angular.module('K9.directives', [])
               fill = "none"
             });
 
-            // green in standard mode stroke: "#00ce5c"
-            // red in turbo mode ???
+            // Link the status of the Turbo button to then
+            // joystick picture being shown and the joystick
+            // appearance itself
+            scope.$watch('k9.motorctrl', function() {
+              if k9.motorctrl==true {
+                joystick.attr({
+                  fill = "green",
+                  cr = 20,
+                });
+                // also change which joystick shown
+              }
+              else {
+                joystick.attr({
+                  fill = "red",
+                  cr = 40,
+                });
+                // also change which joystick shown
+                // delete old joystick
+              }
+              });
+
+
+                          var joystick = Snap.load("img/Joystick Turbo.svg", onJoyLoaded);
+                          // Update joystick view
+                          function onJoyLoaded(data){
+                            j.append(data);
+                          }
+
+
 
             var move = function(dx, dy){
               console.log("Moving!");
-              scope.$apply(
-                  scope.joy_position = {
-                      x : joy_position.x + dx,
-                      y : joy_position.y + dy
-                  }
-              );
+              joy_position.x = joy_position.x + dx;
+              joy_position.y = joy_position.y + dy
+                  };
               this.attr({
                     cx: joy_position.x,
                     cy: joy_position.y
@@ -86,10 +112,6 @@ angular.module('K9.directives', [])
 
             var start = function() {
               console.log("Joystick touch detected");
-              // apply relevant color
-              this.attr({
-                stroke: "#00ce5c"
-              });
             }
 
             var stop = function() {
