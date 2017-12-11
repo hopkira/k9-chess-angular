@@ -1,15 +1,15 @@
 'use strict';
 
 // Import the interface to Tessel hardware
-const tessel = require('tessel');
+var tessel = require('tessel');
+var VL53L0X = require('tessel-vl53l0x');
 
-// Turn one of the LEDs on to start.
-tessel.led[2].on();
+var _vl53l0l = new VL53L0X(tessel.port.A);
 
-// Blink!
-setInterval(() => {
-  tessel.led[2].toggle();
-  tessel.led[3].toggle();
-}, 100);
+_vl53l0l.setSignalRateLimit(.05, () => {
+	_vl53l0l.startCapture();
+});
 
-console.log("I'm blinking! (Press CTRL + C to stop)");
+_vl53l0l.on('distance', function(data){
+	console.log("L: " + data);
+});

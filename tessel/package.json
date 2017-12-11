@@ -11,5 +11,8 @@
     "Tessel"
   ],
   "license": "MIT",
-  "readme": "A bare bones Tessel 2 blinky script."
+  "readme": "A bare bones Tessel 2 blinky script.",
+  "dependencies": {
+    "tessel-vl53l0x": "^1.0.6"
+  }
 }
