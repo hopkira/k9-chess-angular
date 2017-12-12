@@ -21,9 +21,7 @@ angular.module('K9.directives', [])
 .directive('joystick',['NRInstruction', function(NRInstruction) {
 
     function joystickController ($scope) {
-
     }
-
     return {
         restrict : 'E',
         controller : ['$scope', function ($scope) {

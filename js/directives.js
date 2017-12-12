@@ -13,13 +13,13 @@ angular.module('K9.directives', [])
         function(){return NodeREDConnection.status()},
         function(newVal,oldVal) {
           scope.icon = newVal;
-          // console.log("Indirective: " + newVal);
-          }
-        )}
+          // console.log("Indirective: " + newVal);}
+        })
       }
+    }
 }])
 
-.directive('joystick',['NRInstruction','K9' function(NRInstruction,K9) {
+.directive('joystick',['NRInstruction','K9', function(NRInstruction,K9) {
 
     function joystickController ($scope) {
     }
@@ -65,24 +65,24 @@ angular.module('K9.directives', [])
             joystick.attr({
               stroke: "none",  // NEED TO LINK TO TOGGLEVALUE
               strokeWidth: 10,
-              fill = "none"
+              fill : "none"
             });
 
             // Link the status of the Turbo button to then
             // joystick picture being shown and the joystick
             // appearance itself
             scope.$watch('k9.motorctrl', function() {
-              if k9.motorctrl==true {
+              if (k9.motorctrl==true) {
                 joystick.attr({
-                  fill = "green",
-                  cr = 20,
+                  fill : "green",
+                  cr : 20,
                 });
                 // also change which joystick shown
               }
               else {
                 joystick.attr({
-                  fill = "red",
-                  cr = 40,
+                  fill : "red",
+                  cr : 40,
                 });
                 // also change which joystick shown
                 // delete old joystick
@@ -90,19 +90,17 @@ angular.module('K9.directives', [])
               });
 
 
-                          var joystick = Snap.load("img/Joystick Turbo.svg", onJoyLoaded);
-                          // Update joystick view
-                          function onJoyLoaded(data){
-                            j.append(data);
-                          }
+            var joystick = Snap.load("img/Joystick Turbo.svg", onJoyLoaded);
 
-
+            // Update joystick view
+            function onJoyLoaded(data){
+                j.append(data);
+                }
 
             var move = function(dx, dy){
               console.log("Moving!");
               joy_position.x = joy_position.x + dx;
-              joy_position.y = joy_position.y + dy
-                  };
+              joy_position.y = joy_position.y + dy;
               this.attr({
                     cx: joy_position.x,
                     cy: joy_position.y
@@ -121,10 +119,10 @@ angular.module('K9.directives', [])
               joy_position.y = CENTRE_Y;
               send(joy_position);
             }
+
             // register the functions above against the Snap SVG drag movement
             joystick.drag(move,start,stop);
-        }
 
-    };
-
+    }
+  };
 }])

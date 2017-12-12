@@ -66,7 +66,7 @@ angular.module('K9.services', [])
         // until I work out how to stop bad loops happening!
         if (key=="lights" ||
             key=="screen" ||
-            key=="screen" ||
+            key=="eyes" ||
             key=="hover" ||
             key=="motorctrl")
             {
@@ -84,12 +84,11 @@ angular.module('K9.services', [])
       }
     }
     this.toggleValue = function (key,value) {
-      console.log("Key: "+key+" Value: "+value);
+      // console.log("Key: "+key+" Value: "+value);
       var text;
       var value;
-      console.log("This key: "+this.key);
       if (value==true) {text="on";} else {text="off";}
-      console.log("Browser sent "+key+" "+text);
+      // console.log("Browser sent "+key+" "+text);
       NRInstruction.send('toggle',key,text);
       }
 }])
@@ -119,7 +118,7 @@ angular.module('K9.services', [])
     catch(err) {
       alert("Not connected to K9 please check the settings");
     }
-    // console.log(message);
+    console.log(message);
   }
 }])
 

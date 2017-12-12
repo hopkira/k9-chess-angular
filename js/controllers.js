@@ -1,7 +1,7 @@
 angular.module('K9.controllers', [])
 
 // Controller for K9 Follow Me Tab
-.controller('FollowCtrl',["$scope","K9","NRInstruction","msgtoPoint", function($scope, K9, NRInstruction, msgtoPoint) {
+.controller('FollowCtrl',["$scope","K9","NRInstruction","msgtoPoint","NodeREDConnection", function($scope, K9, NRInstruction, msgtoPoint, NodeREDConnection) {
     // SVG
     var j = Snap("#k9joystick");
     var s = Snap("#k9sensors");
@@ -76,8 +76,19 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("MotorCtrl button sent "+value);
+        // console.log("MotorCtrl button sent "+value);
         NRInstruction.send('navigation', "motorctrl", value);
+    }
+
+    // sends mood from button clicks
+    $scope.buttonClick = function(event) {
+      NRInstruction.send('mood', event.target.id,'null');
+      }
+
+    $scope.connectToK9 = function(){
+      $scope.K9settings = NodeREDConnection.getSettings();
+      NodeREDConnection.connect($scope.K9settings);
+      $scope.connected = 'button button-balanced icon-left ion-locked';
     }
 
   // listens for and event from the Node Red Instruction service that
@@ -100,7 +111,7 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("Lights button sent "+value);
+        // console.log("Lights button sent "+value);
         NRInstruction.send('toggle', "lights", value);
     }
     $scope.changeHover = function (status) {
@@ -111,7 +122,7 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("Hover button sent "+value);
+        // console.log("Hover button sent "+value);
         NRInstruction.send('toggle', "hover", value);
     }
     $scope.changeEyes = function (status) {
@@ -122,7 +133,7 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("Eyes button sent "+value);
+        // console.log("Eyes button sent "+value);
         NRInstruction.send('toggle', "eyes", value);
     }
     $scope.changeScreen = function (status) {
@@ -133,7 +144,7 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("Screen button sent "+value);
+        // console.log("Screen button sent "+value);
         NRInstruction.send('toggle', "screen", value);
     }
     $scope.changeFollow = function (status) {
@@ -144,7 +155,7 @@ angular.module('K9.controllers', [])
           } else {
             value="off";
           };
-        console.log("Follow button sent "+value);
+        // console.log("Follow button sent "+value);
         NRInstruction.send('toggle', "follow", value);
     }
 }])
