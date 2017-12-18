@@ -19,6 +19,8 @@ import math    # import maths operations
 import random  # import random numbers
 import time    # enable sleep function
 
+sim = False
+
 # sim is a program wide flag to allow the program to run off the Raspberry Pi
 # this can be enabled by appending the word "test" to the command line
 if ( len(sys.argv) > 1 ) :
@@ -32,10 +34,27 @@ import redis
 r = redis.Redis(host='127.0.0.1',port=6379)
 MAX_SLOTS = 15
 
+# GPIO for left LIDAR shutdown pin
+left_LIDAR_shutdown = 20
+# GPIO for right LIDAR shutdown pin
+right_LIDAR_shutdown = 16
+
 # If running for real initialise servo driver, LIDARs and ADC
 if not sim :
     sys.path.append('/home/pi') # persistent import directory for K9 secrets
     sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persistent directory for Adafruit driver
+    print "Importing RPi GPIO and shutting down LIDAR..."
+    import RPi.GPIO as GPIO
+    GPIO.setwarnings(False)
+    # Setup GPIO for shutdown pins on each VL53L0X
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(left_LIDAR_shutdown, GPIO.OUT)
+    GPIO.setup(right_LIDAR_shutdown, GPIO.OUT)
+    # Set all shutdown pins low to turn off each VL53L0X
+    GPIO.output(left_LIDAR_shutdown, GPIO.LOW)
+    GPIO.output(right_LIDAR_shutdown, GPIO.LOW)
+    # Keep all low for 500 ms or so to make sure they reset
+    time.sleep(0.50)
     print "Importing servo driver library..."
     import Adafruit_PCA9685 # enable control of devices ear servos via Adafruit library
     print "Importing LIDAR driver library..."
@@ -43,7 +62,7 @@ if not sim :
     print "Importing ADC driver library..."
     from ADCPi import ADCPi # import the ADC Plus Pi library
     # Create ADC object
-    adc = ADCPi(0x68, 0x69, 12)
+    adc = ADCPi(0x69, 0x69, 12)
     # Create and intialise servo driver
     pwm = Adafruit_PCA9685.PCA9685()
     pwm.set_pwm_freq(60)
@@ -65,8 +84,8 @@ class K9Ears :
         """
         print "K9 object initialising..."
         # Create LIDAR sensor instances with different channels
-        self.left_ear = LIDAR(name="left",adc=1)
-        self.right_ear = LIDAR(name="right",adc=2)
+        self.left_ear = LIDAR(name="left",adc=5,gpio=left_LIDAR_shutdown,address=0x2B)
+        self.right_ear = LIDAR(name="right",adc=6,gpio=right_LIDAR_shutdown,address=0x2D)
         # Create a sensor array instance
         self.sensor_array = SensorArray()
         # Initialise the various measures that will control the ears
@@ -125,23 +144,30 @@ class K9Ears :
                 pwm.set_pwm(0, right_pwm_channel, self.mid.pwm)
 
 class LIDAR :
-    def __init__(self, name, adc) :
+    def __init__(self, name, adc, gpio, address) :
         """Initialise the VL530L0X that will be used by this LIDAR instance
 
         Arguments:
         name -- the name of the sensor e.g. left or right
-        adc -- this value will determine which I2C bus and ADC channel is used
-        when the sensor is queried
+        adc -- this value will determine which ADC channel is used
+        gpio -- the GPIO pin that controls the LIDAR shutdown
+        address -- the i2c address of the LIDAR itself
+        when the sensor is queried (also translates to I2C address)
         """
         self.adc = adc
         self.name = name
+        self.gpio = gpio
+        self.address = address
         self.slot = 0
         # initialise sensor via relevant I2C bus using TCA9548A multiplexer
         if not sim :
-            self.sensor = VL53L0X.VL53L0X(TCA9548A_Num=self.adc,TCA9548A_Addr=0x70)
+            self.sensor = VL53L0X.VL53L0X(address=self.address)
+            GPIO.output(self.gpio, GPIO.HIGH)
+            time.sleep(0.50)
             # start sensor ranging
             self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
-        print str(self.name) + " LIDAR instantiated."
+        print str(self.name) + " LIDAR instantiated at " + str(self.address) + " measured by ADC " + str(self.adc) + " and controlled by GPIO " + str(self.gpio)
+
 
     def recordReading(self) :
         r.set("reading_ear_"+self.name+":"+str(self.slot),str(self.distance))
@@ -180,5 +206,8 @@ try :
             print str((max_time)*1000) + " ms "
 
 except KeyboardInterrupt :
-    k9ears.left_ear.sensor.stop_ranging()
-    k9ears.right_ear.sensor.stop_ranging()
+    if not sim :
+        k9ears.left_ear.sensor.stop_ranging()
+        k9ears.right_ear.sensor.stop_ranging()
+        GPIO.output(left_LIDAR_shutdown, GPIO.LOW)
+        GPIO.output(right_LIDAR_shutdown, GPIO.LOW)
