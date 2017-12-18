@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# K9 Ear Controller
+# K9 Forward Sensors Controller
 #
 # authored by Richard Hopkins December 2017 for AoT Autonomy Team
 #
 # Licensed under The Unlicense, so free for public domain use
 #
 # This program turns K9's radar crisps into rotating LIDAR
-# sensors that can detect what is in front of the robot dog
-# The information in the sensors is stored in a Redis database
+# sensors that can detect what is in front of the robot dog.
+#
+# This data is supplemented by a stationary mouth sensor that permanently
+# detects what is front of the dog at ground level (thanks to the wonderful
+# Paul Booth for that particular idea!)
+#
+# The information from all the sensors is stored in a Redis database
 # in the Pi, so that the Python Motorcontroller can transmit the current state
 # to the browser via Node-RED
 #
@@ -35,9 +40,10 @@ r = redis.Redis(host='127.0.0.1',port=6379)
 MAX_SLOTS = 15
 
 # GPIO for left LIDAR shutdown pin
-left_LIDAR_shutdown = 20
+left_LIDAR_shutdown = 16
 # GPIO for right LIDAR shutdown pin
-right_LIDAR_shutdown = 16
+right_LIDAR_shutdown = 20
+mouth_LIDAR_shutdown = 21
 
 # If running for real initialise servo driver, LIDARs and ADC
 if not sim :
@@ -50,9 +56,11 @@ if not sim :
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(left_LIDAR_shutdown, GPIO.OUT)
     GPIO.setup(right_LIDAR_shutdown, GPIO.OUT)
+    GPIO.setup(mouth_LIDAR_shutdown, GPIO.OUT)
     # Set all shutdown pins low to turn off each VL53L0X
     GPIO.output(left_LIDAR_shutdown, GPIO.LOW)
     GPIO.output(right_LIDAR_shutdown, GPIO.LOW)
+    GPIO.output(mouth_LIDAR_shutdown, GPIO.LOW)
     # Keep all low for 500 ms or so to make sure they reset
     time.sleep(0.50)
     print "Importing servo driver library..."
@@ -62,7 +70,7 @@ if not sim :
     print "Importing ADC driver library..."
     from ADCPi import ADCPi # import the ADC Plus Pi library
     # Create ADC object
-    adc = ADCPi(0x69, 0x69, 12)
+    adc = ADCPi(0x68, 0x69, 12)
     # Create and intialise servo driver
     pwm = Adafruit_PCA9685.PCA9685()
     pwm.set_pwm_freq(60)
@@ -73,19 +81,21 @@ class SensorArray :
         """
         print "Resetting Redis state..."
         init_time = time.time()
-        for ear in ['left','right']:
+        for s in ['ear_left','ear_right','mouth']:
             for sensor in range (0, MAX_SLOTS):
-                r.set("reading_ear_"+str(ear)+":"+str(sensor),str(0))
-                r.set("time_ear_"+str(ear)+":"+str(sensor),str(init_time))
+                r.set("reading_"+str(s)+":"+str(sensor),str(0))
+                r.set("time_"+str(s)+":"+str(sensor),str(init_time))
+                r.set("direction_"+str(s)+":"+str(sensor),str(0))
 
-class K9Ears :
+class K9ForwardSensors :
     def __init__(self) :
         """Creates two LIDAR instances, one for each ear and a sensor array.
         """
         print "K9 object initialising..."
         # Create LIDAR sensor instances with different channels
-        self.left_ear = LIDAR(name="left",adc=5,gpio=left_LIDAR_shutdown,address=0x2B)
-        self.right_ear = LIDAR(name="right",adc=6,gpio=right_LIDAR_shutdown,address=0x2D)
+        self.left_ear = LIDAR(name="ear_left",adc=5,gpio=left_LIDAR_shutdown,address=0x30)
+        self.right_ear = LIDAR(name="ear_right",adc=6,gpio=right_LIDAR_shutdown,address=0x31)
+        self.mouth = LIDAR(name="mouth",adc=99,gpio=mouth_LIDAR_shutdown,address=0x32)
         # Create a sensor array instance
         self.sensor_array = SensorArray()
         # Initialise the various measures that will control the ears
@@ -113,6 +123,10 @@ class K9Ears :
     def makeReading(self) :
         """Controls the movement of the ears based on robot speed
         """
+        # make reading from mouth sensor
+        self.mouth.makeReading()
+        self.mouth.recordReading()
+        #make reading from ear sensors
         self.forward_speed = self.getForwardSpeed()
         # if the robot is moving forward, then work out what
         # the boundaries should be for the potentiometer and pwm
@@ -168,10 +182,10 @@ class LIDAR :
             self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
         print str(self.name) + " LIDAR instantiated at " + str(self.address) + " measured by ADC " + str(self.adc) + " and controlled by GPIO " + str(self.gpio)
 
-
     def recordReading(self) :
-        r.set("reading_ear_"+self.name+":"+str(self.slot),str(self.distance))
-        r.set("time_ear_"+self.name+":"+str(self.slot),str(time.time()))
+        r.set("distance_"+self.name+":"+str(self.slot),str(self.distance))
+        r.set("time_"+self.name+":"+str(self.slot),str(time.time()))
+        r.set("direction_"+self.name+":"+str(self.slot),str(self.direction))
         if self.slot < (MAX_SLOTS-1) :
             self.slot += 1
         else :
@@ -189,17 +203,20 @@ class LIDAR :
         # get distance from LIDAR sensor
         if not sim :
             self.distance = self.sensor.get_distance()
-            self.direction = adc.read_voltage(self.adc)
+            if (self.adc == 99) :
+                self.direction = 99
+            else :
+                self.direction = adc.read_voltage(self.adc)
         else :
             self.distance = random.uniform(0,1200)
             self.direction = random.uniform(0,5)
         # print str(self.name) + " reads: " + str(self.distance) + " at an angle of " + str(self.direction)
 
 try :
-    k9ears = K9Ears()
+    k9sensors = K9ForwardSensors()
     max_time = 0
     while True :
-        k9ears.makeReading()
+        k9sensors.makeReading()
         elapsed_time = time.time()-float(r.get("time_ear_left:0"))
         if elapsed_time > max_time :
             max_time = elapsed_time
@@ -207,7 +224,8 @@ try :
 
 except KeyboardInterrupt :
     if not sim :
-        k9ears.left_ear.sensor.stop_ranging()
-        k9ears.right_ear.sensor.stop_ranging()
+        k9sensors.left_ear.sensor.stop_ranging()
+        k9sensors.right_ear.sensor.stop_ranging()
+        k9sensors.mouth.sensor.stop_ranging()
         GPIO.output(left_LIDAR_shutdown, GPIO.LOW)
         GPIO.output(right_LIDAR_shutdown, GPIO.LOW)
