@@ -68,9 +68,10 @@ if not sim :
     print "Importing LIDAR driver library..."
     import VL53L0X # enable control of LIDAR sesnsors
     print "Importing ADC driver library..."
-    from ADCPi import ADCPi # import the ADC Plus Pi library
+    import Adafruit_ADS1x15
     # Create ADC object
-    adc = ADCPi(0x68, 0x69, 12)
+    adc = Adafruit_ADS1x15.ADS1115()
+    GAIN = 1
     # Create and intialise servo driver
     pwm = Adafruit_PCA9685.PCA9685()
     pwm.set_pwm_freq(60)
@@ -93,8 +94,8 @@ class K9ForwardSensors :
         """
         print "K9 object initialising..."
         # Create LIDAR sensor instances with different channels
-        self.left_ear = LIDAR(name="ear_left",adc=5,gpio=left_LIDAR_shutdown,address=0x30)
-        self.right_ear = LIDAR(name="ear_right",adc=6,gpio=right_LIDAR_shutdown,address=0x31)
+        self.left_ear = LIDAR(name="ear_left",adc=1,gpio=left_LIDAR_shutdown,address=0x30)
+        self.right_ear = LIDAR(name="ear_right",adc=2,gpio=right_LIDAR_shutdown,address=0x31)
         self.mouth = LIDAR(name="mouth",adc=99,gpio=mouth_LIDAR_shutdown,address=0x32)
         # Create a sensor array instance
         self.sensor_array = SensorArray()
@@ -206,7 +207,7 @@ class LIDAR :
             if (self.adc == 99) :
                 self.direction = 99
             else :
-                self.direction = adc.read_voltage(self.adc)
+                self.direction = adc.read_adc(self.adc,gain=GAIN)
         else :
             self.distance = random.uniform(0,1200)
             self.direction = random.uniform(0,5)
