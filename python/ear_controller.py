@@ -87,6 +87,8 @@ class SensorArray :
                 r.set("reading_"+str(s)+":"+str(sensor),str(0))
                 r.set("time_"+str(s)+":"+str(sensor),str(init_time))
                 r.set("direction_"+str(s)+":"+str(sensor),str(0))
+        r.set("left",str(0.0))
+        r.set("right",str(0.0))
 
 class K9ForwardSensors :
     def __init__(self) :
