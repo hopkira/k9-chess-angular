@@ -6,7 +6,7 @@ The root directory contains some frequently requested design documents and plans
 # Directory Structure
 
 ## chess
-Chess profiler by the amazing Maris Van Spring!
+Chess profiler by the amazing Maris Van Sprang!
 
 ## css
 CSS files for end user interface largely generated and maintained by Ionic
