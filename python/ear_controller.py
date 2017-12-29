@@ -45,7 +45,7 @@ left_LIDAR_shutdown = 16
 right_LIDAR_shutdown = 20
 mouth_LIDAR_shutdown = 21
 
-focus = 0.78
+focus = 0.5
 
 # If running for real initialise servo driver, LIDARs and ADC
 if not sim :
@@ -67,8 +67,8 @@ if not sim :
     time.sleep(0.50)
     print "Importing servo driver library..."
     import Adafruit_PCA9685 # enable control of devices ear servos via Adafruit library
-    print "Importing LIDAR driver library..."
-    import VL53L0X # enable control of LIDAR sesnsors
+    #print "Importing LIDAR driver library..."
+    #import VL53L0X # enable control of LIDAR sesnsors
     print "Importing ADC driver library..."
     import Adafruit_ADS1x15
     # Create ADC object
@@ -77,6 +77,10 @@ if not sim :
     # Create and intialise servo driver
     pwm = Adafruit_PCA9685.PCA9685()
     pwm.set_pwm_freq(60)
+    pwm.set_pwm(4,0,125)
+    pwm.set_pwm(5,0,615)
+
+    
 
 class SensorArray :
     def __init__(self) :
@@ -98,8 +102,8 @@ class K9ForwardSensors :
         """
         print "K9 object initialising..."
         # Create LIDAR sensor instances with different channels
-        self.left_ear = LIDAR(name="ear_left",adc=1,gpio=left_LIDAR_shutdown,address=0x30)
-        self.right_ear = LIDAR(name="ear_right",adc=2,gpio=right_LIDAR_shutdown,address=0x31)
+        self.left_ear = LIDAR(name="ear_left",adc=0,gpio=left_LIDAR_shutdown,address=0x30)
+        self.right_ear = LIDAR(name="ear_right",adc=1,gpio=right_LIDAR_shutdown,address=0x31)
         self.mouth = LIDAR(name="mouth",adc=99,gpio=mouth_LIDAR_shutdown,address=0x32)
         # Create a sensor array instance
         self.sensor_array = SensorArray()
@@ -108,10 +112,10 @@ class K9ForwardSensors :
         self.min_pwm = 140
         self.mid_pwm = 370
         self.max_pwm = 600
-        self.max_l_pot = 18640
-        self.mid_r_pot = 12147
-        self.mid_l_pot = 11785
-        self.min_r_pot = 4460
+        self.max_l_pot = 16776
+        self.mid_r_pot = 10932
+        self.mid_l_pot = 12963
+        self.min_r_pot = 4906
         self.left_pwm_channel = 4
         self.right_pwm_channel = 5
 
@@ -146,22 +150,27 @@ class K9ForwardSensors :
         self.right_pot_tgt = self.mid_r_pot - (focus*self.percent*(self.mid_r_pot-self.min_r_pot))
         self.left_pwm_tgt = self.mid_pwm + (focus*self.percent*(self.max_pwm - self.mid_pwm))
         self.right_pwm_tgt = self.mid_pwm - (focus*self.percent*(self.mid_pwm - self.min_pwm))
+        print ("LT:"+str(self.left_pot_tgt)+" RT:"+str(self.right_pot_tgt)+" pLT:"+str(self.left_pwm_tgt)+" pRT:"+str(self.right_pwm_tgt))
         # Make a reading with the left ear to determine distance and direction
         self.left_ear.makeReading()
         self.left_ear.recordReading()
         # Make a reading with the right ear to determine distance and direction
         self.right_ear.makeReading()
         self.right_ear.recordReading()
+        print ("LA:"+str(self.left_ear.direction)+" RA:"+str(self.right_ear.direction))
         # If both ears are outside the boundaries over which they are meant to move
         # then reverse their direction of travel
-        if ((self.left_ear.direction < self.left_pot_tgt) & (self.right_ear.direction > self.right_pot_tgt)) :
+        if ((self.left_ear.direction < self.left_pot_tgt) or (self.right_ear.direction > self.right_pot_tgt)) :
             if not sim :
-                pwm.set_pwm(0, left_pwm_channel, self.max_pwm)
-                pwm.set_pwm(0, right_pwm_channel, self.min_pwm)
-        if ((self.left_ear.direction > self.max_l_pot) & (self.right_ear.direction < self.min_r_pot)) :
+                pwm.set_pwm(self.left_pwm_channel,0, self.max_pwm)
+                pwm.set_pwm(self.right_pwm_channel,0, self.min_pwm)
+                print("Flip L in towards: " + str(self.max_pwm) + ", R in towards: " + str(self.min_pwm))
+        if ((self.left_ear.direction > self.max_l_pot) or (self.right_ear.direction < self.min_r_pot)) :
             if not sim :
-                pwm.set_pwm(0, left_pwm_channel, self.left_pwm_tgt)
-                pwm.set_pwm(0, right_pwm_channel, self.right_pwm_tgt)
+                pwm.set_pwm(self.left_pwm_channel,0, int(self.left_pwm_tgt))
+                pwm.set_pwm(self.right_pwm_channel,0, int(self.right_pwm_tgt))
+                print("Flip L out towards: " + str(self.left_pwm_tgt) + ", R out towards: " + str(self.right_pwm_tgt))
+
 
 class LIDAR :
     def __init__(self, name, adc, gpio, address) :
