@@ -45,6 +45,8 @@ left_LIDAR_shutdown = 16
 right_LIDAR_shutdown = 20
 mouth_LIDAR_shutdown = 21
 
+focus = 0.78
+
 # If running for real initialise servo driver, LIDARs and ADC
 if not sim :
     sys.path.append('/home/pi') # persistent import directory for K9 secrets
@@ -103,12 +105,13 @@ class K9ForwardSensors :
         self.sensor_array = SensorArray()
         # Initialise the various measures that will control the ears
         # the pwm settings control the target directions of the ears
-        self.min_pwm = 200
-        self.mid_pwm = 400
+        self.min_pwm = 140
+        self.mid_pwm = 370
         self.max_pwm = 600
-        self.min_pot = 0.78
-        self.mid_pot = 1.65
-        self.max_pot = 3.13
+        self.max_l_pot = 18640
+        self.mid_r_pot = 12147
+        self.mid_l_pot = 11785
+        self.min_r_pot = 4460
         self.left_pwm_channel = 4
         self.right_pwm_channel = 5
 
@@ -139,10 +142,10 @@ class K9ForwardSensors :
             self.percent = min(1,self.forward_speed)
         else:
             self.percent = 0
-        self.left_pot_edge = self.mid_pot + (self.percent*(self.max_pot - self.mid_pot))
-        self.right_pot_edge = self.mid_pot - (self.percent*(self.mid_pot-self.min_pot))
-        self.left_pwm_edge = self.mid_pwm + (self.percent*(self.max_pwm - self.mid_pwm))
-        self.right_pwm_edge = self.mid_pwm - (self.percent*(self.mid_pwm-self.min_pwm))
+        self.left_pot_tgt = self.mid_l_pot + (focus*self.percent*(self.max_l_pot - self.mid_l_pot))
+        self.right_pot_tgt = self.mid_r_pot - (focus*self.percent*(self.mid_r_pot-self.min_r_pot))
+        self.left_pwm_tgt = self.mid_pwm + (focus*self.percent*(self.max_pwm - self.mid_pwm))
+        self.right_pwm_tgt = self.mid_pwm - (focus*self.percent*(self.mid_pwm - self.min_pwm))
         # Make a reading with the left ear to determine distance and direction
         self.left_ear.makeReading()
         self.left_ear.recordReading()
@@ -151,14 +154,14 @@ class K9ForwardSensors :
         self.right_ear.recordReading()
         # If both ears are outside the boundaries over which they are meant to move
         # then reverse their direction of travel
-        if ((self.left_ear.direction < self.mid_pot) & (self.right_ear.direction > self.mid_pot)) :
+        if ((self.left_ear.direction < self.left_pot_tgt) & (self.right_ear.direction > self.right_pot_tgt)) :
             if not sim :
                 pwm.set_pwm(0, left_pwm_channel, self.max_pwm)
                 pwm.set_pwm(0, right_pwm_channel, self.min_pwm)
-        if ((self.left_ear.direction > self.max_pot) & (self.right_ear.direction < self.min_pot)) :
+        if ((self.left_ear.direction > self.max_l_pot) & (self.right_ear.direction < self.min_r_pot)) :
             if not sim :
-                pwm.set_pwm(0, left_pwm_channel, self.mid_pwm)
-                pwm.set_pwm(0, right_pwm_channel, self.mid.pwm)
+                pwm.set_pwm(0, left_pwm_channel, self.left_pwm_tgt)
+                pwm.set_pwm(0, right_pwm_channel, self.right_pwm_tgt)
 
 class LIDAR :
     def __init__(self, name, adc, gpio, address) :
@@ -176,13 +179,13 @@ class LIDAR :
         self.gpio = gpio
         self.address = address
         self.slot = 0
-        # initialise sensor via relevant I2C bus using TCA9548A multiplexer
+        # initialise sensor via I2C and GPIO shutdown pin
         if not sim :
-            self.sensor = VL53L0X.VL53L0X(address=self.address)
+            #self.sensor = VL53L0X.VL53L0X(address=self.address)
             GPIO.output(self.gpio, GPIO.HIGH)
             time.sleep(0.50)
             # start sensor ranging
-            self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
+            #self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
         print str(self.name) + " LIDAR instantiated at " + str(self.address) + " measured by ADC " + str(self.adc) + " and controlled by GPIO " + str(self.gpio)
 
     def recordReading(self) :
@@ -205,7 +208,8 @@ class LIDAR :
         self.time=time
         # get distance from LIDAR sensor
         if not sim :
-            self.distance = self.sensor.get_distance()
+            #self.distance = self.sensor.get_distance()
+            self.distance = random.uniform(0,1200) # TEMPORARY FOR TESTING
             if (self.adc == 99) :
                 self.direction = 99
             else :
@@ -227,8 +231,9 @@ try :
 
 except KeyboardInterrupt :
     if not sim :
-        k9sensors.left_ear.sensor.stop_ranging()
-        k9sensors.right_ear.sensor.stop_ranging()
-        k9sensors.mouth.sensor.stop_ranging()
+        #k9sensors.left_ear.sensor.stop_ranging()
+        #k9sensors.right_ear.sensor.stop_ranging()
+        #k9sensors.mouth.sensor.stop_ranging()
         GPIO.output(left_LIDAR_shutdown, GPIO.LOW)
         GPIO.output(right_LIDAR_shutdown, GPIO.LOW)
+        GPIO.output(mouth_LIDAR_shutdown, GPIO.LOW)
