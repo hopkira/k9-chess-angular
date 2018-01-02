@@ -40,10 +40,10 @@ r = redis.Redis(host='127.0.0.1',port=6379)
 MAX_SLOTS = 15
 
 # GPIO for left LIDAR shutdown pin
-left_LIDAR_shutdown = 16
+mouth_LIDAR_shutdown = 16
 # GPIO for right LIDAR shutdown pin
 right_LIDAR_shutdown = 20
-mouth_LIDAR_shutdown = 21
+left_LIDAR_shutdown = 21
 
 focus = 0.5
 
@@ -67,8 +67,8 @@ if not sim :
     time.sleep(0.50)
     print "Importing servo driver library..."
     import Adafruit_PCA9685 # enable control of devices ear servos via Adafruit library
-    #print "Importing LIDAR driver library..."
-    #import VL53L0X # enable control of LIDAR sesnsors
+    print "Importing LIDAR driver library..."
+    import VL53L0X # enable control of LIDAR sesnsors
     print "Importing ADC driver library..."
     import Adafruit_ADS1x15
     # Create ADC object
@@ -104,7 +104,7 @@ class K9ForwardSensors :
         # Create LIDAR sensor instances with different channels
         self.left_ear = LIDAR(name="ear_left",adc=0,gpio=left_LIDAR_shutdown,address=0x30)
         self.right_ear = LIDAR(name="ear_right",adc=1,gpio=right_LIDAR_shutdown,address=0x31)
-        self.mouth = LIDAR(name="mouth",adc=99,gpio=mouth_LIDAR_shutdown,address=0x32)
+        #self.mouth = LIDAR(name="mouth",adc=99,gpio=mouth_LIDAR_shutdown,address=0x32)
         # Create a sensor array instance
         self.sensor_array = SensorArray()
         # Initialise the various measures that will control the ears
@@ -134,8 +134,8 @@ class K9ForwardSensors :
         """Controls the movement of the ears based on robot speed
         """
         # make reading from mouth sensor
-        self.mouth.makeReading()
-        self.mouth.recordReading()
+        #self.mouth.makeReading()
+        #self.mouth.recordReading()
         #make reading from ear sensors
         self.forward_speed = self.getForwardSpeed()
         # if the robot is moving forward, then work out what
@@ -150,26 +150,26 @@ class K9ForwardSensors :
         self.right_pot_tgt = self.mid_r_pot - (focus*self.percent*(self.mid_r_pot-self.min_r_pot))
         self.left_pwm_tgt = self.mid_pwm + (focus*self.percent*(self.max_pwm - self.mid_pwm))
         self.right_pwm_tgt = self.mid_pwm - (focus*self.percent*(self.mid_pwm - self.min_pwm))
-        print ("LT:"+str(self.left_pot_tgt)+" RT:"+str(self.right_pot_tgt)+" pLT:"+str(self.left_pwm_tgt)+" pRT:"+str(self.right_pwm_tgt))
+        #print ("LT:"+str(self.left_pot_tgt)+" RT:"+str(self.right_pot_tgt)+" pLT:"+str(self.left_pwm_tgt)+" pRT:"+str(self.right_pwm_tgt))
         # Make a reading with the left ear to determine distance and direction
         self.left_ear.makeReading()
         self.left_ear.recordReading()
         # Make a reading with the right ear to determine distance and direction
         self.right_ear.makeReading()
         self.right_ear.recordReading()
-        print ("LA:"+str(self.left_ear.direction)+" RA:"+str(self.right_ear.direction))
+        #print ("LA:"+str(self.left_ear.direction)+" RA:"+str(self.right_ear.direction))
         # If both ears are outside the boundaries over which they are meant to move
         # then reverse their direction of travel
         if ((self.left_ear.direction < self.left_pot_tgt) or (self.right_ear.direction > self.right_pot_tgt)) :
             if not sim :
                 pwm.set_pwm(self.left_pwm_channel,0, self.max_pwm)
                 pwm.set_pwm(self.right_pwm_channel,0, self.min_pwm)
-                print("Flip L in towards: " + str(self.max_pwm) + ", R in towards: " + str(self.min_pwm))
+                #print("Flip L in towards: " + str(self.max_pwm) + ", R in towards: " + str(self.min_pwm))
         if ((self.left_ear.direction > self.max_l_pot) or (self.right_ear.direction < self.min_r_pot)) :
             if not sim :
                 pwm.set_pwm(self.left_pwm_channel,0, int(self.left_pwm_tgt))
                 pwm.set_pwm(self.right_pwm_channel,0, int(self.right_pwm_tgt))
-                print("Flip L out towards: " + str(self.left_pwm_tgt) + ", R out towards: " + str(self.right_pwm_tgt))
+                #print("Flip L out towards: " + str(self.left_pwm_tgt) + ", R out towards: " + str(self.right_pwm_tgt))
 
 
 class LIDAR :
@@ -190,17 +190,18 @@ class LIDAR :
         self.slot = 0
         # initialise sensor via I2C and GPIO shutdown pin
         if not sim :
-            #self.sensor = VL53L0X.VL53L0X(address=self.address)
+            self.sensor = VL53L0X.VL53L0X(address=self.address)
             GPIO.output(self.gpio, GPIO.HIGH)
             time.sleep(0.50)
             # start sensor ranging
-            #self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
+            self.sensor.start_ranging(VL53L0X.VL53L0X_LONG_RANGE_MODE)
         print str(self.name) + " LIDAR instantiated at " + str(self.address) + " measured by ADC " + str(self.adc) + " and controlled by GPIO " + str(self.gpio)
 
     def recordReading(self) :
         r.set("distance_"+self.name+":"+str(self.slot),str(self.distance))
         r.set("time_"+self.name+":"+str(self.slot),str(time.time()))
         r.set("direction_"+self.name+":"+str(self.slot),str(self.direction))
+        print("dist_"+str(self.name)+": "+str(self.distance)+"mm at bearing: "+str(self.direction))
         if self.slot < (MAX_SLOTS-1) :
             self.slot += 1
         else :
@@ -217,8 +218,8 @@ class LIDAR :
         self.time=time
         # get distance from LIDAR sensor
         if not sim :
-            #self.distance = self.sensor.get_distance()
-            self.distance = random.uniform(0,1200) # TEMPORARY FOR TESTING
+            self.distance = self.sensor.get_distance()
+            #self.distance = random.uniform(0,1200) # TEMPORARY FOR TESTING
             if (self.adc == 99) :
                 self.direction = 99
             else :
@@ -240,8 +241,8 @@ try :
 
 except KeyboardInterrupt :
     if not sim :
-        #k9sensors.left_ear.sensor.stop_ranging()
-        #k9sensors.right_ear.sensor.stop_ranging()
+        k9sensors.left_ear.sensor.stop_ranging()
+        k9sensors.right_ear.sensor.stop_ranging()
         #k9sensors.mouth.sensor.stop_ranging()
         GPIO.output(left_LIDAR_shutdown, GPIO.LOW)
         GPIO.output(right_LIDAR_shutdown, GPIO.LOW)
