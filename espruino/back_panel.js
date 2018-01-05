@@ -16,7 +16,7 @@ Richard Hopkins, 4th January 2018
 
 // set up USB connector to send messages to Pi via
 // serial over USB
-USB.setup(115200,{bytesize:8,stopbits:1,parity:none});
+USB.setup(115200,{bytesize:8,stopbits:1});
 
 // this array of objects represent the Sharp infrared
 // sensors built into the back panel
@@ -55,26 +55,8 @@ function IRReading() {
     sensorName = sensors[sensor].sensorName;
     reading = analogRead(adcPin);
     distance = convertPin2m(reading);
-    angle = str(sensors[sensor].angle);
+    angle = String(sensors[sensor].angle);
     sendMsg("sensor",sensorName,distance,angle);
-    }
-}
-
-// this loop registers a separate rising and falling watcher for each
-// of the switch buttons.  When activated they will send an 'on' of 'off' message
-// to the Raspberry Pi via the USB serial connection
-function BackPanelSwitches() {
-  for (var sw=0; sw < numSwitches; switch++) {
-    switchPin= new Pin(switches[sw].pinName);
-    switchName = switches[sw].switchName;
-    pinMode(switchPin,"input_pulldown");
-    // the debounce function X
-    setWatch(function() {
-      sendMsg("switch",switchName,"on",999);
-    },switchPin,{ repeat: true, debounce : 50, edge: "rising" });
-    setWatch(function() {
-      sendMsg("switch",switchName,"off",999);
-    },switchPin,{ repeat: true, debounce : 50, edge: "falling" });
     }
 }
 
@@ -96,3 +78,19 @@ function sendMsg(type,sensor,distance,angle) {
   }
 
 var i = setInterval(IRReading, 200);
+
+// this loop registers a separate rising and falling watcher for each
+// of the switch buttons.  When activated they will send an 'on' of 'off' message
+// to the Raspberry Pi via the USB serial connection
+for (var sw=0; sw < numSwitches; sw++) {
+  switchPin= new Pin(switches[sw].pinName);
+  switchName = switches[sw].switchName;
+  pinMode(switchPin,"input_pulldown");
+  // the debounce number stops multiple events being raised
+  setWatch(function() {
+    sendMsg("switch",switchName,"on",999);
+    },switchPin,{ repeat: true, debounce : 50, edge: "rising" });
+  setWatch(function() {
+      sendMsg("switch",switchName,"off",999);
+    },switchPin,{ repeat: true, debounce : 50, edge: "falling" });
+}
