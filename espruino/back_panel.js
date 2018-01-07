@@ -1,8 +1,12 @@
 /*
-Simple espruino program to manage the twelve buttons on the back panel
-and to provide proximity readings from the five IR sensors
+Simple espruino program for the back panel that:
+   - interfaces to the on/off buttons on the back panel
+   - interfaces to the touch sensors on his head and back
+   - provides proximity readings from the five IR sensors
 
 When a button is turned on or off, a message will be sent to node-RED.
+
+When someone touches K9's back or head, a message will be sent to node-RED.
 
 Every 200 ms the IR sensors will be polled for a reading and sent to node-RED.
 
@@ -11,7 +15,7 @@ serial connection over a USB cable.
 
 Published under The Unlicense
 
-Richard Hopkins, 4th January 2018
+Richard Hopkins, 7th January 2018
 */
 
 // set up USB connector to send messages to Pi via
@@ -45,6 +49,13 @@ var switches=[
   {switchName:"r3_c4",pinName:"B15"}
 ];
 var numSwitches=switches.length;
+
+// The array of touch switch objects used to associate buttons to pin names
+var touchswitches=[
+  {switchName:"touch_head",pinName:"C10"},
+  {switchName:"touch_back",pinName:"C11"},
+];
+var numTouchSwitches=touchswitches.length;
 
 // this function will scan all the array of sensors
 // objects and will send a message to the Raspberry Pi
@@ -92,5 +103,23 @@ for (var sw=0; sw < numSwitches; sw++) {
     },switchPin,{ repeat: true, debounce : 50, edge: "rising" });
   setWatch(function() {
       sendMsg("switch",switchName,"off",999);
+    },switchPin,{ repeat: true, debounce : 50, edge: "falling" });
+}
+
+// this loop registers a separate rising and falling watcher for each
+// of the touch switches.  When activated they will send an 'on' of 'off' message
+// to the Raspberry Pi via the USB serial connection
+// the touchswitches are pulled low when activated, so we need
+// to pull the pin up
+for (var ts=0; ts < numTouchSwitches; ts++) {
+  touchPin= new Pin(touchswitches[ts].pinName);
+  switchName = touchswitches[ts].switchName;
+  pinMode(switchPin,"input_pullup");
+  // the debounce number stops multiple events being raised
+  setWatch(function() {
+    sendMsg("switch",switchName,"off",999);
+    },switchPin,{ repeat: true, debounce : 50, edge: "rising" });
+  setWatch(function() {
+      sendMsg("switch",switchName,"on",999);
     },switchPin,{ repeat: true, debounce : 50, edge: "falling" });
 }
