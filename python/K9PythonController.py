@@ -25,6 +25,11 @@ import time    # enable sleep function
 sys.path.append('/home/pi') # persistent import directory for K9 secrets
 sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persistent directory for Adafruit driver
 
+print "Importing Redis library..."
+import redis
+# Connect to a local Redis server
+r = redis.Redis(host='127.0.0.1',port=6379)
+
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
 sim = False # by default run as a real motor controller
@@ -109,15 +114,39 @@ class Motor :
       if not sim :
          if self.name == "left" :
             self.clicks = rc.ReadSpeedM1(rc_address)
+            self.encoder_raw = rc.ReadEncM1(rc_address)
          elif self.name == "right" :
             self.clicks = rc.ReadSpeedM2(rc_address)
+            self.encoder_raw = rc.ReadEncM2(rc_address)
          else:
             print "Unknown motor"
             self.speed = 0
+            self.encoder = 0
          self.speed = int(self.clicks[1] / self.QPPS)
+         self.encoder = int(self.encoder_raw[2])
       else:
          self.speed = self.target
-      print "Actual: " + str(self.name) + " at " + str(self.speed)
+         self.encoder = self.encoder + self.speed
+      print str(self.name) + " speed: " + str(self.speed)
+      print str(self.name) + " encoder: " + str(self.encoder)
+      #
+      # Store actual speed and distance in Redis
+      # but keep a record of the last reading
+      #
+      # Create a transactional pipeline to store new message, this will be closed
+      # and committed by the pipe.execute() command
+      #
+      self.pipe = r.pipeline(transaction=True)
+      self.pipe.set(self.name+":speed:old") = self.pipe.get(self.name + ":speed:now")
+      self.pipe.set(self.name+":time:old") = self.pipe.get(self.name + ":time:now")
+      self.pipe.set(self.name+":encoder:old") = self.pipe.get(self.name + ":encoder:now")
+      # Store the whole of the message as a hash value
+      self.pipe.set(self.name + ":speed:now",str(self.speed))
+      self.pipe.set(self.name + ":time:now",str(str(time.time()))
+      self.pipe.set(self.name + ":encoder:now",str(self.encoder)
+      # Execute all of the above as part of a single transactional interaction with the
+      # Redis server
+      pipe.execute() 
       return self.speed
 
    def setTargetSpeed(self, target) :

@@ -80,7 +80,7 @@ if not sim :
     pwm.set_pwm(4,0,125)
     pwm.set_pwm(5,0,615)
 
-    
+
 
 class SensorArray :
     def __init__(self) :
@@ -121,11 +121,11 @@ class K9ForwardSensors :
 
     def getForwardSpeed(self) :
         if sim :
-            r.set("left", random.uniform(-100,100))
-            r.set("right", random.uniform(-100,100))
+            r.set("left:speed:now", random.uniform(-100,100))
+            r.set("right:speed:now", random.uniform(-100,100))
         # retrieve current actual robot speed from Redis
-        self.left_speed=float(r.get("left"))
-        self.right_speed=float(r.get("right"))
+        self.left_speed=float(r.get("left:speed:now"))
+        self.right_speed=float(r.get("right:speed:now"))
         # forward speed will be the average of the two
         # then convert into a percentage of maximum speed (100)
         return ((self.left_speed + self.right_speed)/200)
