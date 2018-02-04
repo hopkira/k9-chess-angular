@@ -84,7 +84,7 @@ function convertPin2m(pinreading) {
 // this function is used by the IR sensors and back panel switches to
 // send a message to the Rapsberry Pi via a USB serial connection
 function sendMsg(type,sensor,distance,angle) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}!');
+  message = String('{"message":{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}}!');
   USB.print(message);
   }
 

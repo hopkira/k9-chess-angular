@@ -21,14 +21,17 @@ import os      # enables access to environment variables
 import math    # import maths operations
 import random  # import random numbers
 import time    # enable sleep function
+import memory  # import K9 memory functions using Redis
 
 sys.path.append('/home/pi') # persistent import directory for K9 secrets
 sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persistent directory for Adafruit driver
 
+'''
 print "Importing Redis library..."
 import redis
 # Connect to a local Redis server
 r = redis.Redis(host='127.0.0.1',port=6379)
+'''
 
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
@@ -129,24 +132,9 @@ class Motor :
          self.encoder = self.encoder + self.speed
       print str(self.name) + " speed: " + str(self.speed)
       print str(self.name) + " encoder: " + str(self.encoder)
-      #
-      # Store actual speed and distance in Redis
-      # but keep a record of the last reading
-      #
-      # Create a transactional pipeline to store new message, this will be closed
-      # and committed by the pipe.execute() command
-      #
-      self.pipe = r.pipeline(transaction=True)
-      self.pipe.set(self.name+":speed:old") = self.pipe.get(self.name + ":speed:now")
-      self.pipe.set(self.name+":time:old") = self.pipe.get(self.name + ":time:now")
-      self.pipe.set(self.name+":encoder:old") = self.pipe.get(self.name + ":encoder:now")
-      # Store the whole of the message as a hash value
-      self.pipe.set(self.name + ":speed:now",str(self.speed))
-      self.pipe.set(self.name + ":time:now",str(str(time.time()))
-      self.pipe.set(self.name + ":encoder:now",str(self.encoder)
-      # Execute all of the above as part of a single transactional interaction with the
-      # Redis server
-      pipe.execute() 
+      # Store current speed and encoder reading in K9 memory
+      memory.storeState(str(self.name)+":speed",self.speed)
+      memory.storeState(str(self.name)+":encoder",self.encoder)
       return self.speed
 
    def setTargetSpeed(self, target) :

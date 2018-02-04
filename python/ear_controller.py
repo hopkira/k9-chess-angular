@@ -23,6 +23,7 @@ import os      # enables access to environment variables
 import math    # import maths operations
 import random  # import random numbers
 import time    # enable sleep function
+import memory  # imports K9's memory capability
 
 sim = False
 
@@ -32,12 +33,6 @@ if ( len(sys.argv) > 1 ) :
    if ( sys.argv[1] == "test" ) :
       sim = True
       print "Executing ears in simulation mode" # let the user know they are in sim mode
-
-print "Importing Redis library..."
-import redis
-# Connect to a local Redis server
-r = redis.Redis(host='127.0.0.1',port=6379)
-MAX_SLOTS = 15
 
 # GPIO for left LIDAR shutdown pin
 mouth_LIDAR_shutdown = 16
@@ -81,21 +76,6 @@ if not sim :
     pwm.set_pwm(5,0,615)
 
 
-
-class SensorArray :
-    def __init__(self) :
-        """Resets the redis database state to zero ready for new readings
-        """
-        print "Resetting Redis state..."
-        init_time = time.time()
-        for s in ['ear_left','ear_right','mouth']:
-            for sensor in range (0, MAX_SLOTS):
-                r.set("reading_"+str(s)+":"+str(sensor),str(0))
-                r.set("time_"+str(s)+":"+str(sensor),str(init_time))
-                r.set("direction_"+str(s)+":"+str(sensor),str(0))
-        r.set("left",str(0.0))
-        r.set("right",str(0.0))
-
 class K9ForwardSensors :
     def __init__(self) :
         """Creates two LIDAR instances, one for each ear and a sensor array.
@@ -120,12 +100,9 @@ class K9ForwardSensors :
         self.right_pwm_channel = 5
 
     def getForwardSpeed(self) :
-        if sim :
-            r.set("left:speed:now", random.uniform(-100,100))
-            r.set("right:speed:now", random.uniform(-100,100))
         # retrieve current actual robot speed from Redis
-        self.left_speed=float(r.get("left:speed:now"))
-        self.right_speed=float(r.get("right:speed:now"))
+        self.left_speed=float(memory.retrieveState("left:speed"))
+        self.right_speed=float(memory.retrieveState("right:speed"))
         # forward speed will be the average of the two
         # then convert into a percentage of maximum speed (100)
         return ((self.left_speed + self.right_speed)/200)
@@ -187,7 +164,6 @@ class LIDAR :
         self.name = name
         self.gpio = gpio
         self.address = address
-        self.slot = 0
         # initialise sensor via I2C and GPIO shutdown pin
         if not sim :
             self.sensor = VL53L0X.VL53L0X(address=self.address)
@@ -198,14 +174,8 @@ class LIDAR :
         print str(self.name) + " LIDAR instantiated at " + str(self.address) + " measured by ADC " + str(self.adc) + " and controlled by GPIO " + str(self.gpio)
 
     def recordReading(self) :
-        r.set("distance_"+self.name+":"+str(self.slot),str(self.distance))
-        r.set("time_"+self.name+":"+str(self.slot),str(time.time()))
-        r.set("direction_"+self.name+":"+str(self.slot),str(self.direction))
+        memory.storeSensorReading(self.name,self.distance,self.direction)
         print("dist_"+str(self.name)+": "+str(self.distance)+"mm at bearing: "+str(self.direction))
-        if self.slot < (MAX_SLOTS-1) :
-            self.slot += 1
-        else :
-            self.slot = 0
 
     def makeReading(self) :
         """Make a distance reading and update the sensors internal state
@@ -234,7 +204,9 @@ try :
     max_time = 0
     while True :
         k9sensors.makeReading()
+        '''
         elapsed_time = time.time()-float(r.get("time_ear_left:0"))
+        '''
         if elapsed_time > max_time :
             max_time = elapsed_time
             print str((max_time)*1000) + " ms "

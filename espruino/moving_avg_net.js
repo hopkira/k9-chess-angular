@@ -37,6 +37,8 @@ Richard Hopkins, 15th October 2017
 
 */
 // if -s is used to start script, then run in simulation mode
+// this capabilty is commented out as the Espruino cannot understand
+//
 var sim = false;
 /*
 if(process.argv.indexOf("-s") != -1){
@@ -225,7 +227,7 @@ function takeSensorReadings(){
 }
 
 function sendNRMsg(type,sensor,distance,angle) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}');
+  message = String('{"message":{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}}!');
   if (!sim){USB.println(message);}
   else {console.log(message);}
 }
