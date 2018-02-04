@@ -26,14 +26,12 @@ r = redis.Redis(host='127.0.0.1',port=6379)
 def storeState(key,value):
     ''' Stores the value of a received key and the time it was stored as well as preserving the previous value
     '''
-    pipe = r.pipeline(transaction=True)
-    pipe.set(str(key) + ":old", pipe.get(str(key) + ":now"))
-    pipe.set(str(key) + ":time:old", pipe.get(str(key) + ":time:now"))
-    pipe.set(str(key) + ":now",str(value))
-    pipe.set(str(key) + ":time:now",str(time.time()))
-    # Execute all of the above as part of a single transactional interaction with the
-    # Redis server
-    pipe.execute()
+    old_value = r.get(str(key) + ":now")
+    r.set(str(key) + ":old", old_value )
+    old_value = r.get(str(key) + ":time:now")
+    r.set(str(key) + ":time:old", old_value)
+    r.set(str(key) + ":now",str(value))
+    r.set(str(key) + ":time:now",str(time.time()))
 
 def retrieveState(key):
     '''Retrieves the last version of a desired key

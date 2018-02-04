@@ -90,6 +90,7 @@ class Motor :
       print str(name) + " motor object instantiated."
       self.speed = 0.0
       self.target = 0.0
+      self.encoder = 0.0
 
    def calculateTargetSpeed(self,reqmotorspeed,reqsteering,motorctrl) :
       self.reqmotorspeed = reqmotorspeed

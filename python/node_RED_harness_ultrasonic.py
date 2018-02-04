@@ -103,7 +103,7 @@ try:
    ws = HarnessSocket(address)
    ws.connect()
    distance = 1.2
-   sensorlist = ["left","bl_corner","tail","br_corner","right"]
+   sensorlist = ["ir:left","ir:bl_corner","ir:tail","ir:br_corner","ir:right"]
    while (distance > 0.2):
        angle = 0
        while (angle < 360):

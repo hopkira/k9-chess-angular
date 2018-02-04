@@ -260,7 +260,7 @@ angular.module('K9.services', [])
     // holds K9 sensorArray state
     // initialisation of service
     var thisService=this;
-    var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"left","x": 1120,"y":1343,"angle":90},{"sensorName":"bl_corner","x": 1152,"y":1411,"angle":135},{"sensorName":"tail","x": 1200,"y":1430,"angle":180},{"sensorName":"br_corner","x": 1248,"y":1411,"angle":225},{"sensorName":"right","x": 1280,"y":1343,"angle":270}]';
+    var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"ir:left","x": 1120,"y":1343,"angle":90},{"sensorName":"ir:bl_corner","x": 1152,"y":1411,"angle":135},{"sensorName":"ir:tail","x": 1200,"y":1430,"angle":180},{"sensorName":"ir:br_corner","x": 1248,"y":1411,"angle":225},{"sensorName":"ir:right","x": 1280,"y":1343,"angle":270}]';
     var sensorLocations = JSON.parse(sensorList);
     var sensorArray = JSON.parse(sensorList);
     // this function returns the current Sensor Array
