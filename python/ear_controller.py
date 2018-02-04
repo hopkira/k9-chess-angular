@@ -85,8 +85,6 @@ class K9ForwardSensors :
         self.left_ear = LIDAR(name="ear_left",adc=0,gpio=left_LIDAR_shutdown,address=0x30)
         self.right_ear = LIDAR(name="ear_right",adc=1,gpio=right_LIDAR_shutdown,address=0x31)
         #self.mouth = LIDAR(name="mouth",adc=99,gpio=mouth_LIDAR_shutdown,address=0x32)
-        # Create a sensor array instance
-        self.sensor_array = SensorArray()
         # Initialise the various measures that will control the ears
         # the pwm settings control the target directions of the ears
         self.min_pwm = 140
@@ -204,12 +202,6 @@ try :
     max_time = 0
     while True :
         k9sensors.makeReading()
-        '''
-        elapsed_time = time.time()-float(r.get("time_ear_left:0"))
-        '''
-        if elapsed_time > max_time :
-            max_time = elapsed_time
-            print str((max_time)*1000) + " ms "
 
 except KeyboardInterrupt :
     if not sim :

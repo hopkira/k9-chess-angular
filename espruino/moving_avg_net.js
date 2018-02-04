@@ -227,7 +227,7 @@ function takeSensorReadings(){
 }
 
 function sendNRMsg(type,sensor,distance,angle) {
-  message = String('{"message":{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}}!');
+  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}!');
   if (!sim){USB.println(message);}
   else {console.log(message);}
 }

@@ -12,6 +12,7 @@
 # be quickly retrieved on a per sensor basis
 
 import json
+import time
 
 json_data = '{"message":{"type":"sensor","name":"touch_back","angle":"999"}}';
 
@@ -21,12 +22,13 @@ import redis
 print "Connecting to local redis host"
 r = redis.Redis(host='127.0.0.1',port=6379)
 
+
 def storeState(key,value):
     ''' Stores the value of a received key and the time it was stored as well as preserving the previous value
     '''
     pipe = r.pipeline(transaction=True)
-    pipe.set(str(key) + ":old") = pipe.get(str(key) + ":now")
-    pipe.set(str(key) + ":time:old") = pipe.get(str(key) + ":time:now")
+    pipe.set(str(key) + ":old", pipe.get(str(key) + ":now"))
+    pipe.set(str(key) + ":time:old", pipe.get(str(key) + ":time:now"))
     pipe.set(str(key) + ":now",str(value))
     pipe.set(str(key) + ":time:now",str(time.time()))
     # Execute all of the above as part of a single transactional interaction with the
@@ -47,14 +49,17 @@ def getMsgKey():
 def storeSensorReading(name,reading,angle):
     '''Stores a sensor reading as a JSON string, compatible with other sensor readings
     '''
-    json_data = '{"message":{"type":"sensor","sensor":'+str(name)+'","distance":"'+str(reading)+'","angle":"'+str(angle)+'"}}';
-    storeSensorMessage(json_data)
+    json_data = '{"type":"sensor","sensor":"'+str(name)+'","distance":"'+str(reading)+'","angle":"'+str(angle)+'"}'
+    storeSensorMessage(str(json_data))
 
 def storeSensorMessage(json_data):
     '''Stores a JSON string formatted sensor reading message
     '''
     # Parse message into dictionary of name value pairs
+    message = {}
     message = json.loads(json_data)
+    print message
+    print len(message)
     msg_key = getMsgKey()
     # Create a transactional pipeline to store new message, this will be closed
     # and committed by the pipe.execute() command
@@ -65,10 +70,10 @@ def storeSensorMessage(json_data):
     pipe.expire(msg_key,10)
     # For each of the message generating devices e.g. sensors, create a list
     # where the most recent element is at the left of the list
-    pipe.lpush(message.name,msg_key)
+    pipe.lpush(message["sensor"],msg_key)
     # Ensure that the list for each device doesn't get any longer than 15 messages so
     # stuff will fall of the right hand end of the list
-    pipe.ltrim(message.name,0,15)
+    pipe.ltrim(message["sensor"],0,15)
     # Execute all of the above as part of a single transactional interaction with the
     # Redis server
     pipe.execute()
@@ -88,3 +93,6 @@ def retrieveSensorReading(sensor):
 
 def retriveSensorArray():
     '''list of sensors'''
+
+storeState("left:speed",0)
+storeState("right:speed",0)
