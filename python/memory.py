@@ -14,14 +14,11 @@
 import json
 import time
 
-json_data = '{"message":{"type":"sensor","name":"touch_back","angle":"999"}}';
-
 print "Importing Redis library..."
 import redis
 # Connect to a local Redis server
 print "Connecting to local redis host"
 r = redis.Redis(host='127.0.0.1',port=6379)
-
 
 def storeState(key,value):
     ''' Stores the value of a received key and the time it was stored as well as preserving the previous value
@@ -88,9 +85,6 @@ def retrieveSensorReading(sensor):
     '''
     message = json.loads(retrieveSensorMessage(sensor))
     return message
-
-def retriveSensorArray():
-    '''list of sensors'''
 
 storeState("left:speed",0)
 storeState("right:speed",0)
