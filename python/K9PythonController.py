@@ -26,13 +26,6 @@ import memory  # import K9 memory functions using Redis
 sys.path.append('/home/pi') # persistent import directory for K9 secrets
 sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persistent directory for Adafruit driver
 
-'''
-print "Importing Redis library..."
-import redis
-# Connect to a local Redis server
-r = redis.Redis(host='127.0.0.1',port=6379)
-'''
-
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
 sim = False # by default run as a real motor controller

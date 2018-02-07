@@ -38,7 +38,7 @@ def retrieveState(key):
 def getMsgKey():
     '''Uses redis to create a unique message key by incrementing message_num
     '''
-    msg_key = "message_"+str(r.incr("message_num",amount=1))
+    msg_key = "message:"+str(r.incr("message_num",amount=1))
     return msg_key
 
 def storeSensorReading(name,reading,angle):
@@ -65,10 +65,10 @@ def storeSensorMessage(json_data):
     pipe.expire(msg_key,10)
     # For each of the message generating devices e.g. sensors, create a list
     # where the most recent element is at the left of the list
-    pipe.lpush(message["sensor"],msg_key)
+    pipe.lpush("sensor:" + message["sensor"],msg_key)
     # Ensure that the list for each device doesn't get any longer than 15 messages so
     # stuff will fall of the right hand end of the list
-    pipe.ltrim(message["sensor"],0,15)
+    pipe.ltrim("sensor:" + message["sensor"],0,15)
     # Execute all of the above as part of a single transactional interaction with the
     # Redis server
     pipe.execute()
