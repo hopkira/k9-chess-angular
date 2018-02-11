@@ -13,12 +13,20 @@
 
 import json
 import time
+import sys     # allows for command line to be interpreted
+
+rec = False # by default run as a real motor controller
 
 print "Importing Redis library..."
 import redis
 # Connect to a local Redis server
 print "Connecting to local redis host"
 r = redis.Redis(host='127.0.0.1',port=6379)
+
+if ( len(sys.argv) > 1 ) :
+   if ( sys.argv[1] == "record" ) :
+      rec = True
+      print "Recording data permanently" # let the user know they are in sim mode
 
 def storeState(key,value):
     ''' Stores the value of a received key and the time it was stored as well as preserving the previous value
@@ -61,14 +69,16 @@ def storeSensorMessage(json_data):
     pipe = r.pipeline(transaction=True)
     # Store the whole of the message as a hash value
     pipe.hmset(msg_key,message)
-    # Expire all messages after 10 seconds
-    pipe.expire(msg_key,10)
+    # Expire all messages after 10 seconds unless in record mode
+    if not rec :
+        pipe.expire(msg_key,10)
     # For each of the message generating devices e.g. sensors, create a list
     # where the most recent element is at the left of the list
     pipe.lpush("sensor:" + message["sensor"],msg_key)
     # Ensure that the list for each device doesn't get any longer than 15 messages so
     # stuff will fall of the right hand end of the list
-    pipe.ltrim("sensor:" + message["sensor"],0,15)
+    if not rec :
+        pipe.ltrim("sensor:" + message["sensor"],0,15)
     # Execute all of the above as part of a single transactional interaction with the
     # Redis server
     pipe.execute()
