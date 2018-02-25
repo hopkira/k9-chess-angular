@@ -14,6 +14,11 @@ CSS files for end user interface largely generated and maintained by Ionic
 ## espruino
 Embedded JavaScript routines that run on Espruino picos to offload the overhead of working with low level sensors from the Pi.  This includes a neural net implementation for combining five ultrasonic sensor readings into a position vector.  
 
+File | Description
+---  | ---
+moving_avg_net.js | Generated neural net that runs on the Espruino; generates a moving average of readings
+back_panel.js | Controller for the back planel IR sensors, switches and touch sensors
+
 ## img
 Visuals for end user interface, includes default camera image and SVG for Sensors tab.  Some reference images of the hero prop are also included.
 
@@ -35,10 +40,14 @@ This directory contains the python programs that use the Adafruit PWM Servo Driv
 
 Program | Description
 ---  | ---
-K9PIDController.py | RoboClaw based Motor Controller
+K9PythonController.py | RoboClaw based Motor Controller
+ear_controller.py | Controls K9's ears to collect forward facing LIDAR information
+logo.py | Translates simple Logo paths into a movement plan for the RoboClaw
+memory.py | Provides access to K9's short term memory which stores state and sensor readings
+status.py | Sends K9's current state to node-RED (and browser) as JSON string every 200ms
 K9_roboclaw_init.py | Stores PID and motor settings in Roboclaw NVRAM
-node_RED_harness.py | Creates simulated LIDAR and IR sensor readings to simulate collisions
-watsonsnow.py | Uses Snowboy, STT, Conversation, TTS - a bit Alexa like :+)
+node_RED_harness_ultrasonic.py | Creates simulated LIDAR, IR and ultrasonic sensor readings
+ttsrobot.py | Uses Snowboy, Watson STT, Conversation and TTS - a bit Alexa like :+)
 
 ## script
 Simple deployment scripts to move code into right place on the Pi
@@ -50,4 +59,4 @@ Standard JavaScript library used to integrate SVG and AngularJS on the Sensors p
 This directory contains the HTML for each of the tabs of the user interface (including the definition of the tabs themselves!).  Keeping the html for each tab separately simplifies testing and maintenance.
 
 ## tessel
-This directory contains the Tessel 2 program using to control the two LIDAR ears that are used to scan what is in front of K9.  Just like the Espruino, the Tessel 2 can run JavaScript, but as it is a more powerful device, it can also run node.js and the dog's wireless access point.
+Tessel is not currently used on the K9 robot
