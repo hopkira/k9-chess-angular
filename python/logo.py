@@ -131,9 +131,9 @@ def finished():
     '''
     if not sim:
         buffers = rc.ReadBuffers(address);
-        if (buffers[1]==0x80 or buffers[2]==0x80):
-            return False
-    return True
+        if (buffers[1]==0x80 and buffers[2]==0x80):
+            return True
+    return False
 
 # if executed from the command line then execute a test sequence
 if __name__ == '__main__' :
