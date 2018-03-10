@@ -29,7 +29,7 @@ if __name__ == '__main__' :
 CLICK2METRES = 0.00611 # converts clicks to metres
 WALKINGSPEED = 1.4 # top speed of robot in metres per second
 TOPSPEED = int(WALKINGSPEED/CLICK2METRES) # calculate and store max velocity
-ACCELERATION = 2*TOPSPEED # accelerate to top speed in 0.5s
+ACCELERATION = int(2*TOPSPEED) # accelerate to top speed in 0.5s
 TURNING_CIRCLE = int(1.1938/CLICK2METRES) # clicks in a full spin
 HALF_WHEEL_GAP = 0.095 # half the distance between the wheels
 
@@ -61,8 +61,8 @@ def forward(distance):
     clicks = 2*int(distance/CLICK2METRES/2)
     click_vel = calc_click_vel(clicks)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=click_vel,distance1=clicks/2,speed2=click_vel,distance2=clicks/2,buffer=1)
-        rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=0,distance1=clicks/2,speed2=0,distance2=clicks/2,buffer=0)
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(click_vel),distance1=int(clicks/2),speed2=int(click_vel),distance2=int(clicks/2),buffer=int(1))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(clicks/2),speed2=int(0),distance2=int(clicks/2),buffer=int(0))
     if sim:
         print "Moving in straight line..."
         print "Speed=" + str(click_vel) +" Distance="+ str(clicks) + "\n"
@@ -84,8 +84,8 @@ def left(angle):
     clicks = 2*int(TURNING_CIRCLE*fraction/2)
     click_vel = calc_click_vel(clicks)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=-click_vel,distance1=clicks/2,speed2=click_vel,distance2=clicks/2,buffer=1)
-        rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=0,distance1=clicks/2,speed2=0,distance2=clicks/2,buffer=0)
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(-click_vel),distance1=int(clicks/2),speed2=int(click_vel),distance2=int(clicks/2),buffer=int(1))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(clicks/2),speed2=int(0),distance2=int(clicks/2),buffer=int(0))
     if sim:
         print "Spinning..."
         print "Speed=" + str(click_vel) +" Distance="+ str(clicks) + "\n"
@@ -114,8 +114,8 @@ def circle(radius,extent):
     click_vel1 = calc_click_vel(distance1)
     click_vel2 = calc_click_vel(distance2)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=-click_vel1,distance1=distance1/2,speed2=click_vel2,distance2=distance2/2,buffer=1)
-        rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=0,distance1=distance1/2,speed2=0,distance2=distance2/2,buffer=0)
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(-click_vel1),distance1=int(distance1/2),speed2=int(click_vel2),distance2=int(distance2/2),buffer=int(1))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(distance1/2),speed2=int(0),distance2=int(distance2/2),buffer=int(0))
     if sim:
         print "Moving in circle..."
         print "M1 Speed=" + str(click_vel1) +" Distance="+ str(distance1)
