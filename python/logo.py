@@ -60,13 +60,13 @@ def forward(distance):
     # calculate an even number of clicks
     clicks = 2*int(distance/CLICK2METRES/2)
     click_vel = calc_click_vel(clicks)
-    print "Clicks: " + string(clicks) + " Velocity: " + string(click_vel)
+    print "Clicks: " + str(clicks) + " Velocity: " + str(click_vel)
     if not sim:
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(click_vel),distance1=int(clicks/2),speed2=int(click_vel),distance2=int(clicks/2),buffer=int(1))
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(clicks/2),speed2=int(0),distance2=int(clicks/2),buffer=int(0))
     if sim:
         print "Moving in straight line..."
-        print "Speed=" + str(click_vel) +" Distance="+ str(clicks) + "\n"
+        print "Speed=" + str(click_vel) + " Distance="+ str(clicks) + "\n"
         turtle.forward(clicks)
 
 fd = fwd = forward
