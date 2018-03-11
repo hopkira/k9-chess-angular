@@ -43,23 +43,41 @@ if sim:
     import turtle
     turtle.radians()
 
-def calc_click_vel(clicks):
-    '''Calculates velocity for motors given a signed click distance
+def waitForMove2Finish():
+    ''' Waits until robot has finished move
     '''
-    modifier = 1
+    if not sim:
+        buffers = (0,0,0)
+        while (buffers[1]!=0x80 and buffers[2]!=0x80):
+            buffers = rc.ReadBuffers(address);
+    return False
+
+def calc_turn_modifier(radius):
+    turn_modifier = 1 - (0.9/(radius+1))
+    return turn_modifier
+
+def calc_click_vel(clicks,turn_mod):
+    '''Calculates target velocity for motors
+
+    Arguments:
+    clicks -- a signed click distance
+    turn_mod -- a modifier based on radius of turn
+
+    '''
+    sign_modifier = 1
     if (clicks<0):
         modifier = -1
-    click_vel = math.sqrt(abs(float(2*clicks*ACCELERATION)))
-    if (click_vel > TOPSPEED) :
-        click_vel = TOPSPEED
-    return click_vel*modifier
+    click_vel = math.sqrt(abs(float(2*clicks*ACCELERATION*turn_mod)))
+    if (click_vel > TOPSPEED*turn_mod) :
+        click_vel = TOPSPEED*turn_mod
+    return click_vel*sign_modifier
 
 def forward(distance):
     '''Moves K9 forward by 'distance' metres
     '''
     # calculate an even number of clicks
     clicks = 2*int(distance/CLICK2METRES/2)
-    click_vel = calc_click_vel(clicks)
+    click_vel = calc_click_vel(clicks=clicks,turn_mod=1)
     print "Clicks: " + str(clicks) + " Velocity: " + str(click_vel)
     if not sim:
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(1))
@@ -68,6 +86,7 @@ def forward(distance):
         print "Moving in straight line..."
         print "Speed=" + str(click_vel) + " Distance="+ str(clicks) + "\n"
         turtle.forward(clicks)
+    waitForMove2Finish()
 
 fd = fwd = forward
 
@@ -83,14 +102,16 @@ def left(angle):
     '''
     fraction = angle/2*math.pi
     clicks = 2*int(TURNING_CIRCLE*fraction/2)
-    click_vel = calc_click_vel(clicks)
+    turn_modifier = calc_turn_modifier(radius=0)
+    click_vel = calc_click_vel(clicks=clicks,turn_mod=turn_modifier)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(-click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(1))
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(abs(clicks/2)),speed2=int(0),distance2=int(abs(clicks/2)),buffer=int(0))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_modifier),speed1=int(-click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(1))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_modifier),speed1=int(0),distance1=int(abs(clicks/2)),speed2=int(0),distance2=int(abs(clicks/2)),buffer=int(0))
     if sim:
         print "Spinning..."
         print "Speed=" + str(click_vel) +" Distance="+ str(clicks) + "\n"
         turtle.left(angle)
+    waitForMove2Finish()
 
 lt = left
 
@@ -112,11 +133,13 @@ def circle(radius,extent):
     '''
     distance1 = int(extent*(radius-HALF_WHEEL_GAP)/CLICK2METRES)
     distance2 = int(extent*(radius+HALF_WHEEL_GAP)/CLICK2METRES)
-    click_vel1 = calc_click_vel(distance1)
-    click_vel2 = calc_click_vel(distance2)
+    turn_mod1 = calc_turn_modifier(radius-HALF_WHEEL_GAP)
+    turn_mod2 = calc_turn_modifier(radius+HALF_WHEEL_GAP)
+    click_vel1 = calc_click_vel(clicks=distance1,turn_mod=turn_mod1)
+    click_vel2 = calc_click_vel(clicks=distance2,turn_mod=turn_mod2)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(-click_vel1),distance1=int(abs(distance1/2)),speed2=int(click_vel2),distance2=int(abs(distance2/2)),buffer=int(1))
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(abs(distance1/2)),speed2=int(0),distance2=int(abs(distance2/2)),buffer=int(0))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_mod1),speed1=int(-click_vel1),distance1=int(abs(distance1/2)),speed2=int(click_vel2),distance2=int(abs(distance2/2)),buffer=int(1))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_mod2),speed1=int(0),distance1=int(abs(distance1/2)),speed2=int(0),distance2=int(abs(distance2/2)),buffer=int(0))
     if sim:
         print "Moving in circle..."
         print "M1 Speed=" + str(click_vel1) +" Distance="+ str(distance1)
@@ -125,6 +148,7 @@ def circle(radius,extent):
             radius = radius * -1
             extent = extent * -1
         turtle.circle(radius/CLICK2METRES,extent)
+    waitForMove2Finish()
 
 def finished():
     '''Checks to see if last robot movement has been completed
@@ -138,39 +162,15 @@ def finished():
 # if executed from the command line then execute a test sequence
 if __name__ == '__main__' :
     forward(6.7)
-    while not finished():
-        pass
     left(math.pi)
-    while not finished():
-        pass
     fd(1.0)
-    while not finished():
-        pass
     backward(1)
-    while not finished():
-        pass
     fwd(6)
-    while not finished():
-        pass
     circle(0.55,-math.pi/2)
-    while not finished():
-        pass
     circle(0.3,math.pi)
-    while not finished():
-        pass
     forward(.15)
-    while not finished():
-        pass
     circle(0.40,math.pi/2)
-    while not finished():
-        pass
     bk(0.350)
-    while not finished():
-        pass
     forward(0.35)
-    while not finished():
-        pass
     rt(2*math.pi)
-    while not finished():
-        pass
     time.sleep(10)
