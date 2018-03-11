@@ -27,7 +27,7 @@ if __name__ == '__main__' :
             print "Simulating without RoboClaw" # let the user know they are in sim mode
 
 CLICK2METRES = 0.00611 # converts clicks to metres
-WALKINGSPEED = 1.4 # top speed of robot in metres per second
+WALKINGSPEED = 1 # top speed of robot in metres per second
 TOPSPEED = int(WALKINGSPEED/CLICK2METRES) # calculate and store max velocity
 ACCELERATION = int(2*TOPSPEED) # accelerate to top speed in 0.5s
 TURNING_CIRCLE = int(1.1938/CLICK2METRES) # clicks in a full spin
@@ -66,7 +66,7 @@ def calc_click_vel(clicks,turn_mod):
     '''
     sign_modifier = 1
     if (clicks<0):
-        modifier = -1
+        sign_modifier = -1
     click_vel = math.sqrt(abs(float(2*clicks*ACCELERATION*turn_mod)))
     if (click_vel > TOPSPEED*turn_mod) :
         click_vel = TOPSPEED*turn_mod
