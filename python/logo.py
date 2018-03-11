@@ -29,7 +29,7 @@ if __name__ == '__main__' :
 CLICK2METRES = 0.00611 # converts clicks to metres
 WALKINGSPEED = 1 # top speed of robot in metres per second
 TOPSPEED = int(WALKINGSPEED/CLICK2METRES) # calculate and store max velocity
-ACCELERATION = int(2*TOPSPEED) # accelerate to top speed in 0.5s
+ACCELERATION = int(0.5*TOPSPEED) # accelerate to top speed in 0.5s
 TURNING_CIRCLE = int(1.1938/CLICK2METRES) # clicks in a full spin
 HALF_WHEEL_GAP = 0.095 # half the distance between the wheels
 
