@@ -44,8 +44,8 @@ if sim:
     turtle.radians()
 
 def stop():
-    ''''Lock motors to stop motion
-    ''''
+    '''Lock motors to stop motion
+    '''
     if not sim:
         rc.SpeedAccelM1(address,12000,1)
         time.sleep(0.05)
