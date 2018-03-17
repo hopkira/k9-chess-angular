@@ -29,7 +29,7 @@ if __name__ == '__main__' :
 CLICK2METRES = 0.00611 # converts clicks to metres
 WALKINGSPEED = 1 # top speed of robot in metres per second
 TOPSPEED = int(WALKINGSPEED/CLICK2METRES) # calculate and store max velocity
-ACCELERATION = int(0.05*TOPSPEED) # accelerate to top speed in 0.5s
+ACCELERATION = int(2*TOPSPEED) # accelerate to top speed in 0.5s
 TURNING_CIRCLE = int(1.1938/CLICK2METRES) # clicks in a full spin
 HALF_WHEEL_GAP = 0.095 # half the distance between the wheels
 
@@ -48,14 +48,6 @@ def stop():
     '''
     if not sim:
         print "Stopping"
-        rc.SpeedAccelM1(address,12000,1)
-        time.sleep(0.05)
-    	rc.SpeedAccelM2(address,-12000,-1)
-        time.sleep(0.05)
-        rc.SpeedAccelM1(address,12000,1)
-        time.sleep(0.05)
-    	rc.SpeedAccelM2(address,-12000,-1)
-        time.sleep(0.05)
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=0,distance1=0,speed2=0,distance2=0,buffer=int(0))
         print "Stop done"
 
