@@ -8,10 +8,10 @@ if version[0]==False:
 	print "GETVERSION Failed"
 else:
 	print repr(version[1])
+address = 0x80
 nvm=[0,0,0]
 rc.ReadNVM(address)
 print str(nvm)
-address = 0x80
 clicks = 300
 click_vel = 30
 ACCELERATION = 10
