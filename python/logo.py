@@ -90,7 +90,7 @@ def forward(distance):
     print "Clicks: " + str(clicks) + " Velocity: " + str(click_vel)
     if not sim:
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(1))
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(abs(clicks/2)),speed2=int(0),distance2=int(abs(clicks/2)),buffer=int(0))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=-int(ACCELERATION),speed1=int(0),distance1=int(abs(clicks/2)),speed2=int(0),distance2=int(abs(clicks/2)),buffer=int(0))
     if sim:
         print "Moving in straight line..."
         print "Speed=" + str(click_vel) + " Distance="+ str(clicks) + "\n"
