@@ -3,6 +3,14 @@ import math
 from roboclaw import Roboclaw
 rc = Roboclaw("/dev/roboclaw",115200)
 rc.Open()
+version = rc.ReadVersion(address)
+if version[0]==False:
+	print "GETVERSION Failed"
+else:
+	print repr(version[1])
+nvm=[0,0,0]
+rc.ReadNVM(address)
+print str(nvm)
 address = 0x80
 clicks = 300
 click_vel = 30
