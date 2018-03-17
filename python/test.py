@@ -14,5 +14,5 @@ while (buffers[1]!=0x80 and buffers[2]!=0x80):
     buffers = rc.ReadBuffers(address);
     print "Waiting"
 print "Stopping"
-rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=0,distance1=0,speed2=0,distance2=0,buffer=1
+rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=0,distance1=0,speed2=0,distance2=0,buffer=1)
 print "Stop done"
