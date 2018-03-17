@@ -47,6 +47,7 @@ def stop():
     '''Lock motors to stop motion
     '''
     if not sim:
+        print "Stopping"
         rc.SpeedAccelM1(address,12000,1)
         time.sleep(0.05)
     	rc.SpeedAccelM2(address,-12000,-1)
@@ -56,6 +57,7 @@ def stop():
     	rc.SpeedAccelM2(address,-12000,-1)
         time.sleep(0.05)
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=0,distance1=0,speed2=0,distance2=0,buffer=int(0))
+        print "Stop done"
 
 def waitForMove2Finish():
     ''' Waits until robot has finished move
@@ -64,6 +66,7 @@ def waitForMove2Finish():
         buffers = (0,0,0)
         while (buffers[1]!=0x80 and buffers[2]!=0x80):
             buffers = rc.ReadBuffers(address);
+            print "Waiting"
     stop()
 
 def calc_turn_modifier(radius):
