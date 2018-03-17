@@ -54,8 +54,8 @@ def stop():
         rc.SpeedAccelM1(address,12000,1)
         time.sleep(0.05)
     	rc.SpeedAccelM2(address,-12000,-1)
-        time.sleep(0.05)        
-        rc.SpeedAccelM2(address,12000,0)
+        time.sleep(0.05)
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=0,distance1=0,speed2=0,distance2=0,buffer=int(0))
 
 def waitForMove2Finish():
     ''' Waits until robot has finished move
