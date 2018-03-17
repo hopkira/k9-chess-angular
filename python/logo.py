@@ -49,16 +49,12 @@ def stop():
     if not sim:
         rc.SpeedAccelM1(address,12000,1)
         time.sleep(0.05)
-    	rc.SpeedAccelM2(address,12000,-1)
+    	rc.SpeedAccelM2(address,-12000,-1)
         time.sleep(0.05)
         rc.SpeedAccelM1(address,12000,1)
         time.sleep(0.05)
-        rc.SpeedAccelM2(address,12000,-1)
-        time.sleep(0.05)
-        rc.SpeedAccelM1(address,12000,1)
-        time.sleep(0.05)
-        rc.SpeedAccelM2(address,12000,-1)
-        time.sleep(0.05)
+    	rc.SpeedAccelM2(address,-12000,-1)
+        time.sleep(0.05)        
         rc.SpeedAccelM2(address,12000,0)
 
 def waitForMove2Finish():
@@ -98,7 +94,7 @@ def forward(distance):
     click_vel = calc_click_vel(clicks=clicks,turn_mod=1)
     print "Clicks: " + str(clicks) + " Velocity: " + str(click_vel)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(0))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(1))
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION),speed1=int(0),distance1=int(abs(clicks/2)),speed2=int(0),distance2=int(abs(clicks/2)),buffer=int(0))
     if sim:
         print "Moving in straight line..."
@@ -123,7 +119,7 @@ def left(angle):
     turn_modifier = calc_turn_modifier(radius=0)
     click_vel = calc_click_vel(clicks=clicks,turn_mod=turn_modifier)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_modifier),speed1=int(-click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(0))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_modifier),speed1=int(-click_vel),distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=int(1))
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_modifier),speed1=int(0),distance1=int(abs(clicks/2)),speed2=int(0),distance2=int(abs(clicks/2)),buffer=int(0))
     if sim:
         print "Spinning..."
@@ -156,7 +152,7 @@ def circle(radius,extent):
     click_vel1 = calc_click_vel(clicks=distance1,turn_mod=turn_mod1)
     click_vel2 = calc_click_vel(clicks=distance2,turn_mod=turn_mod2)
     if not sim:
-        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_mod1),speed1=int(-click_vel1),distance1=int(abs(distance1/2)),speed2=int(click_vel2),distance2=int(abs(distance2/2)),buffer=int(0))
+        rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_mod1),speed1=int(-click_vel1),distance1=int(abs(distance1/2)),speed2=int(click_vel2),distance2=int(abs(distance2/2)),buffer=int(1))
         rc.SpeedAccelDistanceM1M2(address=address,accel=int(ACCELERATION*turn_mod2),speed1=int(0),distance1=int(abs(distance1/2)),speed2=int(0),distance2=int(abs(distance2/2)),buffer=int(0))
     if sim:
         print "Moving in circle..."
