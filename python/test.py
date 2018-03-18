@@ -8,6 +8,9 @@ if version[0]==False:
 	print "GETVERSION Failed"
 else:
 	print repr(version[1])
+rc.SetM1VelocityPID(rc_address,3000,300,0,708)
+rc.SetM2VelocityPID(rc_address,3000,300,0,720)
+rc.WriteNVM(address)
 nvm=[0,0,0]
 rc.ReadNVM(address)
 print str(nvm)
