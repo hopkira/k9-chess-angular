@@ -10,13 +10,9 @@ else:
 	print repr(version[1])
 rc.SetM1VelocityPID(address,3000,300,0,708)
 rc.SetM2VelocityPID(address,3000,300,0,720)
-rc.WriteNVM(address)
-nvm=[0,0,0]
-nvm=rc.ReadNVM(address)
-print str(nvm[0]+", "+nvm[1]+", "+nvm[2])
-clicks = 1000
-click_vel = 30
-ACCELERATION = 5
+clicks = 5000
+click_vel = 300
+ACCELERATION = 30
 rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=click_vel,distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=1)
 rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=0,distance1=int(abs(clicks/2)),speed2=0,distance2=int(abs(clicks/2)),buffer=0)
 buffers = (0,0,0)
