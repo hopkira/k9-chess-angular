@@ -12,9 +12,9 @@ rc.SetM1VelocityPID(address,3000,300,0,708)
 rc.SetM2VelocityPID(address,3000,300,0,720)
 rc.WriteNVM(address)
 nvm=[0,0,0]
-rc.ReadNVM(address)
+nvm=rc.ReadNVM(address)
 print str(nvm)
-clicks = 300
+clicks = 3000
 click_vel = 30
 ACCELERATION = 10
 rc.SpeedAccelDistanceM1M2(address=address,accel=ACCELERATION,speed1=click_vel,distance1=int(abs(clicks/2)),speed2=int(click_vel),distance2=int(abs(clicks/2)),buffer=1)
