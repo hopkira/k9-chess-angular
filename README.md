@@ -8,6 +8,9 @@ The root directory contains some frequently requested design documents and plans
 ## chess
 Chess profiler by the amazing Maris Van Sprang!
 
+## conversation
+JSON configuration files for IBM Watson Assistant workspaces
+
 ## css
 CSS files for end user interface largely generated and maintained by Ionic
 
