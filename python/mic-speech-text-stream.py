@@ -40,17 +40,13 @@ class MyRecognizeCallback(RecognizeCallback):
 
     def on_transcription_complete(self):
         print('Transcription completed')
-        listening = False
 
     def on_hypothesis(self, hypothesis):
         print(hypothesis)
 
 listening = True
 mycallback = MyRecognizeCallback()
-reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
-print ("Openning audio recording")
-p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
-data = p.stdout
-while listening:
-    speech_to_text.recognize_with_websocket(audio=data,content_type='audio/l16; rate=16000', recognize_callback=mycallback)
-p.kill()
+record = "arecord -d 5 -f S16_LE -r 16000 -t wav my_voice.wav"
+p = subprocess.Popen(record, shell=True)
+with open(my_voice) as f:
+    speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=16000', recognize_callback=mycallback)
