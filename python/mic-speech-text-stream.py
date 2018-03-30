@@ -50,7 +50,7 @@ mycallback = MyRecognizeCallback()
 reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
 print ("Openning audio recording")
 p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
+data = p.stdout
 while listening:
-    data = bytearray(p.stdout.read(1024))
-    speech_to_text.recognize_with_websocket(audio=data, recognize_callback=mycallback)
+    speech_to_text.recognize_with_websocket(audio=data,content_type='audio/l16; rate=16000', recognize_callback=mycallback)
 p.kill()
