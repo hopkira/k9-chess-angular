@@ -12,6 +12,8 @@ speech_to_text = SpeechToTextV1(
     password=os.environ['WTTSpassword'],
     url='https://stream.watsonplatform.net/speech-to-text/api')
 
+print "Username: " + str(username)
+print "Password: " + str(password)
 
 # Example using websockets
 class MyRecognizeCallback(RecognizeCallback):
@@ -46,7 +48,7 @@ tmp = tempfile.NamedTemporaryFile()
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-CHUNK = 1024
+CHUNK = 512
 RECORD_SECONDS = 5
 
 audio = pyaudio.PyAudio()
@@ -54,6 +56,7 @@ stream = audio.open(
     format=FORMAT,
     channels=CHANNELS,
     rate=RATE,
+    input_device_index = 2,
     input=True,
     frames_per_buffer=CHUNK)
 
