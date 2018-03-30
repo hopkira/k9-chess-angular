@@ -46,6 +46,13 @@ conversation = ConversationV1(
 
 workspace_id = os.environ['WCworkspace']
 
+print "Initialising speech to text..."
+# Initialise speech to text global variable
+stt_client = SpeechToTextV1(
+    username=os.environ['WTTSusername'],
+    password=os.environ['WTTSpassword'],
+    url='https://stream.watsonplatform.net/speech-to-text/api')
+
 # Initialise the PWM device using the default address
 pwm = 0
 #pwm = Adafruit_PCA9685.PCA9685()
@@ -134,12 +141,7 @@ def speech_to_text():
     global speech_received
     speech_received = False # has speech been returned by Watson?
     transcript = "silence"  # default value for speech if nothing returned
-    print "Initialising speech to text..."
-    # Initialise speech to text global variables
-    speech_to_text = SpeechToTextV1(
-        username=os.environ['WTTSusername'],
-        password=os.environ['WTTSpassword'],
-        url='https://stream.watsonplatform.net/speech-to-text/api')
+    mycallback = MyRecognizeCallback()
     while not speech_received:
         time.sleep(0.1)
     return transcript
