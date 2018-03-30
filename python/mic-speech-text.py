@@ -8,13 +8,16 @@ import os
 from watson_developer_cloud import SpeechToTextV1
 from watson_developer_cloud.websocket import RecognizeCallback
 
+STTusername = os.environ['WTTSusername']
+STTpassword = os.environ['WTTSpassword']
+
 speech_to_text = SpeechToTextV1(
-    username=os.environ['WTTSusername'],
-    password=os.environ['WTTSpassword'],
+    username=STTusername,
+    password=STTpassword,
     url='https://stream.watsonplatform.net/speech-to-text/api')
 
-print ("Username: " + str(username))
-print ("Password: " + str(password))
+print ("Username: " + str(STTusername))
+print ("Password: " + str(STTpassword))
 
 # Example using websockets
 class MyRecognizeCallback(RecognizeCallback):
