@@ -28,24 +28,19 @@ class MyRecognizeCallback(RecognizeCallback):
 
     def on_connected(self):
         print('Connection was successful')
-        self.stream_audio_thread.start()
 
     def on_error(self, error):
         print('Error received: {}'.format(error))
 
     def on_inactivity_timeout(self, error):
         print('Inactivity timeout: {}'.format(error))
-        listening = False
-        stream_audio_thread.join()
 
     def on_listening(self):
         print('Service is listening')
-        listening = True
 
     def on_transcription_complete(self):
         print('Transcription completed')
         listening = False
-        self.stream_audio_thread.join()
 
     def on_hypothesis(self, hypothesis):
         print(hypothesis)
