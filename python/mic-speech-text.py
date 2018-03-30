@@ -4,6 +4,7 @@
 from __future__ import print_function
 import pyaudio
 import tempfile
+import os
 from watson_developer_cloud import SpeechToTextV1
 from watson_developer_cloud.websocket import RecognizeCallback
 
