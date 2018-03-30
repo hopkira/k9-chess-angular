@@ -53,7 +53,7 @@ class MyRecognizeCallback(RecognizeCallback):
 listening = True
 mycallback = MyRecognizeCallback()
 reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
-print "Openning audio recording"
+print ("Openning audio recording")
 p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
 while listening:
     data = bytearray(p.stdout.read(1024))
