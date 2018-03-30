@@ -13,7 +13,7 @@ speech_to_text = SpeechToTextV1(
     url='https://stream.watsonplatform.net/speech-to-text/api')
 
 print ("Username: " + str(username))
-print ()"Password: " + str(password))
+print ("Password: " + str(password))
 
 # Example using websockets
 class MyRecognizeCallback(RecognizeCallback):
