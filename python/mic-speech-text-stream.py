@@ -18,13 +18,10 @@ speech_to_text = SpeechToTextV1(
 print ("Username: " + str(STTusername))
 print ("Password: " + str(STTpassword))
 
-mycallback = MyRecognizeCallback()
-
 # Example using websockets
 class MyRecognizeCallback(RecognizeCallback):
     def __init__(self):
         RecognizeCallback.__init__(self)
-        self.stream_audio_thread = threading.Thread(target=self.stream_audio)
 
     def on_transcription(self, transcript):
         print(transcript)
@@ -38,27 +35,27 @@ class MyRecognizeCallback(RecognizeCallback):
 
     def on_inactivity_timeout(self, error):
         print('Inactivity timeout: {}'.format(error))
-        self.listening = False
-        self.stream_audio_thread.join()
+        listening = False
+        stream_audio_thread.join()
 
     def on_listening(self):
         print('Service is listening')
-        self.listening = True
+        listening = True
 
     def on_transcription_complete(self):
         print('Transcription completed')
-        self.listening = False
+        listening = False
         self.stream_audio_thread.join()
 
     def on_hypothesis(self, hypothesis):
         print(hypothesis)
 
-	def stream_audio(self):
-        self.reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
-        print "Openning audio recording"
-        self.p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
-        while self.listening:
-        	self.data = bytearray(p.stdout.read(1024))
-            speech_to_text.recognize_with_websocket(audio=self.data, recognize_callback=mycallback)
-        self.p.kill()
-        print "p.kill()"
+listening = True
+mycallback = MyRecognizeCallback()
+reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
+print "Openning audio recording"
+p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
+while listening:
+    data = bytearray(p.stdout.read(1024))
+    speech_to_text.recognize_with_websocket(audio=data, recognize_callback=mycallback)
+p.kill()
