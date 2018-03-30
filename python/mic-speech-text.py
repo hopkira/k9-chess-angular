@@ -12,8 +12,8 @@ speech_to_text = SpeechToTextV1(
     password=os.environ['WTTSpassword'],
     url='https://stream.watsonplatform.net/speech-to-text/api')
 
-print "Username: " + str(username)
-print "Password: " + str(password)
+print ("Username: " + str(username))
+print ()"Password: " + str(password))
 
 # Example using websockets
 class MyRecognizeCallback(RecognizeCallback):
