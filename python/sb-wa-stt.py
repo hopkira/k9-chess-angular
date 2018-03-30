@@ -146,7 +146,8 @@ def speech_to_text():
 
 def stop_snowboy():
     global stop_now
-    print "Stopping snowboy..."
+    if stop_now = True:
+        print "Snowboy stop interrupt."
     return stop_now
 
 # Sets brightness of PWM lights from 0 to 100
@@ -183,4 +184,3 @@ while go:
     answer = './tts ' + answer
     print str(answer)
     subprocess.call(answer, shell=True)
-    
