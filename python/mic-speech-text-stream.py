@@ -79,5 +79,5 @@ response = conversation.message(workspace_id=WAworkspace_id, input={'text':trans
 results = re.search('\], u\'text\': \[u\'(.*)\'\]\}, u\'alt', str(response))
 answer = results.group(1)
 answer = './tts ' + answer
-print str(answer)
+print (str(answer))
 subprocess.call(answer, shell=True)
