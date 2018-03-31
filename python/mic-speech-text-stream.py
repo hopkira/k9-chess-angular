@@ -44,9 +44,6 @@ def interrupt_callback():
     global interrupted
     return interrupted
 
-signal.signal(signal.SIGINT, signal_handler)
-detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
-
 # K9 hotword has been detected
 def K9_detected():
     print ("K9 hotword detected...\n")
@@ -92,6 +89,8 @@ mycallback = MyRecognizeCallback()
 record = "arecord -d 5 -f S16_LE -r 44100 -t wav my_voice.wav"
 go = True
 while go:
+    signal.signal(signal.SIGINT, signal_handler)
+    detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
     interrupted = False
     stop_now = False
     print ("Listening for K9 keyword... press Ctrl+C to exit")
