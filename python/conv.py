@@ -24,6 +24,9 @@ response = conversation.message(workspace_id=WAworkspace_id, input={'text':trans
 print(response)
 
 results = re.search('\], u\'text\': \[u\'(.*)\'\]\}, u\'alt', str(response))
+
+print(results)
+
 answer = results.group(1)
 answer = './tts ' + answer
 print (str(answer))
