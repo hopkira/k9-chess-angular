@@ -108,7 +108,7 @@ while go:
     print ("Lights off")
     mycallback = MyRecognizeCallback()
     with open('my_voice.wav') as f:
-        speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=44100', recognize_callback=mycallback)
+        speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=44100', recognize_callback=mycallback, inactivity_timeout=5)
     while not finished:
         time.sleep(0.1)
     response = conversation.message(workspace_id=WAworkspace_id, input={'text':transcript})
