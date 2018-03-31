@@ -51,7 +51,6 @@ detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
 def K9_detected():
     global pwm
     print ("K9 hotword detected...\n")
-    set_PWM(PWM_eye,30)
     global stop_now
     stop_now = True # get the detector to terminate
 
