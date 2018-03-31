@@ -46,7 +46,10 @@ class MyRecognizeCallback(RecognizeCallback):
         print(hypothesis)
 
 finished = False
-os.remove("my_voice.wav")
+try:
+    os.remove("my_voice.wav")
+except: OSError:
+    pass
 mycallback = MyRecognizeCallback()
 record = "arecord -d 30 -f S16_LE -r 44100 -t wav my_voice.wav"
 p = subprocess.Popen(record)
