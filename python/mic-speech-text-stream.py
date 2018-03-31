@@ -6,7 +6,7 @@ from watson_developer_cloud import SpeechToTextV1
 from watson_developer_cloud.websocket import RecognizeCallback
 from watson_developer_cloud import ConversationV1
 
-import os, sys, subprocess, threading, time, json
+import os, sys, subprocess, threading, time, json, re
 
 STTusername = os.environ['WTTSusername']
 STTpassword = os.environ['WTTSpassword']
