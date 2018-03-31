@@ -51,7 +51,7 @@ try:
 except OSError:
     pass
 mycallback = MyRecognizeCallback()
-record = "arecord -d 5ls -f S16_LE -r 44100 -t wav my_voice.wav"
+record = "arecord -d 30 -f S16_LE -r 44100 -t wav my_voice.wav"
 p = subprocess.Popen(record, shell=True)
 time.sleep(0.3)
 with open('my_voice.wav') as f:
