@@ -50,7 +50,7 @@ detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
 # K9 hotword has been detected
 def K9_detected():
     global pwm
-    print "K9 hotword detected...\n"
+    print ("K9 hotword detected...\n")
     set_PWM(PWM_eye,30)
     global stop_now
     stop_now = True # get the detector to terminate
@@ -58,7 +58,7 @@ def K9_detected():
 def stop_snowboy():
     global stop_now
     if stop_now = True:
-        print "Snowboy stop interrupt."
+        print ("Snowboy stop interrupt.")
     return stop_now
 
 # Example using websockets
@@ -95,7 +95,7 @@ while go:
     interrupted = False
     stop_now = False
     finished = False
-    print "Listening for K9 keyword... press Ctrl+C to exit"
+    print ("Listening for K9 keyword... press Ctrl+C to exit")
     detector.start(detected_callback=K9_detected,
     interrupt_check=stop_snowboy,
     sleep_time=0.03)
