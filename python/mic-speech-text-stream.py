@@ -27,7 +27,7 @@ class MyRecognizeCallback(RecognizeCallback):
         print(transcript)
 
     def on_connected(self):
-        print('Connection was successful')
+        pass
 
     def on_error(self, error):
         print('Error received: {}'.format(error))
@@ -36,15 +36,14 @@ class MyRecognizeCallback(RecognizeCallback):
         print('Inactivity timeout: {}'.format(error))
 
     def on_listening(self):
-        print('Service is listening')
+        pass
 
     def on_transcription_complete(self):
         global finished
-        print('Transcription completed')
         finished = True
 
     def on_hypothesis(self, hypothesis):
-        print(hypothesis)
+        pass
 
 finished = False
 try:
@@ -54,11 +53,12 @@ except OSError:
 mycallback = MyRecognizeCallback()
 record = "arecord -d 7 -f S16_LE -r 44100 -t wav my_voice.wav"
 p = subprocess.Popen(record, shell=True)
+print("Lights on")
 time.sleep(3)
 with open('my_voice.wav') as f:
     speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=44100', recognize_callback=mycallback)
 while (p.poll() is None) :
-    print ("Still recording")
-print ("Recording stopped")
+    pass
+print ("Lights off")
 while not finished:
     time.sleep(0.1)
