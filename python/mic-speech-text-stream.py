@@ -49,7 +49,6 @@ detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
 
 # K9 hotword has been detected
 def K9_detected():
-    global pwm
     print ("K9 hotword detected...\n")
     global stop_now
     stop_now = True # get the detector to terminate
@@ -89,25 +88,25 @@ class MyRecognizeCallback(RecognizeCallback):
         transcript = hypothesis
         print(transcript)
 
+mycallback = MyRecognizeCallback()
+record = "arecord -d 5 -f S16_LE -r 44100 -t wav my_voice.wav"
 go = True
 while go:
     interrupted = False
     stop_now = False
-    finished = False
     print ("Listening for K9 keyword... press Ctrl+C to exit")
     detector.start(detected_callback=K9_detected,
     interrupt_check=stop_snowboy,
     sleep_time=0.03)
     detector.terminate()
-    time.sleep(0.03)
+    time.sleep(0.1)
+    finished = False
     try:
         os.remove("my_voice.wav")
     except OSError:
         pass
-    mycallback = MyRecognizeCallback()
-    record = "arecord -d 5 -f S16_LE -r 44100 -t wav my_voice.wav"
     print("Lights on")
-    p = subprocess.call(record, shell=True)
+    subprocess.call(record, shell=True)
     print ("Lights off")
     with open('my_voice.wav') as f:
         speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=44100', recognize_callback=mycallback)
