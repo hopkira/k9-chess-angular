@@ -53,4 +53,4 @@ p = subprocess.Popen(record, shell=True)
 with open('my_voice.wav') as f:
     speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=44100', recognize_callback=mycallback)
 while not finished:
-    sleep 0.1
+    time.sleep(0.1)
