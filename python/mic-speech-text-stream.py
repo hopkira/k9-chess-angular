@@ -57,7 +57,7 @@ def K9_detected():
 
 def stop_snowboy():
     global stop_now
-    if stop_now = True:
+    if (stop_now is True) :
         print ("Snowboy stop interrupt.")
     return stop_now
 
