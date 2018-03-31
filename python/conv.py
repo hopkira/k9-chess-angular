@@ -23,7 +23,7 @@ response = conversation.message(workspace_id=WAworkspace_id, input={'text':trans
 
 print(response)
 
-results = re.search('\], u\'text\': \[u\'(.*)\'\]\}, u\'alt', str(response))
+results = re.search(': \{u\'text\': \[u\'(.*)\'\], u\'log', str(response))
 
 print(results)
 
