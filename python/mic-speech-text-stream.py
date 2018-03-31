@@ -88,7 +88,7 @@ signal.signal(signal.SIGINT, signal_handler)
 detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
 interrupted = False
 stop_now = False
-print ("Listening for K9 keyword... press Ctrl+C to exit")
+print ("Listening for K9 keyword... press Ctrl+Z to exit")
 detector.start(detected_callback=K9_detected,
 interrupt_check=stop_snowboy,
 sleep_time=0.03)
