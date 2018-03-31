@@ -76,8 +76,7 @@ with open('my_voice.wav') as f:
 while not finished:
     time.sleep(0.1)
 response = conversation.message(workspace_id=WAworkspace_id, input={'text':transcript})
-print(response)
-results = re.search('\], u\'text\': \[u\'(.*)\'\]\}, u\'alt', str(response))
+results = re.search(': \{u\'text\': \[u\'(.*)\'\], u\'log', str(response))
 answer = results.group(1)
 answer = './tts ' + answer
 print (str(answer))
