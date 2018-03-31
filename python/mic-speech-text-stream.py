@@ -24,7 +24,7 @@ class MyRecognizeCallback(RecognizeCallback):
         RecognizeCallback.__init__(self)
 
     def on_transcription(self, transcript):
-        print(transcript)
+        pass
 
     def on_connected(self):
         pass
@@ -43,7 +43,7 @@ class MyRecognizeCallback(RecognizeCallback):
         finished = True
 
     def on_hypothesis(self, hypothesis):
-        pass
+        print(hypothesis)
 
 finished = False
 try:
