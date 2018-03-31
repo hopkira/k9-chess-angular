@@ -51,14 +51,11 @@ try:
 except OSError:
     pass
 mycallback = MyRecognizeCallback()
-record = "arecord -d 7 -f S16_LE -r 44100 -t wav my_voice.wav"
-p = subprocess.Popen(record, shell=True)
+record = "arecord -d 5 -f S16_LE -r 44100 -t wav my_voice.wav"
 print("Lights on")
-time.sleep(3)
+p = subprocess.call(record, shell=True)
+print ("Lights off")
 with open('my_voice.wav') as f:
     speech_to_text.recognize_with_websocket(audio=f,content_type='audio/l16; rate=44100', recognize_callback=mycallback)
-while (p.poll() is None) :
-    pass
-print ("Lights off")
 while not finished:
     time.sleep(0.1)
