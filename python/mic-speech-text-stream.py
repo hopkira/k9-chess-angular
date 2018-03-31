@@ -1,6 +1,3 @@
-# You need to install pyaudio to run this example
-# pip install pyaudio
-
 from __future__ import print_function
 from watson_developer_cloud import SpeechToTextV1
 from watson_developer_cloud.websocket import RecognizeCallback
