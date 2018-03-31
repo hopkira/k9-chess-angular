@@ -60,7 +60,7 @@ with open('my_voice.wav') as f:
 print ("I got here")
 while not finished:
     if (p.poll() is None) :
-        print "Still recording"
+        print ("Still recording")
     else :
-        print "Recording stopped"
+        print ("Recording stopped")
     time.sleep(0.1)
