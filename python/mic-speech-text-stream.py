@@ -48,7 +48,7 @@ class MyRecognizeCallback(RecognizeCallback):
 finished = False
 try:
     os.remove("my_voice.wav")
-except: OSError:
+except OSError:
     pass
 mycallback = MyRecognizeCallback()
 record = "arecord -d 30 -f S16_LE -r 44100 -t wav my_voice.wav"
