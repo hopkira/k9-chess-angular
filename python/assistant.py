@@ -27,8 +27,9 @@ print r.status_code
 auth_token = (r.content)
 
 # Initialise the PWM device using the default address
-pwm = Adafruit_PCA9685.PCA9685()
-pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
+#pwm = Adafruit_PCA9685.PCA9685()
+#pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
+pwm=0
 
 class SpeechToTextClient(WebSocketClient):
 
@@ -133,10 +134,10 @@ def set_PWM(light, brightness):
     global pwm
     light = int(light)
     brightness = int(float(brightness)*40.95)
-        if light >=0 and light <=15: # check that PWM channel exists
-            if brightness >= 0 and brightness <= 4095: # check that frequency is valid
-                pwm.set_pwm(0,light,brightness)
-                print "Eye brightness set to: " + str(brightness)
+    if light >=0 and light <=15: # check that PWM channel exists
+        if brightness >= 0 and brightness <= 4095: # check that frequency is valid
+            #pwm.set_pwm(0,light,brightness)
+            print "Eye brightness set to: " + str(brightness)
 
 # Initialise the eye lights at 3%
 set_PWM(PWM_eye,3)
