@@ -26,6 +26,14 @@ r = requests.get('https://stream.watsonplatform.net/authorization/api/v1/token?u
 print r.status_code
 auth_token = (r.content)
 
+# Initialising TTS global variables
+speech_received = False # has speech been returned by Watson?
+transcript = "silence"	# default value for speech if nothing returned
+
+# Initialise snowboy global variables
+model = "./K9.pmdl"
+interrupted = False
+
 # Initialise the PWM device using the default address
 #pwm = Adafruit_PCA9685.PCA9685()
 #pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
