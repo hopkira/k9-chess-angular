@@ -35,6 +35,17 @@ pwm=0
 PWM_eye = 0
 PWM_hover = 1
 
+def signal_handler(signal, frame):
+	global interrupted
+	interrupted = True
+
+def interrupt_callback():
+	global interrupted
+	return interrupted
+
+signal.signal(signal.SIGINT, signal_handler)
+detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
+
 class SpeechToTextClient(WebSocketClient):
 
     def __init__(self):
