@@ -112,10 +112,10 @@ class SpeechToTextClient(WebSocketClient):
         print "arecord and p=subprocess.Popen"
         p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
         while self.listening:
-            print "while self.listening is true"
+            #print "while self.listening is true"
             data = p.stdout.read(1024)
             try:
-                print "self.send bytearray"
+                #print "self.send bytearray"
                 self.send(bytearray(data), binary=True)
             except ssl.SSLError: pass
         p.kill()
@@ -143,7 +143,7 @@ def speech_to_text():
     print "stt_client initialisation"
     stt_client = SpeechToTextClient()
     while not speech_received:
-        print "not hearing anything, so sleeping"
+        #print "not hearing anything, so sleeping"
         time.sleep(0.1)
     return transcript
 
