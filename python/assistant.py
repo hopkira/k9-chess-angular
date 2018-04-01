@@ -91,11 +91,11 @@ class SpeechToTextClient(WebSocketClient):
             if results:
                 transcript = results.group(1)
                 print str(transcript)
-                set_PWM(PWM_eye,3)
-                self.close()
-                print "Speech_received, exiting"
-                # self.close()
-                # sys.exit()
+            set_PWM(PWM_eye,3)
+            self.close()
+            print "Speech_received, exiting"
+            # self.close()
+            # sys.exit()
         if "error" in message:
             speech_received = True
             self.listening = False
