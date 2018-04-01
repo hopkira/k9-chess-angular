@@ -31,6 +31,10 @@ auth_token = (r.content)
 #pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
 pwm=0
 
+# Create names for each PWM channel
+PWM_eye = 0
+PWM_hover = 1
+
 class SpeechToTextClient(WebSocketClient):
 
     def __init__(self):
