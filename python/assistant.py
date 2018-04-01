@@ -58,6 +58,7 @@ class SpeechToTextClient(WebSocketClient):
 
     def __init__(self):
         ws_url = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
+        self.listening = False
         try:
             WebSocketClient.__init__(self, ws_url,
             headers=[("X-Watson-Authorization-Token",auth_token)])
