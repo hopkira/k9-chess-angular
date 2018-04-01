@@ -106,7 +106,6 @@ class SpeechToTextClient(WebSocketClient):
     def stream_audio(self):
         print "Entering stream_audio(self)"
         while not self.listening:
-            print "sleeping"
             time.sleep(0.1)
         reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
         print "arecord and p=subprocess.Popen"
@@ -149,7 +148,6 @@ def speech_to_text():
 
 def stop_snowboy():
     global stop_now
-    print "Waiting: " + str(stop_now)
     return stop_now
 
 # Sets brightness of PWM lights from 0 to 100
