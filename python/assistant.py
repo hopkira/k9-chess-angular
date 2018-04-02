@@ -81,20 +81,21 @@ class SpeechToTextClient(WebSocketClient):
                 self.listening = True
                 set_PWM(PWM_eye,100)
                 print "Speak now..."
-        if "'final': True" in message:
-            self.listening = False
-            speech_received = True
-            print "Sending stop transcription message"
-            self.send('{"action": "stop"}')
-            results = re.search('transcript\'\: u\'(.*)\'\}\]', str(message))
-            if results:
-                transcript = results.group(1)
-                print str(transcript)
-            set_PWM(PWM_eye,3)
-            self.close()
-            print "Speech_received, exiting"
-            # self.close()
-            # sys.exit()
+        if "results" in message:
+            response = json.loads(message)
+            print response.results[0].final
+            print response.results[0].alternatives[0].transcript
+            if response.results[0].final :
+                transcript = response.results[0].alternatives[0].transcript
+                self.listening = False
+                speech_received = True
+                print "Sending stop transcription message"
+                self.send('{"action": "stop"}')
+                set_PWM(PWM_eye,3)
+                self.close()
+                print "Speech_received, exiting"
+                # self.close()
+                # sys.exit()
         if "error" in message:
             speech_received = True
             self.listening = False
