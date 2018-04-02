@@ -1,4 +1,24 @@
-import os, sys, subprocess, threading, time, json, re, signal, snowboydecoder,ssl,ast
+#
+# K9 Conversation by Richard Hopkins using
+# Kitt-AI Snowboy for hotword recognition
+# Watson Speech to Text (streaming to sockets)
+# Watson Conversation
+# eSpeak Text to Speech
+# Robot status displayed with Adafruit PWM Servo Driver driving LED brightness
+#
+# Original TTS elements (now much revised) derived from
+# Joshua Rees-Jones, IBM intern
+# "Getting robots to listen"
+#
+# Conversation elements derived from:
+# watson-developer-cloud/python-sdk/examples/conversation_v1.py
+#
+# Snowboy elements derived from
+# Kitt-AI/snowboy/examples/Python/demo.py
+#
+# Released under The Unlicense license
+
+import os, sys, subprocess, threading, time, json, re, signal, snowboydecoder,ssl
 import requests
 from requests.auth import HTTPBasicAuth
 from ws4py.client.threadedclient import WebSocketClient
