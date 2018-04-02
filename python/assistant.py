@@ -44,12 +44,12 @@ PWM_eye = 0
 PWM_hover = 1
 
 def signal_handler(signal, frame):
-	global interrupted
-	interrupted = True
+    global interrupted
+    interrupted = True
 
 def interrupt_callback():
-	global interrupted
-	return interrupted
+    global interrupted
+    return interrupted
 
 signal.signal(signal.SIGINT, signal_handler)
 detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
@@ -155,6 +155,7 @@ def set_PWM(light, brightness):
     brightness = int(float(brightness)*40.95)
     if light >=0 and light <=15: # check that PWM channel exists
         if brightness >= 0 and brightness <= 4095: # check that frequency is valid
+            pass
             #pwm.set_pwm(0,light,brightness)
             #print "Eye brightness set to: " + str(brightness)
 
