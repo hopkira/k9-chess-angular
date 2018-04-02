@@ -16,14 +16,14 @@ conversation = ConversationV1(
     password=WApassword,
 version='2018-02-16')
 
-print "STT Username: " + str(STTusername)
-print "STT Password: " + str(STTpassword)
-print "WA Username: " + str(WAusername)
-print "WA Password: " + str(WApassword)
-print "WA Workspace: " + str(WAworkspace_id)
+#print "STT Username: " + str(STTusername)
+#print "STT Password: " + str(STTpassword)
+#print "WA Username: " + str(WAusername)
+#print "WA Password: " + str(WApassword)
+#print "WA Workspace: " + str(WAworkspace_id)
 
 r = requests.get('https://stream.watsonplatform.net/authorization/api/v1/token?url=https://stream.watsonplatform.net/speech-to-text/api', auth=HTTPBasicAuth(STTusername, STTpassword))
-print r.status_code
+#print r.status_code
 auth_token = (r.content)
 
 # Initialising TTS global variables
@@ -66,7 +66,7 @@ class SpeechToTextClient(WebSocketClient):
         except: print "Failed to open WebSocket."
 
     def opened(self):
-        print "opened(self) and self.send"
+        #print "opened(self) and self.send"
         self.send('{"action":"start","content-type":"audio/l16;rate=16000","interim_results":true}')
         self.stream_audio_thread = threading.Thread(target=self.stream_audio)
         self.stream_audio_thread.start()
@@ -75,39 +75,38 @@ class SpeechToTextClient(WebSocketClient):
         global transcript
         global pwm
         message = json.loads(str(message))
-        print "Received: " + str(message)
+        #print "Received: " + str(message)
         if "state" in message and not speech_received:
             if message["state"] == "listening":
                 self.listening = True
                 set_PWM(PWM_eye,100)
-                print "Speak now..."
+                print "+++ SPEAK NOW +++"
         if "results" in message:
-            print "Got here!"
-            print message['results'][0]['final']
-            print message['results'][0]['alternatives'][0]['transcript']
+            #print message['results'][0]['final']
+            #print message['results'][0]['alternatives'][0]['transcript']
             if message['results'][0]['final'] :
                 transcript = message['results'][0]['alternatives'][0]['transcript']
                 self.listening = False
                 speech_received = True
-                print "Sending stop transcription message"
+                #print "Sending stop transcription message"
                 self.send('{"action": "stop"}')
                 set_PWM(PWM_eye,3)
                 self.close()
-                print "Speech_received, exiting"
+                print "+++ SPEECH PROCESSED +++"
         if "error" in message:
             speech_received = True
             self.listening = False
             self.send('{"action": "stop"}')
-            print "no speech heard for 30 seconds, exiting"
+            print "+++ NOTHING HEARD +++"
             set_PWM(PWM_eye,3)
             self.close()
 
     def stream_audio(self):
-        print "Entering stream_audio(self)"
+        #print "Entering stream_audio(self)"
         while not self.listening:
             time.sleep(0.1)
         reccmd = ["arecord", "-f", "S16_LE", "-r", "16000", "-t", "raw"]
-        print "arecord and p=subprocess.Popen"
+        #print "arecord and p=subprocess.Popen"
         p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
         while self.listening:
             #print "while self.listening is true"
@@ -117,18 +116,18 @@ class SpeechToTextClient(WebSocketClient):
                 self.send(bytearray(data), binary=True)
             except ssl.SSLError: pass
         p.kill()
-        print "p.kill()"
+        #print "p.kill()"
 
     def close(self):
         self.listening = False
         speech_received = True
         self.stream_audio_thread.join()
-        print "close self - self.listening false - clean closure"
+        #print "close self - self.listening false - clean closure"
 
 # K9 hotword has been detected
 def K9_detected():
     global pwm
-    print "K9 detected\n"
+    print "+++ HOT WORD DETECTED +++"
     set_PWM(PWM_eye,30)
     global stop_now
     stop_now = True # get the detector to terminate
@@ -138,7 +137,7 @@ def speech_to_text():
     global speech_received
     speech_received = False # has speech been returned by Watson?
     transcript = "silence"  # default value for speech if nothing returned
-    print "stt_client initialisation"
+    #print "stt_client initialisation"
     stt_client = SpeechToTextClient()
     while not speech_received:
         #print "not hearing anything, so sleeping"
@@ -157,16 +156,15 @@ def set_PWM(light, brightness):
     if light >=0 and light <=15: # check that PWM channel exists
         if brightness >= 0 and brightness <= 4095: # check that frequency is valid
             #pwm.set_pwm(0,light,brightness)
-            print "Eye brightness set to: " + str(brightness)
+            #print "Eye brightness set to: " + str(brightness)
 
 # Initialise the eye lights at 3%
 set_PWM(PWM_eye,3)
 
-
-print "Calling listen_for_K9"
+#print "Calling listen_for_K9"
 interrupted = False
 stop_now = False
-print "Listening for K9 keyword... press Ctrl+C to exit"
+print "+++ Listening for K9 keyword... press Ctrl+Z to exit +++"
 detector.start(detected_callback=K9_detected,
     interrupt_check=stop_snowboy,
     sleep_time=0.03)
@@ -174,9 +172,9 @@ detector.terminate()
 time.sleep(0.03)
 speech_received = False
 transcript = "silence"
-print "Calling speech_to_text"
+#print "Calling speech_to_text"
 speech_to_text()
-print "To conversation: " + transcript
+#print "To conversation: " + transcript
 response = conversation.message(workspace_id=WAworkspace_id, input={'text':transcript})
 results = re.search(': \{u\'text\': \[u\'(.*)\'\], u\'log', str(response))
 answer = results.group(1)
