@@ -57,7 +57,7 @@ detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
 class SpeechToTextClient(WebSocketClient):
 
     def __init__(self):
-        ws_url = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize?inactivity_timeout=1&interim_results=true'
+        ws_url = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
         self.listening = False
         try:
             WebSocketClient.__init__(self, ws_url,
@@ -67,7 +67,12 @@ class SpeechToTextClient(WebSocketClient):
 
     def opened(self):
         print "opened(self) and self.send"
-        self.send('{"action": "start", "content-type": "audio/l16;rate=16000;channels=1"}')
+        self.send('{
+            "action": "start",
+            "content-type": "audio/l16;rate=16000;channels=1",
+            "inactivity_timeout": 1,
+            "interim_results": "true"
+        }')
         #self.stream_audio_thread = threading.Thread(target=self.stream_audio)
         #self.stream_audio_thread.start()
 
