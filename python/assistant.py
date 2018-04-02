@@ -67,15 +67,9 @@ class SpeechToTextClient(WebSocketClient):
 
     def opened(self):
         print "opened(self) and self.send"
-        self.send('{
-            "action": "start",
-            "content-type": "audio/l16;rate=16000;channels=1",
-            "inactivity_timeout": 1,
-            "interim_results": "true"
-        }')
+        self.send('{"action": "start","content-type": "audio/l16;rate=16000;channels=1","inactivity_timeout": 1,"interim_results": "true"}')
         #self.stream_audio_thread = threading.Thread(target=self.stream_audio)
         #self.stream_audio_thread.start()
-
     def received_message(self, message):
         global speech_received
         global transcript
