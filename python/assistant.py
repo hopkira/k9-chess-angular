@@ -67,7 +67,7 @@ class SpeechToTextClient(WebSocketClient):
 
     def opened(self):
         print "opened(self) and self.send"
-        self.send('{"action":"start","content-type":"audio/l16;rate=16000","inactivity_timeout":1}')
+        self.send('{"action":"start","content-type":"audio/l16;rate=16000","inactivity_timeout":1,"interim_results":true}')
         self.stream_audio_thread = threading.Thread(target=self.stream_audio)
         self.stream_audio_thread.start()
     def received_message(self, message):
@@ -81,7 +81,7 @@ class SpeechToTextClient(WebSocketClient):
                 self.listening = True
                 set_PWM(PWM_eye,100)
                 print "Speak now..."
-        if "results" in message:
+        if "'final': True" in message:
             self.listening = False
             speech_received = True
             print "Sending stop transcription message"
