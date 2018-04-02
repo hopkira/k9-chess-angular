@@ -1,4 +1,4 @@
-import os, sys, subprocess, threading, time, json, re, signal, snowboydecoder
+import os, sys, subprocess, threading, time, json, re, signal, snowboydecoder,ssl
 import requests
 from requests.auth import HTTPBasicAuth
 from ws4py.client.threadedclient import WebSocketClient
