@@ -94,6 +94,8 @@ class SpeechToTextClient(WebSocketClient):
                 set_PWM(PWM_eye,3)
                 self.close()
                 print "Speech_received, exiting"
+                self.stream_audio_thread.join()
+                print "close self - self.listening false - clean closure"
                 # self.close()
                 # sys.exit()
         if "error" in message:
