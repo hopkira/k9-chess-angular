@@ -162,24 +162,23 @@ def set_PWM(light, brightness):
 # Initialise the eye lights at 3%
 set_PWM(PWM_eye,3)
 
-go = True
-while go:
-    print "Calling listen_for_K9"
-    interrupted = False
-    stop_now = False
-    print "Listening for K9 keyword... press Ctrl+C to exit"
-    detector.start(detected_callback=K9_detected,
-        interrupt_check=stop_snowboy,
-        sleep_time=0.03)
-    detector.terminate()
-    time.sleep(0.03)
-    speech_received = False
-    transcript = "silence"
-    print "Calling speech_to_text"
-    speech_to_text()
-    print "To conversation: " + transcript
-    response = conversation.message(workspace_id=WAworkspace_id, input={'text':transcript})
-    results = re.search(': \{u\'text\': \[u\'(.*)\'\], u\'log', str(response))
-    answer = results.group(1)
-    answer = './tts ' + answer
-    subprocess.call(answer, shell=True)
+
+print "Calling listen_for_K9"
+interrupted = False
+stop_now = False
+print "Listening for K9 keyword... press Ctrl+C to exit"
+detector.start(detected_callback=K9_detected,
+    interrupt_check=stop_snowboy,
+    sleep_time=0.03)
+detector.terminate()
+time.sleep(0.03)
+speech_received = False
+transcript = "silence"
+print "Calling speech_to_text"
+speech_to_text()
+print "To conversation: " + transcript
+response = conversation.message(workspace_id=WAworkspace_id, input={'text':transcript})
+results = re.search(': \{u\'text\': \[u\'(.*)\'\], u\'log', str(response))
+answer = results.group(1)
+answer = './tts ' + answer
+subprocess.call(answer, shell=True)
