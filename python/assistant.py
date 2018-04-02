@@ -1,4 +1,4 @@
-import os, sys, subprocess, threading, time, json, re, signal, snowboydecoder,ssl
+import os, sys, subprocess, threading, time, json, re, signal, snowboydecoder,ssl,ast
 import requests
 from requests.auth import HTTPBasicAuth
 from ws4py.client.threadedclient import WebSocketClient
@@ -74,7 +74,7 @@ class SpeechToTextClient(WebSocketClient):
         global speech_received
         global transcript
         global pwm
-        message = json.loads(str(message))
+        message = ast.literal_eval(message)
         print "Received: " + str(message)
         if "state" in message and not speech_received:
             if message["state"] == "listening":
@@ -83,11 +83,10 @@ class SpeechToTextClient(WebSocketClient):
                 print "Speak now..."
         if "results" in message:
             print "Got here!"
-            response = json.loads(message)
-            print response.results[0].final
-            print response.results[0].alternatives[0].transcript
-            if response.results[0].final :
-                transcript = response.results[0].alternatives[0].transcript
+            print message['results'][0]['final']
+            print message['results'][0]['alternatives'][0]['transcript']
+            if message['results'][0]['final'] :
+                transcript = message['results'][0]['alternatives'][0]['transcript']
                 self.listening = False
                 speech_received = True
                 print "Sending stop transcription message"
