@@ -74,8 +74,8 @@ class SpeechToTextClient(WebSocketClient):
         global speech_received
         global transcript
         global pwm
-		message = json.loads(str(message))
-		print "Received: " + str(message)
+        message = json.loads(str(message))
+        print "Received: " + str(message)
         if "state" in message and not speech_received:
             if message["state"] == "listening":
                 self.listening = True
