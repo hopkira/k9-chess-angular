@@ -74,7 +74,7 @@ class SpeechToTextClient(WebSocketClient):
         global speech_received
         global transcript
         global pwm
-        message = unicode(message,'iso-8859-15')
+        message = str(message)
         message = ast.literal_eval(message)
         print "Received: " + str(message)
         if "state" in message and not speech_received:
