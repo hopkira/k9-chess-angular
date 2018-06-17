@@ -1,4 +1,5 @@
 import math
+import time
 from roboclaw import Roboclaw
 address = 0x80
 rc = Roboclaw("/dev/roboclaw",115200)
