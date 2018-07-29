@@ -6,10 +6,10 @@ angular.module('K9.controllers', [])
     var j = Snap("#k9joystick");
     var s = Snap("#k9sensors");
     Snap.load("img/K9 sensors.svg", onSVGLoaded);
-    Snap.load("img/Joystick Turbo.svg", onJoyLoaded);
+    //Snap.load("img/Joystick Slow.svg", onJoyLoaded);
     // Update joystick view
-    function onJoyLoaded(data){
-      j.append(data);
+    function onJoyLoaded( data ){
+      j.append( data );
     }
     // Update sensor view
     function onSVGLoaded( data ){
@@ -68,17 +68,21 @@ angular.module('K9.controllers', [])
         };
     $scope.k9 = K9;
 
+/*
     $scope.changeMotorCtrl = function (status) {
         // console.log(status);
         var value;
         if ($scope.k9.motorctrl==true) {
             value="on";
-          } else {
+          }
+          else
+          {
             value="off";
           };
         // console.log("MotorCtrl button sent "+value);
         NRInstruction.send('navigation', "motorctrl", value);
     }
+    */
 
     // sends mood from button clicks
     $scope.buttonClick = function(event) {
