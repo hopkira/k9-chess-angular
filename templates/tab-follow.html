@@ -5,16 +5,16 @@
   <ion-content class="padding" scroll="false">
       <div class="row" style="border: thin solid Gainsboro">
         <div class="col"><just-gage id="mot_bat_gage" min=12 max=29 value="k9.main_volt" title="Motor Battery"
-          options="{levelColors: ['#ef473a', '#ef473a', '#7a7a7a', '#33cd5f'],'noGradient':'True','symbol':' V'}"></just-gage></div>
-        <div class="col"><just-gage id="brain_bat_gage" min=10 max=15 value="k9.brain_volt" title="Brain Battery"
-          options="{levelColors: ['#ef473a', '#ef473a', '#7a7a7a', '#33cd5f'],'noGradient':'true','symbol':' V'}"></just-gage></div>
+          options="{levelColors: ['#ef473a', '#7a7a7a', '#33cd5f', '#33cd5f'],'noGradient':'True','symbol':' V'}"></just-gage></div>
+        <div class="col"><just-gage id="brain_bat_gage" min=10 max=14 value="k9.brain_volt" title="Brain Battery"
+          options="{levelColors: ['#ef473a', '#7a7a7a', '#33cd5f', '#33cd5f'],'noGradient':'true','symbol':' V'}"></just-gage></div>
         <div class="col col-30">
           <!--<img id="mjpeg_dest2" src="img/K9-Camera-Image.png" width="256" height="144" alt="K9 camera"></img>-->
           <img id="mjpeg_dest" onload="setTimeout('init();', 100);" src="img/K9-Camera-Image.png"
       width="256" height="144" alt="K9 camera"></img>
         </div>
-        <div class="col"><just-gage id="temp_gage" min=10 max=100 value="k9.temp" title="Temperature"
-          options="{levelColors: ['#33cd5f', '#7a7a7a', '#7a7a7a', '#ef473a'],'noGradient':'true','symbol':' C'}"></just-gage></div>
+        <div class="col"><just-gage id="temp_gage" min=15 max=85 value="k9.temp" title="Temperature"
+          options="{levelColors: ['#33cd5f', '#33cd5f', '#7a7a7a', '#ef473a'],'noGradient':'true','symbol':' C'}"></just-gage></div>
         <div class="col"><just-gage id="speedometer" min=0 max=10 value="k9.speed" title="Speed"
           options="{levelColors: ['#33cd5f', '#ef473a', '#ef473a', '#ef473a'],'noGradient':'true','symbol':' mph'}"></just-gage></div>
       </div>

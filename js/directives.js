@@ -65,7 +65,7 @@ angular.module('K9.directives', [])
             var msg_turbo = "off"
             var joystick_pic = Snap.load("img/Joystick Slow.svg", onJoyLoaded);
             // draw the joystick circle
-            var joy = s.circle(joy_position.x,joy_position.y,10);
+            var joy = s.circle(joy_position.x,joy_position.y,20);
             // initialise as green or red depending upon turbo value
             joy.attr({
               stroke: "none",  // NEED TO LINK TO TOGGLEVALUE
@@ -171,7 +171,7 @@ angular.module('K9.directives', [])
                   joystick_pic = Snap.load("img/Joystick Slow.svg", onJoyLoaded);
                   joy.attr({
                     fill : "green",
-                    r : 10,
+                    r : 20,
                   });
                   s.append(joy);
                   console.log("slow mode");
@@ -183,7 +183,7 @@ angular.module('K9.directives', [])
             // register the functions above against the Snap SVG drag movement
             console.log("Registering joystick functions")
             joy.drag(move,start,stop);
-            joy.dblclick(doubleclick);
+            joy.click(doubleclick);
             s.append(joy);
     }
   };
