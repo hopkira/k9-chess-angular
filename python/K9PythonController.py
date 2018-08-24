@@ -29,8 +29,8 @@ sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persisten
 from ws4py.client.threadedclient import WebSocketClient #enabling web sockets
 
 sim = False # by default run as a real motor controller
-m1_qpps = 708
-m2_qpps = 720
+m1_qpps = 740
+m2_qpps = 700
 
 # sim is a program wide flag to allow the program to run without the Roboclaw
 # and without access to the Raspberry Pi GPIO ports
@@ -62,8 +62,8 @@ if not sim :
    else:
       print repr(version[1])
       # Set PID variables to those required by K9
-      rc.SetM1VelocityPID(rc_address,3000,300,0,m1_qpps)
-      rc.SetM2VelocityPID(rc_address,3000,300,0,m2_qpps)
+      rc.SetM1VelocityPID(rc_address,20000,2000,0,m1_qpps)
+      rc.SetM2VelocityPID(rc_address,20000,2000,0,m2_qpps)
       # Zero the motor encoders
       rc.ResetEncoders(rc_address)
       print "PID variables set on roboclaw"
