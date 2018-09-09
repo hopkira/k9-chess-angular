@@ -8,11 +8,11 @@ serial connection over a USB cable.
 
 Published under The Unlicense
 
-Richard Hopkins, 8th September 2018
+Richard Hopkins, 9th September 2018
 */
 // set up USB connector to send messages to Pi via
 // serial over USB
-//USB.setup(115200,{bytesize:8,stopbits:1});
+USB.setup(115200,{bytesize:8,stopbits:1});
 var PWM_l = 0; // minimum position for sevo
 var PWM_r = 1; // maximum position for servo
 var PIN_PWM_l = B15; // left ear PWM pin name
@@ -23,9 +23,10 @@ var PIN_pot_l = B1; // pin for servo potentiometer
 var PIN_pot_r = A7; // pin for servo potentiometer
 var PIN_sda = B3; // pin for I2C SDA cable
 var PIN_scl = B10; // pin for I2C SCL cable
-var move_int=10; // time between servo moves in ms
-var scan_int=35; // time between readings in ms
-var num_steps = 30; // number of steps in full sweep
+var move_int=23; // time between servo moves in ms
+var scan_int_l=41; // time between readings in ms on left LIDAR
+var scan_int_r=43; // time between readings in ms on right LIDAR
+var num_steps = 22; // number of steps in full sweep
 var step = 0; // start at step 0
 var direction = 1; // direction of first sweep
 var LIDAR_l;  // object for left LIDAR sensor
@@ -33,11 +34,13 @@ var LIDAR_r; // object for right LIDAR sensor
 var vRef = E.getAnalogVRef(); // voltage reference
 var num_readings = 1;  // number of times voltage has been read
 
-// position servo as instructed between 0 and 1
+// position servo as instructed (from 0 to 1)
+// using a pulse between 0.75ms and 2.25ms
 function setServo(pin,pos) {
  if (pos<0) pos=0;
  if (pos>1) pos=1;
- analogWrite(pin, (1+pos) / 50.0, {freq:20});
+ //console.log(pos);
+ analogWrite(pin, (0.75+(1.25*pos)) / 50.0, {freq:20});
 }
 
 // initialise the LIDAR and I2C interfaces
@@ -45,7 +48,7 @@ function setServo(pin,pos) {
 function initHW(){
    digitalWrite(PIN_LIDARX_l,0);
    digitalWrite(PIN_LIDARX_r,0);
-   I2C2.setup({sda:PIN_sda, scl:PIN_scl, bitrate:400000});
+   I2C2.setup({sda:PIN_sda, scl:PIN_scl, bitrate:100000});
   console.log("HW init done");
 }
 
@@ -76,7 +79,8 @@ function onInit() {
    initLIDAR();
    setInterval(refine_vRef,1000);
    setInterval(moveEars,move_int);
-   setInterval(takeReading,scan_int);
+   setInterval(takeReading,scan_int_l,'l_ear');
+  setInterval(takeReading,scan_int_r,'r_ear');
 }
 
 // calculate desired servo position based on step
@@ -101,20 +105,26 @@ function scaleServoPos(position) {
 // send a JSON message to the Rapsberry Pi via a USB serial connection
 function sendMsg(type,sensor,distance,angle) {
   message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}!');
-  //USB.print(message);
-  console.log(message);
+  USB.print(message);
+  //console.log(message);
   }
 
 // take a reading from each of the LIDAR sensors
-function takeReading(){
-   var dist_l = 0;
-   var dist_r = 0;
-   //var dist_l = LIDAR_l.performSingleMeasurement().distance;
-   var l_ear_dir=analogRead(PIN_pot_l)*vRef;
-   //var dist_r = LIDAR_r.performSingleMeasurement().distance;
-   var r_ear_dir=analogRead(PIN_pot_r)*vRef;
-   sendMsg("LIDAR","l_ear",dist_l,l_ear_dir);
-   sendMsg("LIDAR","r_ear",dist_r,r_ear_dir);
+function takeReading(ear){
+  var dist;
+  var ear_dir;
+  if (ear == 'l_ear'){
+     read_lidar = LIDAR_l;
+     read_pin = PIN_pot_l;
+  }
+  if (ear == 'r_ear'){
+     read_lidar = LIDAR_r;
+     read_pin = PIN_pot_r;
+  }
+  dist = read_lidar.performSingleMeasurement().distance;
+  if (dist <= 20) {dist=0;}
+  ear_dir=analogRead(read_pin)*vRef;
+  sendMsg("LIDAR",ear,dist,ear_dir);
 }
 
 // calculate the next position for the servos and move them to it
@@ -122,11 +132,11 @@ function moveEars(){
    step = step + direction;
    if (step > num_steps) {
       direction = -1;
-      step = num_steps;
+      step = num_steps-1;
    }
    if (step < 0) {
       direction = 1;
-      step = 0;
+      step = 1;
    }
    position = calculateServoPos(step);
    scaled_pos = scaleServoPos(position);
