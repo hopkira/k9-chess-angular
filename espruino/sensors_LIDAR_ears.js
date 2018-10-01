@@ -40,7 +40,7 @@ function setServo(pin,pos) {
  if (pos<0) pos=0;
  if (pos>1) pos=1;
  //console.log(pos);
- analogWrite(pin, (0.75+(1.25*pos)) / 50.0, {freq:20});
+ analogWrite(pin, (1+pos) / 50.0, {freq:20});
 }
 
 // initialise the LIDAR and I2C interfaces
