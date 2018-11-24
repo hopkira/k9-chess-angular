@@ -86,8 +86,12 @@ function onInit() {
 // calculate desired servo position based on step
 // the trigonometry smooths the movement of the servos
 function calculateServoPos(step) {
+   // each swing of the ears is separated into a number of steps (num_steps)
+   // and the angle is calculated as the fraction of a half circle
    angle = step/num_steps*Math.PI;
    //console.log("Angle: "+String(angle));
+   // the position calculated transforms the linear steps into a smoooth
+   // natural motion
    position = (angle-(Math.cos(angle)*Math.sin(angle)))/Math.PI;
    //console.log("Pos: "+String(position));
    return position;
@@ -122,6 +126,7 @@ function takeReading(ear){
      read_pin = PIN_pot_r;
   }
   dist = read_lidar.performSingleMeasurement().distance;
+  // if distance is less than or equal to 20mm, then report 0mm
   if (dist <= 20) {dist=0;}
   ear_dir=analogRead(read_pin)*vRef;
   sendMsg("LIDAR",ear,dist,ear_dir);
