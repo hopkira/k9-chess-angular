@@ -2,6 +2,7 @@
 Simple espruino program for the ear LIDAR sensors that:
    - moves the ears smoothly backwards and forwards
    - sends LIDAR readings via the USB cable to the node-RED on the Pi
+   - responds to speed commands from USB serial port
 
 All messages to node-RED are sent as JSON strings terminated in an ! via a
 serial connection over a USB cable.
@@ -13,8 +14,9 @@ Richard Hopkins, 9th September 2018
 // set up USB connector to send messages to Pi via
 // serial over USB
 USB.setup(115200,{bytesize:8,stopbits:1});
-var PWM_l = 0; // minimum position for sevo
-var PWM_r = 1; // maximum position for servo
+//LoopbackA.setConsole();
+var PWM_l = 0.15; // minimum position for sevo
+var PWM_r = 0.8; // maximum position for servo
 var PIN_PWM_l = B15; // left ear PWM pin name
 var PIN_PWM_r = B14; // right ear PWM pin name
 var PIN_LIDARX_l = B4; // pin for LIDAR on/off
@@ -23,10 +25,10 @@ var PIN_pot_l = B1; // pin for servo potentiometer
 var PIN_pot_r = A7; // pin for servo potentiometer
 var PIN_sda = B3; // pin for I2C SDA cable
 var PIN_scl = B10; // pin for I2C SCL cable
-var move_int=23; // time between servo moves in ms
-var scan_int_l=41; // time between readings in ms on left LIDAR
-var scan_int_r=43; // time between readings in ms on right LIDAR
-var num_steps = 22; // number of steps in full sweep
+var move_int=1000; // time between servo moves in ms
+var scan_int_l=10000; // time between readings in ms on left LIDAR
+var scan_int_r=10000; // time between readings in ms on right LIDAR
+var num_steps = 50; // number of steps in full sweep
 var step = 0; // start at step 0
 var direction = 1; // direction of first sweep
 var LIDAR_l;  // object for left LIDAR sensor
@@ -80,7 +82,32 @@ function onInit() {
    setInterval(refine_vRef,1000);
    setInterval(moveEars,move_int);
    setInterval(takeReading,scan_int_l,'l_ear');
-  setInterval(takeReading,scan_int_r,'r_ear');
+   setInterval(takeReading,scan_int_r,'r_ear');
+   USB.on('data', function (data) {
+     USB.print(data);
+     switch(data) {
+       case "stop":
+        move_int=1000;
+        scan_int_l=1000;
+        scan_int_r=1000;
+        break;
+       case "slow":
+        move_int=500;
+        scan_int_l=1000;
+        scan_int_r=1000;
+        break;
+      case "medium":
+        move_int=50;
+        scan_int_l=100;
+        scan_int_r=100;
+        break;
+      case "fast":
+        move_int=23;
+        scan_int_l=41;
+        scan_int_r=43;
+        break;
+        }
+      });
 }
 
 // calculate desired servo position based on step
@@ -108,8 +135,8 @@ function scaleServoPos(position) {
 
 // send a JSON message to the Rapsberry Pi via a USB serial connection
 function sendMsg(type,sensor,distance,angle) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}!');
-  USB.print(message);
+  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}');
+   USB.print(message);
   //console.log(message);
   }
 
@@ -127,24 +154,35 @@ function takeReading(ear){
   }
   dist = read_lidar.performSingleMeasurement().distance;
   // if distance is less than or equal to 20mm, then report 0mm
-  if (dist <= 20) {dist=0;}
-  ear_dir=analogRead(read_pin)*vRef;
-  sendMsg("LIDAR",ear,dist,ear_dir);
+  if (dist != 20) {
+    ear_dir=analogRead(read_pin)*vRef;
+    sendMsg("LIDAR",ear,dist,ear_dir);
+  }
 }
 
 // calculate the next position for the servos and move them to it
 function moveEars(){
-   step = step + direction;
-   if (step > num_steps) {
-      direction = -1;
-      step = num_steps-1;
-   }
-   if (step < 0) {
-      direction = 1;
-      step = 1;
-   }
-   position = calculateServoPos(step);
-   scaled_pos = scaleServoPos(position);
-   setServo(PIN_PWM_l,scaled_pos);
-   setServo(PIN_PWM_r,1-scaled_pos);
+   if (move_int > 500) {return;}
+   else {
+     step = step + direction;
+     if (step > num_steps) {
+        direction = -1;
+        step = num_steps-1;
+     }
+     if (step < 0) {
+        direction = 1;
+        step = 1;
+     }
+     scaled_pos = step_lookup[step];
+     setServo(PIN_PWM_l,scaled_pos);
+     setServo(PIN_PWM_r,1-scaled_pos);
+  }
 }
+
+// create an array of all the valid scaled positions
+step_lookup = [];
+for (step = 0; step <= num_steps; step++) {
+  step_lookup[step] = scaleServoPos(calculateServoPos(step));
+  //print(step + " : " + step_lookup[step]);
+}
+step = 0;
