@@ -11,10 +11,6 @@ Published under The Unlicense
 
 Richard Hopkins, 9th September 2018
 */
-// set up USB connector to send messages to Pi via
-// serial over USB
-USB.setup(115200,{bytesize:8,stopbits:1});
-//LoopbackA.setConsole();
 var PWM_l = 0.15; // minimum position for sevo
 var PWM_r = 0.8; // maximum position for servo
 var PIN_PWM_l = B15; // left ear PWM pin name
@@ -25,9 +21,6 @@ var PIN_pot_l = B1; // pin for servo potentiometer
 var PIN_pot_r = A7; // pin for servo potentiometer
 var PIN_sda = B3; // pin for I2C SDA cable
 var PIN_scl = B10; // pin for I2C SCL cable
-var move_int=1000; // time between servo moves in ms
-var scan_int_l=10000; // time between readings in ms on left LIDAR
-var scan_int_r=10000; // time between readings in ms on right LIDAR
 var num_steps = 50; // number of steps in full sweep
 var step = 0; // start at step 0
 var direction = 1; // direction of first sweep
@@ -35,14 +28,18 @@ var LIDAR_l;  // object for left LIDAR sensor
 var LIDAR_r; // object for right LIDAR sensor
 var vRef = E.getAnalogVRef(); // voltage reference
 var num_readings = 1;  // number of times voltage has been read
+var mov_int_ref; // the reference id for the ear movement timer
+var scan_int_l_ref; // the reference id for the left scan timer
+var scan_int_r_ref; // the reference id for the right scan timer
+var speed = "fast"; // initial speed is fast
 
 // position servo as instructed (from 0 to 1)
 // using a pulse between 0.75ms and 2.25ms
 function setServo(pin,pos) {
- if (pos<0) pos=0;
- if (pos>1) pos=1;
- //console.log(pos);
- analogWrite(pin, (1+pos) / 50.0, {freq:20});
+   if (pos<0) pos=0;
+   if (pos>1) pos=1;
+   //console.log(pos);
+   analogWrite(pin, (1+pos) / 50.0, {freq:20});
 }
 
 // initialise the LIDAR and I2C interfaces
@@ -51,7 +48,7 @@ function initHW(){
    digitalWrite(PIN_LIDARX_l,0);
    digitalWrite(PIN_LIDARX_r,0);
    I2C2.setup({sda:PIN_sda, scl:PIN_scl, bitrate:100000});
-  console.log("HW init done");
+   //console.log("HW init done");
 }
 
 // create the LIDAR objects on the I2C bus
@@ -70,6 +67,15 @@ function refine_vRef(){
   //console.log("Vref: " + vRef);
 }
 
+function resetIntervals(move,left,right){
+   clearInterval(mov_int_ref);
+   mov_int_ref = setInterval(moveEars,move);
+   clearInterval(scan_int_l_ref);
+   scan_int_l_ref = setInterval(takeReading,left,'l_ear');
+   clearInterval(scan_int_r_ref);
+   scan_int_r_ref = setInterval(takeReading,right,'r_ear');
+}
+
 // this function is called automatically on Pico initialisation
 // it will initise the I2C bus and the LIDAR and then enable three
 // fuctions to run at intervals.  This includes:
@@ -77,36 +83,32 @@ function refine_vRef(){
 // - moving the ears via their servos
 // - taking a LIDAR reading
 function onInit() {
+   USB.setup(115200,{bytesize:8,stopbits:1});
    initHW();
    initLIDAR();
    setInterval(refine_vRef,1000);
-   setInterval(moveEars,move_int);
-   setInterval(takeReading,scan_int_l,'l_ear');
-   setInterval(takeReading,scan_int_r,'r_ear');
+   mov_int_ref = setInterval(moveEars,20);
+   scan_int_l_ref = setInterval(takeReading,40,'l_ear');
+   scan_int_r_ref = setInterval(takeReading,40,'r_ear');
+   setTimeout(function() { Serial1.setConsole(); }, 30000); // give time for Pi to boot and make USB connection
    USB.on('data', function (data) {
-     USB.print(data);
-     switch(data) {
-       case "stop":
-        move_int=1000;
-        scan_int_l=1000;
-        scan_int_r=1000;
-        break;
-       case "slow":
-        move_int=500;
-        scan_int_l=1000;
-        scan_int_r=1000;
-        break;
-      case "medium":
-        move_int=50;
-        scan_int_l=100;
-        scan_int_r=100;
-        break;
-      case "fast":
-        move_int=23;
-        scan_int_l=41;
-        scan_int_r=43;
-        break;
-        }
+      message = {type:"LIDAR",sensor:"none",distance:data,angle:data};
+      sendMsg(message);
+      speed = data;
+      switch(data) {
+         case "stop":
+            resetIntervals(1000,1000,1000);
+            break;
+         case "slow":
+            resetIntervals(500,1000,1000);
+            break;
+         case "medium":
+            resetIntervals(50,100,100);
+            break;
+         case "fast":
+            resetIntervals(20,40,40);
+            break;
+         }
       });
 }
 
@@ -135,10 +137,25 @@ function scaleServoPos(position) {
 
 // send a JSON message to the Rapsberry Pi via a USB serial connection
 function sendMsg(type,sensor,distance,angle) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}');
-   USB.print(message);
-  //console.log(message);
+   messageStr = JSON.stringify(message);
+   USB.write(messageStr);
   }
+
+function volts2angle(volts,ear){
+   var MIN_V = 1.33; // lowest likely POT value
+   var MAX_V = 2.10; // highest likely POT value
+   var MAX_ANG = Math.PI/4;  // ears can travel roughly 45 degrees
+   // normalize the voltage to a value between 0 and 1
+   angle = Math.min((Math.max(volts - MIN_V,0))/(MAX_V-MIN_V),1.00);
+   if (ear == 'l_ear'){
+      angle = 1 - angle; // for left ear max volts is minimum angle
+   }
+   if (ear == 'r_ear'){
+      angle = angle * -1; // for right ear, angle is negative
+   }
+   angle = angle * MAX_ANG;
+   return angle;
+}
 
 // take a reading from each of the LIDAR sensors
 function takeReading(ear){
@@ -152,17 +169,20 @@ function takeReading(ear){
      read_lidar = LIDAR_r;
      read_pin = PIN_pot_r;
   }
+  volts = analogRead(read_pin)*vRef;
+  ear_dir=volts2angle(volts,ear);
   dist = read_lidar.performSingleMeasurement().distance;
-  // if distance is less than or equal to 20mm, then report 0mm
+  // if distance does not equal 20mm, then report distance
   if (dist != 20) {
-    ear_dir=analogRead(read_pin)*vRef;
-    sendMsg("LIDAR",ear,dist,ear_dir);
+    dist = dist/1000; // convert to metres from mm
+    message = {type:"LIDAR",sensor:ear,distance:dist,angle:ear_dir};
+    sendMsg(message);
   }
 }
 
 // calculate the next position for the servos and move them to it
 function moveEars(){
-   if (move_int > 500) {return;}
+   if (speed == 'stop') {return;}
    else {
      step = step + direction;
      if (step > num_steps) {
