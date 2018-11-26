@@ -92,7 +92,7 @@ function onInit() {
    scan_int_r_ref = setInterval(takeReading,40,'r_ear');
    setTimeout(function() { Serial1.setConsole(); }, 30000); // give time for Pi to boot and make USB connection
    USB.on('data', function (data) {
-      message = {type:"LIDAR",sensor:"none",distance:data,angle:data};
+      message = {type:"sensorcommand",sensor:"ears",command:data};
       sendMsg(message);
       speed = data;
       switch(data) {
@@ -178,7 +178,7 @@ function takeReading(ear){
   // if distance does not equal 20mm, then report distance
   if (dist != 20) {
     dist = dist/1000; // convert to metres from mm
-    message = {type:"LIDAR",sensor:ear,distance:dist,angle:ear_dir};
+    message = {type:"sensor",sensor:ear,distance:dist,angle:ear_dir};
     sendMsg(message);
   }
 }
