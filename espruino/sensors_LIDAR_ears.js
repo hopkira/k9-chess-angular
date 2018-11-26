@@ -144,16 +144,17 @@ function sendMsg(type,sensor,distance,angle) {
 function volts2angle(volts,ear){
    var MIN_V = 1.33; // lowest likely POT value
    var MAX_V = 2.10; // highest likely POT value
-   var MAX_ANG = Math.PI/4;  // ears can travel roughly 45 degrees
+   var MAX_ANG = 45;  // ears can travel roughly 45 degrees
    // normalize the voltage to a value between 0 and 1
    angle = Math.min((Math.max(volts - MIN_V,0))/(MAX_V-MIN_V),1.00);
    if (ear == 'l_ear'){
       angle = 1 - angle; // for left ear max volts is minimum angle
+      angle = angle * MAX_ANG; // translate into degrees
    }
    if (ear == 'r_ear'){
-      angle = angle * -1; // for right ear, angle is negative
+      angle = angle * MAX_ANG; // translate into degrees
+      angle = 360 - angle; // for right ear, angle is measured from 360
    }
-   angle = angle * MAX_ANG;
    return angle;
 }
 
@@ -169,9 +170,11 @@ function takeReading(ear){
      read_lidar = LIDAR_r;
      read_pin = PIN_pot_r;
   }
-  volts = analogRead(read_pin)*vRef;
-  ear_dir=volts2angle(volts,ear);
+  volts1 = analogRead(read_pin)*vRef;
   dist = read_lidar.performSingleMeasurement().distance;
+  volts2 = analogRead(read_pin)*vRef;
+  volts = (volts1 + volts2)/2;
+  ear_dir=volts2angle(volts,ear);
   // if distance does not equal 20mm, then report distance
   if (dist != 20) {
     dist = dist/1000; // convert to metres from mm
