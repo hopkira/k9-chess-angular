@@ -31,7 +31,7 @@ var num_readings = 1;  // number of times voltage has been read
 var mov_int_ref; // the reference id for the ear movement timer
 var scan_int_l_ref; // the reference id for the left scan timer
 var scan_int_r_ref; // the reference id for the right scan timer
-var speed = "fast"; // initial speed is fast
+var speed = "stop"; // initial speed is fast
 
 // position servo as instructed (from 0 to 1)
 // using a pulse between 0.75ms and 2.25ms
@@ -87,9 +87,9 @@ function onInit() {
    initHW();
    initLIDAR();
    setInterval(refine_vRef,1000);
-   mov_int_ref = setInterval(moveEars,20);
-   scan_int_l_ref = setInterval(takeReading,40,'l_ear');
-   scan_int_r_ref = setInterval(takeReading,40,'r_ear');
+   mov_int_ref = setInterval(moveEars,1000);
+   scan_int_l_ref = setInterval(takeReading,1000,'l_ear');
+   scan_int_r_ref = setInterval(takeReading,1000,'r_ear');
    setTimeout(function() { Serial1.setConsole(); }, 30000); // give time for Pi to boot and make USB connection
    USB.on('data', function (data) {
       message = {type:"sensorcommand",sensor:"ears",command:data};
@@ -99,14 +99,20 @@ function onInit() {
          case "stop":
             resetIntervals(1000,1000,1000);
             break;
-         case "slow":
+          case "veryslow":
             resetIntervals(500,1000,1000);
             break;
+         case "slow":
+            resetIntervals(100,500,500);
+            break;
          case "medium":
-            resetIntervals(50,100,100);
+            resetIntervals(40,160,160);
+            break;
+         case "normal":
+            resetIntervals(20,80,80);
             break;
          case "fast":
-            resetIntervals(20,40,40);
+            resetIntervals(10,40,40);
             break;
          }
       });
