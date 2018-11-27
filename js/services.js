@@ -162,6 +162,8 @@ angular.module('K9.services', [])
             // "type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes
             $rootScope.$broadcast("event:k9state",messageObj);
             break;
+          case 'collection':
+            console.log("Collection message recognised.")
           case 'sensor':
             // sensor message has been received
             sensor = messageObj.sensor;
