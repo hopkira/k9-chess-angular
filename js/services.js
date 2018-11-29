@@ -333,8 +333,10 @@ angular.module('K9.services', [])
             {
             if (!sensorLocations[i].angle)
                {
+               console.log("Comparing "+angle+" to min "+sensorLocations[i].min_angle+" and max "+sensorLocations[i].max_angle)
                if ((angle > sensorLocations[i].min_angle) && (angle <= sensorLocations[i].max_angle))
                   {
+                  console.log("Matching angle found")
                   break;
                   }
                }
