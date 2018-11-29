@@ -171,7 +171,7 @@ angular.module('K9.services', [])
                distance = parseFloat(messageArray[i].distance);
                angle = parseFloat(messageArray[i].angle);
                msgtoPoint.recordReading(sensor,distance,angle);
-               console.log(message[i] + " being processed - " + sensor +", "+ distance + ", " + angle );
+               console.log(messageArray[i] + " being processed - " + sensor +", "+ distance + ", " + angle );
             }
             break;
           case 'sensor':
@@ -341,7 +341,7 @@ angular.module('K9.services', [])
             break;
             }
          }
-      console.log("Match found - " + sensorLocations[i].name + ":" + i);
+      console.log("Match found - " + sensorLocations[i].sensorName + ":" + i);
       mySensorLocation.x = sensorLocations[i].x;
       mySensorLocation.y = sensorLocations[i].y;
       // angles that are specified as 999 are 'variable' and the value
@@ -375,7 +375,7 @@ angular.module('K9.services', [])
       endpoint.y = mySensorLocation.y + Math.round(x_real * -1,0);
       //endpoint.x = Math.round(mySensorLocation.x + ( thisService.dist2SVG(distance) * Math.cos(mySensorLocation.angle)),0);
       //endpoint.y = Math.round(mySensorLocation.y + ( thisService.dist2SVG(distance) * Math.sin(mySensorLocation.angle)),0);
-      //console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);
+      console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);
       return endpoint
       }
 }])
