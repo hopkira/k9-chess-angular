@@ -163,14 +163,15 @@ angular.module('K9.services', [])
             $rootScope.$broadcast("event:k9state",messageObj);
             break;
           case 'collection':
-            console.log("Collection message recognised.");
+            //console.log("Collection message recognised.");
             messageArray = messageObj.data;
             msgArrayLen = messageArray.length;
             for (var i = 0; i < msgArrayLen; i++){
                sensor = messageArray[i].sensor;
-               distance = messageArray[i].distance;
+               distance = parseFloat(messageArray[i].distance);
                angle = parseFloat(messageArray[i].angle);
                msgtoPoint.recordReading(sensor,distance,angle);
+               console.log(message[i] + " being processed - " + sensor +", "+ distance + ", " + angle );
             }
             break;
           case 'sensor':
