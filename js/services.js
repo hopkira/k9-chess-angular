@@ -326,23 +326,21 @@ angular.module('K9.services', [])
       mySensorLocation.angle = 999;
       // search for matching sensor location and modify the
       // origin point values if a match is found
+
       for (var i=0, len=sensorLocations.length; i < len; i++)
-         {
-         //console.log("Comparing "+sensorLocations[i].sensorName+" with "+mySensorLocation.name);
-         if (sensorLocations[i].sensorName == mySensorLocation.name)
-            {
-            if (!sensorLocations[i].angle)
-               {
-               console.log("Comparing "+angle+" to min "+sensorLocations[i].min_angle+" and max "+sensorLocations[i].max_angle)
-               if ((angle > sensorLocations[i].min_angle) && (angle <= sensorLocations[i].max_angle))
-                  {
-                  console.log("Matching angle found")
-                  break;
-                  }
-               }
-            break;
+      {
+         if (!sensorLocations[i].angle) {
+            // compare the name and angle
+            if ((angle > sensorLocations[i].min_angle) && (angle <= sensorLocations[i].max_angle)){
+               break;
             }
          }
+         else {
+            if (sensorLocations[i].sensorName == mySensorLocation.name){
+               break;
+            }
+         }
+      }
       console.log("Match found - " + sensorLocations[i].sensorName + ":" + i);
       mySensorLocation.x = sensorLocations[i].x;
       mySensorLocation.y = sensorLocations[i].y;
