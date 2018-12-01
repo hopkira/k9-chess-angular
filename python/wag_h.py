@@ -12,8 +12,8 @@ pwm.set_pwm(4, 0, 320)	# centre tail vertically
 count= 0
 while count < 4:
     pwm.set_pwm(5, 0, 325)	# tail left
-	time.sleep(0.25)
+    time.sleep(0.25)
     pwm.set_pwm(5, 0, 440)	# tail right
-	time.sleep(0.25)
-	count +=1
+    time.sleep(0.25)
+    count +=1
 pwm.set_pwm(5, 0, 350)	# tail centre

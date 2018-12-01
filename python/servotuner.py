@@ -15,8 +15,8 @@ servo = 0				# default servo
 value = 375				# default value for servo
 
 if ( len(sys.argv) > 1 ) :
-	servo = int(sys.argv[1])
-	value = int(sys.argv[2])
+    servo = int(sys.argv[1])
+    value = int(sys.argv[2])
 
 print 'Servo: ' + str(servo) + ' Value: ' + str(value)
 
