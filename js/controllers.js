@@ -145,67 +145,41 @@ angular.module('K9.controllers', [])
 
 // Controller for K9 On/Off Tab
 .controller('PowerCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
-    $scope.k9 = K9;
-    $scope.changeLights = function (status) {
-        // console.log(status);
-        var value;
-        if ($scope.k9.lights==true) {
-            value="on";
-          } else {
-            value="off";
-          };
-        // console.log("Lights button sent "+value);
-        NRInstruction.send('toggle', "lights", value);
-    }
-    $scope.changeHover = function (status) {
-        // console.log(status);
-        var value;
-        if ($scope.k9.hover==true) {
-            value="on";
-          } else {
-            value="off";
-          };
-        // console.log("Hover button sent "+value);
-        NRInstruction.send('toggle', "hover", value);
-    }
-    $scope.changeEyes = function (status) {
-        // console.log(status);
-        var value;
-        if ($scope.k9.eyes==true) {
-            value="on";
-          } else {
-            value="off";
-          };
-        // console.log("Eyes button sent "+value);
-        NRInstruction.send('toggle', "eyes", value);
-    }
-    $scope.changeScreen = function (status) {
-        // console.log(status);
-        var value;
-        if ($scope.k9.screen==true) {
-            value="on";
-          } else {
-            value="off";
-          };
-        // console.log("Screen button sent "+value);
-        NRInstruction.send('toggle', "screen", value);
-    }
-    $scope.changeFollow = function (status) {
-        // console.log(status);
-        var value;
-        if ($scope.k9.follow==true) {
-            value="on";
-          } else {
-            value="off";
-          };
-        // console.log("Follow button sent "+value);
-        NRInstruction.send('toggle', "follow", value);
-    }
-}])
-
-// Controller for K9 Servos Tab
-.controller('ServoCtrl',["$scope", "NRInstruction", function($scope, NRInstruction) {
+     $scope.k9 = K9;
      $scope.dogstatus = {};
+     $scope.changeLights = function (status) {
+         // console.log(status);
+         var value;
+         if ($scope.k9.lights==true) {
+             value="on";
+           } else {
+             value="off";
+           };
+         // console.log("Lights button sent "+value);
+         NRInstruction.send('toggle', "lights", value);
+     }
+     $scope.changeScreen = function (status) {
+         // console.log(status);
+         var value;
+         if ($scope.k9.screen==true) {
+             value="on";
+           } else {
+             value="off";
+           };
+         // console.log("Screen button sent "+value);
+         NRInstruction.send('toggle', "screen", value);
+     }
+     $scope.changeFollow = function (status) {
+         // console.log(status);
+         var value;
+         if ($scope.k9.follow==true) {
+             value="on";
+           } else {
+             value="off";
+           };
+         // console.log("Follow button sent "+value);
+         NRInstruction.send('toggle', "follow", value);
+     }
      $scope.changeHead = function() {
       NRInstruction.send('toggle','head',$scope.dogstatus.head);
       if ($scope.dogstatus.head == "up" ) {
