@@ -175,9 +175,9 @@ angular.module('K9.controllers', [])
       $scope.changeEyes = function() {
         NRInstruction.send('toggle','eyes',$scope.dogstatus.eyes);
         if ($scope.dogstatus.eyes == "on" ) {
-          $scope.dogstatus.pwmeyes="0";
-          } else {
           $scope.dogstatus.pwmeyes="100";
+          } else {
+          $scope.dogstatus.pwmeyes="0";
           }
         }
      $scope.setEyesPWM = function() {
@@ -196,9 +196,9 @@ angular.module('K9.controllers', [])
  $scope.changeHover = function() {
    NRInstruction.send('toggle','hover',$scope.dogstatus.hover);
    if ($scope.dogstatus.hover == "on" ) {
-     $scope.dogstatus.pwmhover="0";
-     } else {
      $scope.dogstatus.pwmhover="100";
+     } else {
+     $scope.dogstatus.pwmhover="0";
      }
    }
 $scope.setHoverPWM = function() {
@@ -216,9 +216,9 @@ $scope.setHoverPWM = function() {
 $scope.changeTail = function() {
   NRInstruction.send('toggle','tail',$scope.dogstatus.tail);
   if ($scope.dogstatus.tail == "up" ) {
-    $scope.dogstatus.pwmverttail="270";
-    } else {
     $scope.dogstatus.pwmverttail="370";
+    } else {
+    $scope.dogstatus.pwmverttail="270";
     }
   }
  $scope.setTailVPWM = function() {
