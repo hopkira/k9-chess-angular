@@ -215,7 +215,7 @@ $scope.setHoverPWM = function() {
 
 $scope.changeTail = function() {
   NRInstruction.send('toggle','tail',$scope.dogstatus.tail);
-  if ($scope.dogstatus.tail == "up" ) {
+  if ($scope.dogstatus.tail == "down" ) {
     $scope.dogstatus.pwmverttail="370";
     } else {
     $scope.dogstatus.pwmverttail="270";
@@ -223,9 +223,9 @@ $scope.changeTail = function() {
   }
  $scope.setTailVPWM = function() {
  if (parseInt($scope.dogstatus.pwmverttail) <= 320) {
-   $scope.dogstatus.tail = "down"
-   } else {
    $scope.dogstatus.tail = "up"
+   } else {
+   $scope.dogstatus.tail = "down"
    }
      NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
  }
@@ -236,7 +236,7 @@ $scope.changeTail = function() {
 
  $scope.changeTailH = function() {
    NRInstruction.send('toggle','tailh',$scope.dogstatus.tailh);
-   if ($scope.dogstatus.tailh == "left" ) {
+   if ($scope.dogstatus.tailh == "right" ) {
      $scope.dogstatus.pwmhoriztail="440";
      } else {
      $scope.dogstatus.pwmhoriztail="325";
@@ -244,9 +244,9 @@ $scope.changeTail = function() {
    }
   $scope.setTailHPWM = function() {
   if (parseInt($scope.dogstatus.pwmhoriztail) <= 380) {
-    $scope.dogstatus.tailh = "left"
-    } else {
     $scope.dogstatus.tailh = "right"
+    } else {
+    $scope.dogstatus.tailh = "left"
     }
       NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
   }
