@@ -18,7 +18,7 @@
         </li>
       <div class="item range range-balanced">
           <i class="icon ion-lightbulb"></i>
-            <input type="range" ng-model="dogstatus.eyes" ng-change="setEyesPWM()" name="eyes" min="0" max="100" step="1">
+            <input type="range" ng-model="dogstatus.pwmeyes" ng-change="setEyesPWM()" name="eyes" min="0" max="100" step="1">
             </input>
           <i class="icon ion-ios-lightbulb-outline"></i>
       </div>
@@ -53,7 +53,7 @@
       </li>
        <div class="item range range-balanced">
          <i class="icon ion-arrow-left-a"></i>
-         <input type="range" ng-model="dogstatus.pwmhoriztail" ng-change="setTailHPWM()" name="tailhorizontal" min="270" max="370" step="5">
+         <input type="range" ng-model="dogstatus.pwmhoriztail" ng-change="setTailHPWM()" name="tailhorizontal" min="325" max="440" step="5">
                   </input>
          <i class="icon ion-arrow-right-a"></i>
        </div>
@@ -71,7 +71,7 @@
        </li>
         <div class="item range range-balanced">
           <i class="icon ion-lightbulb"></i>
-          <input type="range" ng-model="dogstatus.hover" ng-change="setHoverPWM()" name="hover" min="270" max="370" step="5">
+          <input type="range" ng-model="dogstatus.pwmhover" ng-change="setHoverPWM()" name="hover" min="0" max="100" step="1">
                    </input>
           <i class="icon ion-ios-lightbulb-outline"></i>
         </div>

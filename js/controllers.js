@@ -175,9 +175,9 @@ angular.module('K9.controllers', [])
       $scope.changeEyes = function() {
         NRInstruction.send('toggle','eyes',$scope.dogstatus.eyes);
         if ($scope.dogstatus.eyes == "on" ) {
-          $scope.dogstatus.pwmeyes="100";
-          } else {
           $scope.dogstatus.pwmeyes="0";
+          } else {
+          $scope.dogstatus.pwmeyes="100";
           }
         }
      $scope.setEyesPWM = function() {
@@ -196,21 +196,21 @@ angular.module('K9.controllers', [])
  $scope.changeHover = function() {
    NRInstruction.send('toggle','hover',$scope.dogstatus.hover);
    if ($scope.dogstatus.hover == "on" ) {
-     $scope.dogstatus.hover="100";
+     $scope.dogstatus.pwmhover="0";
      } else {
-     $scope.dogstatus.hover="0";
+     $scope.dogstatus.pwmhover="100";
      }
    }
 $scope.setHoverPWM = function() {
-if (parseInt($scope.dogstatus.hover) <= 50) {
+if (parseInt($scope.dogstatus.pwmhover) <= 50) {
   $scope.dogstatus.hover = "off"
   } else {
   $scope.dogstatus.hover = "on"
   }
-  NRInstruction.send('servo','hover',$scope.dogstatus.hover);
+  NRInstruction.send('servo','hover',$scope.dogstatus.pwmhover);
 }
 $scope.setHoverPWM = function() {
-    NRInstruction.send('servo','hover',$scope.dogstatus.hover);
+    NRInstruction.send('servo','hover',$scope.dogstatus.pwmhover);
 }
 
 $scope.changeTail = function() {
@@ -223,9 +223,9 @@ $scope.changeTail = function() {
   }
  $scope.setTailVPWM = function() {
  if (parseInt($scope.dogstatus.pwmverttail) <= 320) {
-   $scope.dogstatus.tail = "up"
-   } else {
    $scope.dogstatus.tail = "down"
+   } else {
+   $scope.dogstatus.tail = "up"
    }
      NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
  }
@@ -237,16 +237,16 @@ $scope.changeTail = function() {
  $scope.changeTailH = function() {
    NRInstruction.send('toggle','tailh',$scope.dogstatus.tailh);
    if ($scope.dogstatus.tailh == "left" ) {
-     $scope.dogstatus.pwmhoriztail="325";
-     } else {
      $scope.dogstatus.pwmhoriztail="440";
+     } else {
+     $scope.dogstatus.pwmhoriztail="325";
      }
    }
   $scope.setTailHPWM = function() {
   if (parseInt($scope.dogstatus.pwmhoriztail) <= 380) {
-    $scope.dogstatus.tailh = "right"
-    } else {
     $scope.dogstatus.tailh = "left"
+    } else {
+    $scope.dogstatus.tailh = "right"
     }
       NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
   }
