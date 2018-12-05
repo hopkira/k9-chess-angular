@@ -17,10 +17,10 @@
         </label>
         </li>
       <div class="item range range-balanced">
-          <i class="icon ion-lightbulb"></i>
+          <i class="icon ion-eye"></i>
             <input type="range" ng-model="dogstatus.pwmeyes" ng-change="setEyesPWM()" name="eyes" min="0" max="100" step="1">
             </input>
-          <i class="icon ion-ios-lightbulb-outline"></i>
+          <i class="icon ion-ios-eye-outline"></i>
       </div>
 
      <li class="item item-toggle">
@@ -78,6 +78,7 @@
 
 
       </ul>
+
       <ion-toggle
       ng-model="k9.lights"
       ng-checked="k9.lights"
@@ -85,6 +86,7 @@
       id="lights">
       Back panel lights
       </ion-toggle>
+
       <ion-toggle
       ng-model="k9.screen"
       ng-checked="k9.screen"
@@ -92,5 +94,6 @@
       ng-change="changeScreen(k9.screen)">
       Side monitor
       </ion-toggle>
+
   </ion-content>
 </ion-view>

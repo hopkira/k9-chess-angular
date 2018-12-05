@@ -181,16 +181,13 @@ angular.module('K9.controllers', [])
           }
         }
      $scope.setEyesPWM = function() {
-     if (parseInt($scope.dogstatus.eyes) <= 50) {
+     if (parseInt($scope.dogstatus.pwmeyes) <= 50) {
        $scope.dogstatus.eyes = "off"
        } else {
        $scope.dogstatus.eyes = "on"
        }
        NRInstruction.send('servo','eyes',$scope.dogstatus.pwmeyes);
      }
-     $scope.setEyesPWM = function() {
-         NRInstruction.send('servo','eyes',$scope.dogstatus.pwmeyes);
-    }
 
 
  $scope.changeHover = function() {
@@ -209,9 +206,6 @@ if (parseInt($scope.dogstatus.pwmhover) <= 50) {
   }
   NRInstruction.send('servo','hover',$scope.dogstatus.pwmhover);
 }
-$scope.setHoverPWM = function() {
-    NRInstruction.send('servo','hover',$scope.dogstatus.pwmhover);
-}
 
 $scope.changeTail = function() {
   NRInstruction.send('toggle','tail',$scope.dogstatus.tail);
@@ -221,6 +215,7 @@ $scope.changeTail = function() {
     $scope.dogstatus.pwmverttail="270";
     }
   }
+
  $scope.setTailVPWM = function() {
  if (parseInt($scope.dogstatus.pwmverttail) <= 320) {
    $scope.dogstatus.tail = "up"
@@ -229,10 +224,6 @@ $scope.changeTail = function() {
    }
      NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
  }
- $scope.setTailVPWM = function() {
-     NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
- }
-
 
  $scope.changeTailH = function() {
    NRInstruction.send('toggle','tailh',$scope.dogstatus.tailh);
@@ -242,15 +233,13 @@ $scope.changeTail = function() {
      $scope.dogstatus.pwmhoriztail="325";
      }
    }
+
   $scope.setTailHPWM = function() {
   if (parseInt($scope.dogstatus.pwmhoriztail) <= 380) {
-    $scope.dogstatus.tailh = "right"
-    } else {
     $scope.dogstatus.tailh = "left"
+    } else {
+    $scope.dogstatus.tailh = "right"
     }
-      NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
-  }
-  $scope.setTailHPWM = function() {
       NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
   }
 
