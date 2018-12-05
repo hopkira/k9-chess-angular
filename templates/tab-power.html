@@ -4,6 +4,8 @@
    </ion-nav-buttons>
   <ion-content class="padding">
      <ul class="list">
+
+
         <li class="item item-toggle">
         Eye Brightness
         <label class="toggle toggle-balanced">
@@ -16,10 +18,11 @@
         </li>
       <div class="item range range-balanced">
           <i class="icon ion-lightbulb"></i>
-            <input type="range" ng-model="dogstatus.eyes" ng-change="setEyesPWM()" name="eyes" min="220" max="430" step="10">
+            <input type="range" ng-model="dogstatus.eyes" ng-change="setEyesPWM()" name="eyes" min="0" max="100" step="1">
             </input>
-          <i class="icon ion-lightbulb"></i>
+          <i class="icon ion-ios-lightbulb-outline"></i>
       </div>
+
      <li class="item item-toggle">
       Tail Up/Down
       <label class="toggle toggle-balanced">
@@ -36,10 +39,12 @@
                  </input>
         <i class="icon ion-arrow-down-a"></i>
       </div>
+
+
       <li class="item item-toggle">
        Tail Left/Right
        <label class="toggle toggle-balanced">
-         <input type="checkbox"  ng-model="dogstatus.tail" ng-true-value="'left'" ng-false-value="'right'" ng-change="changeTailH()">
+         <input type="checkbox"  ng-model="dogstatus.tailh" ng-true-value="'left'" ng-false-value="'right'" ng-change="changeTailH()">
          <div class="track">
            <div class="handle"></div>
          </div>
@@ -52,6 +57,8 @@
                   </input>
          <i class="icon ion-arrow-right-a"></i>
        </div>
+
+
        <li class="item item-toggle">
         Hover brightness
         <label class="toggle toggle-balanced">
@@ -64,10 +71,12 @@
        </li>
         <div class="item range range-balanced">
           <i class="icon ion-lightbulb"></i>
-          <input type="range" ng-model="dogstatus.hover" ng-change="setHover()" name="hover" min="270" max="370" step="5">
+          <input type="range" ng-model="dogstatus.hover" ng-change="setHoverPWM()" name="hover" min="270" max="370" step="5">
                    </input>
-          <i class="icon ion-lightbulb"></i>
+          <i class="icon ion-ios-lightbulb-outline"></i>
         </div>
+
+
       </ul>
       <ion-toggle
       ng-model="k9.lights"

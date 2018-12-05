@@ -147,6 +147,7 @@ angular.module('K9.controllers', [])
 .controller('PowerCtrl',["$scope","K9","NRInstruction", function($scope, K9, NRInstruction) {
      $scope.k9 = K9;
      $scope.dogstatus = {};
+
      $scope.changeLights = function (status) {
          // console.log(status);
          var value;
@@ -158,6 +159,7 @@ angular.module('K9.controllers', [])
          // console.log("Lights button sent "+value);
          NRInstruction.send('toggle', "lights", value);
      }
+
      $scope.changeScreen = function (status) {
          // console.log(status);
          var value;
@@ -169,58 +171,89 @@ angular.module('K9.controllers', [])
          // console.log("Screen button sent "+value);
          NRInstruction.send('toggle', "screen", value);
      }
-     $scope.changeFollow = function (status) {
-         // console.log(status);
-         var value;
-         if ($scope.k9.follow==true) {
-             value="on";
-           } else {
-             value="off";
-           };
-         // console.log("Follow button sent "+value);
-         NRInstruction.send('toggle', "follow", value);
+
+      $scope.changeEyes = function() {
+        NRInstruction.send('toggle','eyes',$scope.dogstatus.eyes);
+        if ($scope.dogstatus.eyes == "on" ) {
+          $scope.dogstatus.pwmeyes="100";
+          } else {
+          $scope.dogstatus.pwmeyes="0";
+          }
+        }
+     $scope.setEyesPWM = function() {
+     if (parseInt($scope.dogstatus.eyes) <= 50) {
+       $scope.dogstatus.eyes = "off"
+       } else {
+       $scope.dogstatus.eyes = "on"
+       }
+       NRInstruction.send('servo','eyes',$scope.dogstatus.pwmeyes);
      }
-     $scope.changeHead = function() {
-      NRInstruction.send('toggle','head',$scope.dogstatus.head);
-      if ($scope.dogstatus.head == "up" ) {
-        $scope.dogstatus.pwmhead="220";
-        } else {
-        $scope.dogstatus.pwmhead="430";
-        }
-      }
-    $scope.changeTail = function() {
-      NRInstruction.send('toggle','tail',$scope.dogstatus.tail);
-      if ($scope.dogstatus.tail == "up" ) {
-        $scope.dogstatus.pwmverttail="270";
-        } else {
-        $scope.dogstatus.pwmverttail="370";
-        }
-      }
-    $scope.setHeadPWM = function() {
-    if (parseInt($scope.dogstatus.pwmhead) <= 325) {
-      $scope.dogstatus.head = "up"
-      } else {
-      $scope.dogstatus.head = "down"
-      }
-      NRInstruction.send('servo','head',$scope.dogstatus.pwmhead);
+     $scope.setEyesPWM = function() {
+         NRInstruction.send('servo','eyes',$scope.dogstatus.pwmeyes);
     }
-    $scope.setTailVPWM = function() {
-    if (parseInt($scope.dogstatus.pwmverttail) <= 320) {
-      $scope.dogstatus.tail = "up"
-      } else {
-      $scope.dogstatus.tail = "down"
-      }
-        NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
+
+
+ $scope.changeHover = function() {
+   NRInstruction.send('toggle','hover',$scope.dogstatus.hover);
+   if ($scope.dogstatus.hover == "on" ) {
+     $scope.dogstatus.hover="100";
+     } else {
+     $scope.dogstatus.hover="0";
+     }
+   }
+$scope.setHoverPWM = function() {
+if (parseInt($scope.dogstatus.hover) <= 50) {
+  $scope.dogstatus.hover = "off"
+  } else {
+  $scope.dogstatus.hover = "on"
+  }
+  NRInstruction.send('servo','hover',$scope.dogstatus.hover);
+}
+$scope.setHoverPWM = function() {
+    NRInstruction.send('servo','hover',$scope.dogstatus.hover);
+}
+
+$scope.changeTail = function() {
+  NRInstruction.send('toggle','tail',$scope.dogstatus.tail);
+  if ($scope.dogstatus.tail == "up" ) {
+    $scope.dogstatus.pwmverttail="270";
+    } else {
+    $scope.dogstatus.pwmverttail="370";
     }
-    $scope.setTailHPWM = function() {
-        NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
+  }
+ $scope.setTailVPWM = function() {
+ if (parseInt($scope.dogstatus.pwmverttail) <= 320) {
+   $scope.dogstatus.tail = "up"
+   } else {
+   $scope.dogstatus.tail = "down"
+   }
+     NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
+ }
+ $scope.setTailVPWM = function() {
+     NRInstruction.send('servo','tailv',$scope.dogstatus.pwmverttail);
+ }
+
+
+ $scope.changeTailH = function() {
+   NRInstruction.send('toggle','tailh',$scope.dogstatus.tailh);
+   if ($scope.dogstatus.tailh == "left" ) {
+     $scope.dogstatus.pwmhoriztail="325";
+     } else {
+     $scope.dogstatus.pwmhoriztail="440";
+     }
+   }
+  $scope.setTailHPWM = function() {
+  if (parseInt($scope.dogstatus.pwmhoriztail) <= 380) {
+    $scope.dogstatus.tailh = "right"
+    } else {
+    $scope.dogstatus.tailh = "left"
     }
-    $scope.setEarRPWM = function() {
-        NRInstruction.send('servo','earr',$scope.dogstatus.pwmrightear);
-    }
-    $scope.setEarLPWM = function() {
-        NRInstruction.send('servo','earl',$scope.dogstatus.pwmleftear);
-    }
+      NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
+  }
+  $scope.setTailHPWM = function() {
+      NRInstruction.send('servo','tailh',$scope.dogstatus.pwmhoriztail);
+  }
+
   }])
 
 // Controller for K9 Audio Tab
