@@ -3,6 +3,82 @@
       <x-nr-status-icon></x-nr-status-icon>
    </ion-nav-buttons>
   <ion-content class="padding">
+     <ul class="list">
+
+
+        <li class="item item-toggle">
+        Eye Brightness
+        <label class="toggle toggle-balanced">
+          <input type="checkbox" ng-model="dogstatus.eyes" ng-true-value="'on'" ng-false-value="'off'" ng-change="changeEyes()">
+            <div class="track">
+               <div class="handle"></div>
+            </div>
+          </input>
+        </label>
+        </li>
+      <div class="item range range-balanced">
+          <i class="icon ion-eye"></i>
+            <input type="range" ng-model="dogstatus.pwmeyes" ng-change="setEyesPWM()" name="eyes" min="0" max="100" step="1">
+            </input>
+          <i class="icon ion-ios-eye-outline"></i>
+      </div>
+
+     <li class="item item-toggle">
+      Tail Up/Down
+      <label class="toggle toggle-balanced">
+        <input type="checkbox"  ng-model="dogstatus.tail" ng-true-value="'down'" ng-false-value="'up'" ng-change="changeTail()">
+        <div class="track">
+          <div class="handle"></div>
+        </div>
+        </input>
+      </label>
+     </li>
+      <div class="item range range-balanced">
+        <i class="icon ion-arrow-up-a"></i>
+        <input type="range" ng-model="dogstatus.pwmverttail" ng-change="setTailVPWM()" name="tailvertical" min="270" max="370" step="5">
+                 </input>
+        <i class="icon ion-arrow-down-a"></i>
+      </div>
+
+
+      <li class="item item-toggle">
+       Tail Left/Right
+       <label class="toggle toggle-balanced">
+         <input type="checkbox"  ng-model="dogstatus.tailh" ng-true-value="'right'" ng-false-value="'left'" ng-change="changeTailH()">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+         </input>
+       </label>
+      </li>
+       <div class="item range range-balanced">
+         <i class="icon ion-arrow-left-a"></i>
+         <input type="range" ng-model="dogstatus.pwmhoriztail" ng-change="setTailHPWM()" name="tailhorizontal" min="325" max="440" step="5">
+                  </input>
+         <i class="icon ion-arrow-right-a"></i>
+       </div>
+
+
+       <li class="item item-toggle">
+        Hover brightness
+        <label class="toggle toggle-balanced">
+          <input type="checkbox"  ng-model="dogstatus.hover" ng-true-value="'on'" ng-false-value="'off'" ng-change="changeHover()">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+          </input>
+        </label>
+       </li>
+        <div class="item range range-balanced">
+          <i class="icon ion-lightbulb"></i>
+          <input type="range" ng-model="dogstatus.pwmhover" ng-change="setHoverPWM()" name="hover" min="0" max="100" step="1">
+                   </input>
+          <i class="icon ion-ios-lightbulb-outline"></i>
+        </div>
+
+
+      </ul>
+
       <ion-toggle
       ng-model="k9.lights"
       ng-checked="k9.lights"
@@ -10,20 +86,7 @@
       id="lights">
       Back panel lights
       </ion-toggle>
-      <ion-toggle
-      ng-model="k9.hover"
-      ng-checked="k9.hover"
-      id="hover"
-      ng-change="changeHover(k9.hover)">
-      Hover lights
-      </ion-toggle>
-      <ion-toggle
-      ng-model="k9.eyes"
-      ng-checked="k9.eyes"
-      id="eyes"
-      ng-change="changeEyes(k9.eyes)">
-      Eye lights
-      </ion-toggle>
+
       <ion-toggle
       ng-model="k9.screen"
       ng-checked="k9.screen"
@@ -31,12 +94,6 @@
       ng-change="changeScreen(k9.screen)">
       Side monitor
       </ion-toggle>
-      <ion-toggle
-      ng-model="k9.follow"
-      ng-checked="k9.follow"
-      id="follow"
-      ng-change="changeFollow(k9.follow)">
-      Follow mode
-      </ion-toggle>
+
   </ion-content>
 </ion-view>

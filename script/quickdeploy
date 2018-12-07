@@ -1,0 +1,5 @@
+#!/bin/bash
+# Ensure that hidden files are copied
+shopt -s dotglob nullglob
+# Copy the remainder of the files to the Apache webserver
+sudo cp -r /home/pi/k9-chess-angular/* /var/www/html

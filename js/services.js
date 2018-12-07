@@ -162,6 +162,18 @@ angular.module('K9.services', [])
             // "type":"status","command":"update","left": left,"right": right,"lights": lights,"eyes": eyes
             $rootScope.$broadcast("event:k9state",messageObj);
             break;
+          case 'collection':
+            //console.log("Collection message recognised.");
+            messageArray = messageObj.data;
+            msgArrayLen = messageArray.length;
+            for (var i = 0; i < msgArrayLen; i++){
+               sensor = messageArray[i].sensor;
+               distance = parseFloat(messageArray[i].distance);
+               angle = parseFloat(messageArray[i].angle);
+               msgtoPoint.recordReading(sensor,distance,angle);
+               console.log(messageArray[i] + " being processed - " + sensor +", "+ distance + ", " + angle );
+            }
+            break;
           case 'sensor':
             // sensor message has been received
             sensor = messageObj.sensor;
@@ -170,7 +182,7 @@ angular.module('K9.services', [])
             if (isNaN(messageObj.angle)) {
               angle = 1000;
             } else {
-              angle = parseInt(messageObj.angle);
+              angle = parseFloat(messageObj.angle);
             }
             //console.log("NRWSservice: sensor " + sensor + " reports obstruction " + String(distance) + "m away at " + String(angle) + " degrees.");
             // record the sensor reading via the sensorArray service
@@ -260,7 +272,7 @@ angular.module('K9.services', [])
     // holds K9 sensorArray state
     // initialisation of service
     var thisService=this;
-    var sensorList = '[{"sensorName":"ultrasonic","x": 1200,"y":1200,"angle":999},{"sensorName":"l_ear","x": 1158,"y":890,"angle":999},{"sensorName":"r_ear","x": 1242,"y":890,"angle":999},{"sensorName":"ir:left","x": 1120,"y":1343,"angle":90},{"sensorName":"ir:bl_corner","x": 1152,"y":1411,"angle":135},{"sensorName":"ir:tail","x": 1200,"y":1430,"angle":180},{"sensorName":"ir:br_corner","x": 1248,"y":1411,"angle":225},{"sensorName":"ir:right","x": 1280,"y":1343,"angle":270}]';
+    var sensorList = '[{"sensorName":"ultrasonic","x":1200,"y":1200,"angle":999},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":40.0,"max_angle":45.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":35.0,"max_angle":40.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":30.0,"max_angle":35.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":25.0,"max_angle":30.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":20.0,"max_angle":25.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":15.0,"max_angle":20.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":10.0,"max_angle":15.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":5.0,"max_angle":10.0},{"sensorName":"l_ear","x":1158,"y":890,"min_angle":0.0,"max_angle":5.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":355.0,"max_angle":360.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":350.0,"max_angle":355.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":345.0,"max_angle":350.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":340.0,"max_angle":345.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":335.0,"max_angle":340.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":330.0,"max_angle":335.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":325.0,"max_angle":330.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":320.0,"max_angle":325.0},{"sensorName":"r_ear","x":1242,"y":890,"min_angle":315.0,"max_angle":320.0},{"sensorName":"ir:left","x":1120,"y":1343,"angle":90},{"sensorName":"ir:bl_corner","x":1152,"y":1411,"angle":135},{"sensorName":"ir:tail","x":1200,"y":1430,"angle":180},{"sensorName":"ir:br_corner","x":1248,"y":1411,"angle":225},{"sensorName":"ir:right","x":1280,"y":1343,"angle":270}]';
     var sensorLocations = JSON.parse(sensorList);
     var sensorArray = JSON.parse(sensorList);
     // this function returns the current Sensor Array
@@ -314,26 +326,35 @@ angular.module('K9.services', [])
       mySensorLocation.angle = 999;
       // search for matching sensor location and modify the
       // origin point values if a match is found
-      for (var i=0, len=sensorLocations.length; i < len; i++) {
-        //console.log("Comparing "+sensorLocations[i].sensorName+" with "+mySensorLocation.name);
-        if (sensorLocations[i].sensorName == mySensorLocation.name)
-          {
-          //console.log("Match found - item " + i);
-          mySensorLocation.x = sensorLocations[i].x;
-          mySensorLocation.y = sensorLocations[i].y;
-          // angles that are specified as 999 are 'variable' and the value
-          // will be supplied inside ihe sensor reading
-          // fixed position sensors will be read in from the sensorLocations array
-          if (sensorLocations[i].angle != 999) {
-            mySensorLocation.angle = sensorLocations[i].angle;
-          }
-          else
-          {
-            mySensorLocation.angle = angle;
-          }
-        break;
-        }
+
+      for (var i=0, len=sensorLocations.length; i < len; i++)
+      {
+         if (!sensorLocations[i].angle) {
+            // compare the name and angle
+            if ((angle > sensorLocations[i].min_angle) && (angle <= sensorLocations[i].max_angle)){
+               break;
+            }
+         }
+         else {
+            if (sensorLocations[i].sensorName == mySensorLocation.name){
+               break;
+            }
+         }
       }
+      console.log("Match found - " + sensorLocations[i].sensorName + ":" + i);
+      mySensorLocation.x = sensorLocations[i].x;
+      mySensorLocation.y = sensorLocations[i].y;
+      // angles that are specified as 999 are 'variable' and the value
+      // will be supplied inside ihe sensor reading
+      // fixed position sensors will be read in from the sensorLocations array
+      if (sensorLocations[i].angle)
+         {
+         mySensorLocation.angle = sensorLocations[i].angle;
+         }
+      else
+         {
+         mySensorLocation.angle = angle;
+         }
       // the endpoint object is the SVG location to plot the sensor
       // this is calculated using basic trigonometry and scaling
       // using mySensorLocation as the origin point
@@ -354,7 +375,7 @@ angular.module('K9.services', [])
       endpoint.y = mySensorLocation.y + Math.round(x_real * -1,0);
       //endpoint.x = Math.round(mySensorLocation.x + ( thisService.dist2SVG(distance) * Math.cos(mySensorLocation.angle)),0);
       //endpoint.y = Math.round(mySensorLocation.y + ( thisService.dist2SVG(distance) * Math.sin(mySensorLocation.angle)),0);
-      //console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);
+      console.log("endpoint: x:"+endpoint.x+",y:"+endpoint.y);
       return endpoint
       }
 }])
