@@ -158,15 +158,14 @@ class K9 :
       print "K9 object initialising"
       # Create names for each PWM channel
       self.pwm_eyes = 0
-      self.pwm_hover = 1
+      self.pwm_hover = 3
       self.pwm_screen = 2
-      self.pwm_lights = 3
+      self.pwm_lights = 1
       # Set initial values for k9
       self.lights = 100
-      self.eyes = 3
+      self.eyes = 30
       self.hover = 0
       self.screen = 100
-      self.motorctrl = 0
       # Create two motor objects
       self.leftMotor = Motor("left",m1_qpps)
       self.rightMotor = Motor("right",m2_qpps)
@@ -194,7 +193,7 @@ class K9 :
       self.brightness = int(self.brightness * 40.95)
       print "Setting channel " + str(self.channel) + " to " + str(self.brightness)
       if not sim :
-          self.pwm.set_pwm(0,self.channel,self.brightness)
+          self.pwm.set_pwm(self.channel,0,self.brightness)
       print "Channel " + str(self.channel) + "set to " + str(self.brightness)
 
    def getStatusInfo(self) :

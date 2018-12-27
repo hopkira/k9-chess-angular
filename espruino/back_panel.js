@@ -25,11 +25,11 @@ USB.setup(115200,{bytesize:8,stopbits:1});
 // this array of objects represent the Sharp infrared
 // sensors built into the back panel
 var sensors=[
-  {sensorName:"left",pinName:"C0",angle:Math.PI/2},
-  {sensorName:"bl_corner",pinName:"C1",angle:Math.PI*3/4},
-  {sensorName:"tail",pinName:"C2",angle:Math.PI},
-  {sensorName:"br_corner",pinName:"C3",angle:Math.PI*-3/4},
-  {sensorName:"right",pinName:"A0",angle:Math.PI/-2}
+  {sensorName:"left",pinName:"A2",angle:Math.PI/2},
+  {sensorName:"bl_corner",pinName:"A3",angle:Math.PI*3/4},
+  {sensorName:"tail",pinName:"A4",angle:Math.PI},
+  {sensorName:"br_corner",pinName:"A5",angle:Math.PI*-3/4},
+  {sensorName:"right",pinName:"A6",angle:Math.PI/-2}
 ];
 var numSensors=sensors.length;
 
