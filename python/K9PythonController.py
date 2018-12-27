@@ -224,7 +224,6 @@ class K9 :
         "eyes": self.eyes,
         "hover": self.hover,
         "screen": self.screen,
-        "motorctrl": self.motorctrl,
         "main_volt": self.main_volt,
         "brain_volt": self.brain_volt,
         "motor_l_amp": self.m1current,
