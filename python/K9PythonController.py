@@ -171,8 +171,8 @@ class K9:
         self.pwm_hover = 3
         self.pwm_screen = 2
         self.pwm_lights = 1
-        self.tail = 4
-        self.tailh = 5
+        self.pwm_tail = 4
+        self.pwm_tailh = 5
         # Set initial values for k9
         self.lights = 100
         self.eyes = 30
