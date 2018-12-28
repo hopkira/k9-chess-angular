@@ -199,9 +199,12 @@ class K9:
             self.set_k9_pwm(self.pwm_hover, self.hover)
             self.set_k9_pwm(self.pwm_screen, self.screen)
             self.set_k9_pwm(self.pwm_lights, self.lights)
+            print "Tail vertical..."
             self.set_k9_pwm_direct(self.pwm_tail, self.tail)
+            print "Tail horizontal"
             self.set_k9_pwm_direct(self.pwm_tailh, self.tailh)
             print "All servo driver initial state set..."
+            print "k9 instance of K9 Class initialized"
 
     def set_k9_pwm_direct(self, channel, pwm):
         if not sim:
