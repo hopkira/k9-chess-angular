@@ -37,7 +37,6 @@ m1_qpps = 740
 m2_qpps = 700
 
 # sim is a program wide flag to allow the program to run without the Roboclaw
-# and without access to the Raspberry Pi GPIO ports
 # this can be enabled by appending the word "test" to the command line
 
 if (len(sys.argv) > 1):
@@ -45,7 +44,7 @@ if (len(sys.argv) > 1):
         sim = True
         print "Executing in simulation mode"
 
-# If running for real initialise remote socket, roboclaw driver and GPIO
+# If running for real initialise remote socket, roboclaw driver
 if not sim:
     print "Importing servo driver library..."
     import Adafruit_PCA9685  # enable control of devices
@@ -71,11 +70,11 @@ if not sim:
         # Zero the motor encoders
         rc.ResetEncoders(rc_address)
         print "PID variables set on roboclaw"
-    import RPi.GPIO as GPIO  # enables manipulation of GPIO ports
-    GPIO.setmode(GPIO.BOARD)  # use board numbers rather than BCM numbers
-    GPIO.setwarnings(False)  # remove duplication warnings
-    chan_list = [11, 13]     # GPIO channels to initialise and use
-    GPIO.setup(chan_list, GPIO.IN)  # set GPIO to low at initialise
+    # import RPi.GPIO as GPIO  # enables manipulation of GPIO ports
+    # GPIO.setmode(GPIO.BOARD)  # use board numbers rather than BCM numbers
+    # GPIO.setwarnings(False)  # remove duplication warnings
+    # chan_list = [11, 13]     # GPIO channels to initialise and use
+    # GPIO.setup(chan_list, GPIO.IN)  # set GPIO to low at initialise
 else:
     # otherwise use local host as node-RED server
     # and don't initialise GPIO or Roboclaw
@@ -206,6 +205,7 @@ class K9:
 
     def set_k9_pwm_direct(self, channel, pwm):
         if not sim:
+            print "Setting channel " + channel + " to " + pwm
             self.pwm.set_pwm(self.channel, 0, pwm)
 
     def set_k9_object(self, object, brightness):
@@ -412,6 +412,6 @@ except KeyboardInterrupt:
         ws.k9.rightMotor.setTargetSpeed(0)
         ws.k9.leftMotor.setMotorSpeed()
         ws.k9.rightMotor.setMotorSpeed()
-        GPIO.cleanup()
+        # GPIO.cleanup()
         ws.close()
         print "Exiting controller after cleanup."
