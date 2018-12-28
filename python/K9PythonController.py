@@ -180,7 +180,7 @@ class K9:
         self.screen = 100
         self.tail = 320
         self.tailh = 382
-        self.motorctrl=0
+        self.motorctrl = 0
         # Create two motor objects
         self.leftMotor = Motor("left", m1_qpps)
         self.rightMotor = Motor("right", m2_qpps)
@@ -209,7 +209,7 @@ class K9:
     def set_k9_pwm_direct(self, channel, pwm):
         if not sim:
             print "Setting channel " + channel + " to " + pwm
-            self.pwm.set_pwm(self.channel, 0, pwm)
+            self.pwm.set_pwm(channel, 0, pwm)
 
     def set_k9_object(self, object, brightness):
         def switch_obj_to_channel(self, object):
@@ -354,9 +354,9 @@ class K9PythonController(WebSocketClient):
         self.message_obj = json.loads(self.message)  # parse JSON to obj
         # do some stuff here to handle PWM and Toggle Messages
         if self.message_obj["type"] == "toggle":
-            toggle_message()
+            self.toggle_message()
         elif self.message_obj["type"] == "servo":
-            servo_message()
+            self.servo_message()
         elif self.message_obj["type"] == "navigation":
             # navigation command received
             if self.message_obj["object"] == "browser":
