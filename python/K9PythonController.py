@@ -345,7 +345,7 @@ class K9PythonController(WebSocketClient):
             self.k9.set_k9_object(self.message_dict["object"], self.brightness)
 
     def servo_message(self):
-        self.k9.set_k9_object(self.message_dict["object"], self.brightness)
+        self.k9.set_k9_object(self.message_dict["object"], self.message_dict["value"])
 
     def received_message(self, message):
         self.message = message
