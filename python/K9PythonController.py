@@ -200,9 +200,9 @@ class K9:
             self.set_k9_pwm(self.pwm_screen, self.screen)
             self.set_k9_pwm(self.pwm_lights, self.lights)
             print "Tail vertical..."
-            self.set_k9_pwm_direct(self.pwm_tail, self.tail)
+            # self.set_k9_pwm_direct(self.pwm_tail, self.tail)
             print "Tail horizontal"
-            self.set_k9_pwm_direct(self.pwm_tailh, self.tailh)
+            # self.set_k9_pwm_direct(self.pwm_tailh, self.tailh)
             print "All servo driver initial state set..."
             print "k9 instance of K9 Class initialized"
 
@@ -341,10 +341,10 @@ class K9PythonController(WebSocketClient):
         else:
             if self.message_dict["value"] == "on":
                 self.brightness = 100
-            set_k9_object(self.message_dict["object"], self.brightness)
+            self.k9.set_k9_object(self.message_dict["object"], self.brightness)
 
     def servo_message(self):
-        set_k9_object(self.message_dict["object"], self.brightness)
+        self.k9.set_k9_object(self.message_dict["object"], self.brightness)
 
     def received_message(self, message):
         self.message = message
