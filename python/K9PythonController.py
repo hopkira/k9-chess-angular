@@ -193,8 +193,8 @@ class K9:
             print "Initialising servo driver state..."
             self.pwm = Adafruit_PCA9685.PCA9685()
             print "pwm object created"
-            self.pwm.set_pwm_freq(60)  # Set frequency to 100 Hz
-            print "frequency set to 60Hz"
+            self.pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
+            print "frequency set to 100Hz"
             self.set_k9_pwm(self.pwm_eyes, self.eyes)
             self.set_k9_pwm(self.pwm_hover, self.hover)
             self.set_k9_pwm(self.pwm_screen, self.screen)
@@ -224,7 +224,7 @@ class K9:
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = int(channel)
-        self.brightness = int(int(brightness) * 68.25)
+        self.brightness = int(int(brightness) * 40.95)
         print "Setting channel " +\
             str(self.channel) + " to " + str(self.brightness)
         if not sim:
