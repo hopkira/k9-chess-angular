@@ -211,7 +211,7 @@ class K9:
             print "Setting channel " + channel + " to " + pwm
             self.pwm.set_pwm(channel, 0, pwm)
 
-    def switch_obj_to_channel(self,object):
+    def switch_obj_to_channel(self, object):
         convert = {
             "eyes": 0,
             "lights": 1,
@@ -225,9 +225,9 @@ class K9:
     def set_k9_object(self, object, brightness):
         self.pwm_channel = self.switch_obj_to_channel(object)
         if (self.pwm_channel == 4 or self.pwm_channel == 5):
-            set_k9_pwm_direct(self.pwm_channel, brightness)
+            self.set_k9_pwm_direct(self.pwm_channel, brightness)
         else:
-            set_k9_pwm(self.pwm_channel, brightness)
+            self.set_k9_pwm(self.pwm_channel, brightness)
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = channel
