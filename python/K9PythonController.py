@@ -199,9 +199,13 @@ class K9:
             self.set_k9_pwm(self.pwm_hover, self.hover)
             self.set_k9_pwm(self.pwm_screen, self.screen)
             self.set_k9_pwm(self.pwm_lights, self.lights)
-            self.set_k9_pwm(self.pwm_tail, self.tail)
-            self.set_k9_pwm(self.pwm_tailh, self.tailh)
+            self.set_k9_pwm_direct(self.pwm_tail, self.tail)
+            self.set_k9_pwm_direct(self.pwm_tailh, self.tailh)
             print "All servo driver initial state set..."
+
+    def set_k9_pwm_direct(self, channel, pwm):
+        if not sim:
+            self.pwm.set_pwm(self.channel, 0, pwm)
 
     def set_k9_object(self, object, brightness):
         def switch_obj_to_channel(self, object):
@@ -215,7 +219,10 @@ class K9:
             }
             return convert.get(object)
         self.pwm_channel = switch_obj_to_channel(object)
-        set_k9_pwm(self.pwm_channel, brightness)
+        if (self.pwm_channel == 4 or self.pwm_channel == 5):
+            set_k9_pwm_direct(self.pwm_channel, brightness)
+        else:
+            set_k9_pwm(self.pwm_channel, brightness)
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = channel
@@ -226,7 +233,8 @@ class K9:
             str(self.channel) + " to " + str(self.brightness)
         if not sim:
             self.pwm.set_pwm(self.channel, 0, self.brightness)
-        print "Channel " + str(self.channel) + "set to " + str(self.brightness)
+        print "Channel " + str(self.channel) +\
+            " set to " + str(self.brightness)
 
     def getStatusInfo(self):
         # retrieves status of motors and lights
@@ -389,7 +397,8 @@ class K9PythonController(WebSocketClient):
 
 # Wait for node-RED server to become active
 if not sim:
-    time.sleep(30)
+    # time.sleep(30)
+    print "Not sleeping"
 try:
     ws = K9PythonController(address)
     ws.connect()
