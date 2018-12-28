@@ -324,59 +324,59 @@ class K9PythonController(WebSocketClient):
 
     def toggle_message(self):
         self.brightness = 0  # default to "off" value
-        if (self.message_obj.object == "tail"):
-            if (self.message_obj.value == "up"):
+        if (self.message_dict["object"] == "tail"):
+            if (self.message_dict["value"] == "up"):
                 self.k9.set_k9_pwm(5, 382)  # centre tail
                 self.k9.set_k9_pwm(4, 270)  # move up
             else:
                 self.k9.set_k9_pwm(5, 382)  # centre tail
                 self.k9.set_k9_pwm(4, 370)  # move up
-        elif (self.message_obj.object == "tailh"):
-            if (self.message_obj.value == "left"):
+        elif (self.message_dict["object"] == "tailh"):
+            if (self.message_dict["value"] == "left"):
                 self.k9.set_k9_pwm(4, 320)  # centre tail
                 self.k9.set_k9_pwm(5, 325)  # move left
             else:
                 self.k9.set_k9_pwm(4, 320)  # centre tail
                 self.k9.set_k9_pwm(5, 440)  # move right
         else:
-            if self.message_obj.value == "on":
+            if self.message_dict["value"] == "on":
                 self.brightness = 100
-            set_k9_object(self.message_obj.object, self.brightness)
+            set_k9_object(self.message_dict["object"], self.brightness)
 
     def servo_message(self):
-        set_k9_object(self.message_obj.object, self.brightness)
+        set_k9_object(self.message_dict["object"], self.brightness)
 
     def received_message(self, message):
         self.message = message
         self.message = str(self.message)
         # turn message into JSON formatted string
-        self.message_obj = []
-        self.message_obj = json.loads(self.message)  # parse JSON to obj
+        self.message_dict = []
+        self.message_dict = json.loads(self.message)  # parse JSON to dict
         # do some stuff here to handle PWM and Toggle Messages
-        if self.message_obj["type"] == "toggle":
+        if self.message_dict["type"] == "toggle":
             self.toggle_message()
-        elif self.message_obj["type"] == "servo":
+        elif self.message_dict["type"] == "servo":
             self.servo_message()
-        elif self.message_obj["type"] == "navigation":
+        elif self.message_dict["type"] == "navigation":
             # navigation command received
-            if self.message_obj["object"] == "browser":
+            if self.message_dict["object"] == "browser":
                 # heartbeat received from browser
                 self.message = self.k9.getStatusInfo()
                 # get K9 status information
                 self.send(self.message)
                 # send current status information to the node-RED websocket
                 # print "Status: " + str(self.message)
-            elif self.message_obj["object"] == "motorctrl":
+            elif self.message_dict["object"] == "motorctrl":
                 # toggle fine or coarse grained motor control
-                if self.message_obj["value"] == "on":
+                if self.message_dict["value"] == "on":
                     self.k9.motorctrl = 1.0
                 else:
                     self.k9.motorctrl = 0.0
-            elif self.message_obj["object"] == "motors":
+            elif self.message_dict["object"] == "motors":
                 # change the motor speeds
-                # print "I heard:" + str(self.message_obj);
-                self.motorspeed = float(self.message_obj["motorspeed"])
-                self.steering = float(self.message_obj["steering"])
+                # print "I heard:" + str(self.message_dict);
+                self.motorspeed = float(self.message_dict["motorspeed"])
+                self.steering = float(self.message_dict["steering"])
                 self.leftTarget = self.k9.leftMotor.calculateTargetSpeed(
                     self.motorspeed, self.steering, self.k9.motorctrl)
                 self.rightTarget = self.k9.rightMotor.calculateTargetSpeed(
@@ -394,10 +394,11 @@ class K9PythonController(WebSocketClient):
                 self.k9.rightMotor.setMotorSpeed()
             else:
                 # command could not be interpreted
-                print "Command object not understood: " + str(self.message_obj)
+                print "Command object not understood: " +\
+                    str(self.message_dict)
         else:
             # not a navigation command
-            print "Illegal command received: " + str(self.message_obj)
+            print "Illegal command received: " + str(self.message_dict)
 
 
 # Wait for node-RED server to become active
