@@ -171,14 +171,14 @@ class K9:
         self.pwm_hover = 3
         self.pwm_screen = 6
         self.pwm_lights = 1
-        self.pwm_tail = 4
+        self.pwm_tailv = 4
         self.pwm_tailh = 5
         # Set initial values for k9
         self.lights = 100
         self.eyes = 5
         self.hover = 0
         self.screen = 100
-        self.tail = 50
+        self.tailv = 50
         self.tailh = 50
         self.motorctrl = 0
         # Create two motor objects
@@ -193,14 +193,14 @@ class K9:
             print "Initialising servo driver state..."
             self.pwm = Adafruit_PCA9685.PCA9685()
             print "pwm object created"
-            self.pwm.set_pwm_freq(100)  # Set frequency to 100 Hz
-            print "frequency set to 100Hz"
+            self.pwm.set_pwm_freq(60)  # Set frequency to 100 Hz
+            print "frequency set to 60Hz"
             self.set_k9_pwm(self.pwm_eyes, self.eyes)
             self.set_k9_pwm(self.pwm_hover, self.hover)
             self.set_k9_pwm(self.pwm_screen, self.screen)
             self.set_k9_pwm(self.pwm_lights, self.lights)
             print "Tail vertical..."
-            self.set_k9_pwm(self.pwm_tail, self.tail)
+            self.set_k9_pwm(self.pwm_tailv, self.tailv)
             print "Tail horizontal"
             self.set_k9_pwm(self.pwm_tailh, self.tailh)
             print "All servo driver initial state set..."
@@ -212,7 +212,7 @@ class K9:
             "lights": 1,
             "screen": 6,
             "hover": 3,
-            "tail": 4,
+            "tailv": 4,
             "tailh": 5
         }
         return convert.get(object)
@@ -224,7 +224,7 @@ class K9:
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = int(channel)
-        self.brightness = int(int(brightness) * 40.95)
+        self.brightness = int(int(brightness) * 68.25)
         print "Setting channel " +\
             str(self.channel) + " to " + str(self.brightness)
         if not sim:
@@ -316,7 +316,7 @@ class K9PythonController(WebSocketClient):
 
     def toggle_message(self):
         self.brightness = 0  # default to "off" value
-        if (self.message_dict["object"] == "tail"):
+        if (self.message_dict["object"] == "tailv"):
             if (self.message_dict["value"] == "up"):
                 self.k9.set_k9_pwm(5, 50)  # centre tail
                 self.k9.set_k9_pwm(4, 0)  # move up
