@@ -172,11 +172,15 @@ class K9:
         self.pwm_hover = 3
         self.pwm_screen = 2
         self.pwm_lights = 1
+        self.tail = 4
+        self.tailh = 5
         # Set initial values for k9
         self.lights = 100
         self.eyes = 30
         self.hover = 0
         self.screen = 100
+        self.tail = 320
+        self.tailh = 382
         # Create two motor objects
         self.leftMotor = Motor("left", m1_qpps)
         self.rightMotor = Motor("right", m2_qpps)
@@ -195,6 +199,8 @@ class K9:
             self.set_k9_pwm(self.pwm_hover, self.hover)
             self.set_k9_pwm(self.pwm_screen, self.screen)
             self.set_k9_pwm(self.pwm_lights, self.lights)
+            self.set_k9_pwm(self.pwm_tail, self.tail)
+            self.set_k9_pwm(self.pwm_tailh, self.tailh)
             print "All servo driver initial state set..."
 
     def set_k9_object(self, object, brightness):
@@ -315,10 +321,10 @@ class K9PythonController(WebSocketClient):
         elif (self.message_obj.object == "tailh"):
             if (self.message_obj.value == "left"):
                 self.k9.set_k9_pwm(4, 320)  # centre tail
-                self.k9.set_k9_pwm(4, 325)  # move left
+                self.k9.set_k9_pwm(5, 325)  # move left
             else:
                 self.k9.set_k9_pwm(4, 320)  # centre tail
-                self.k9.set_k9_pwm(4, 440)  # move right
+                self.k9.set_k9_pwm(5, 440)  # move right
         else:
             if self.message_obj.value == "on":
                 self.brightness = 100
