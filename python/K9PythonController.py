@@ -175,11 +175,11 @@ class K9:
         self.pwm_tailh = 5
         # Set initial values for k9
         self.lights = 100
-        self.eyes = 30
+        self.eyes = 5
         self.hover = 0
         self.screen = 100
-        self.tail = 320
-        self.tailh = 382
+        self.tail = 50
+        self.tailh = 50
         self.motorctrl = 0
         # Create two motor objects
         self.leftMotor = Motor("left", m1_qpps)
@@ -200,16 +200,11 @@ class K9:
             self.set_k9_pwm(self.pwm_screen, self.screen)
             self.set_k9_pwm(self.pwm_lights, self.lights)
             print "Tail vertical..."
-            # self.set_k9_pwm_direct(self.pwm_tail, self.tail)
+            self.set_k9_pwm(self.pwm_tail, self.tail)
             print "Tail horizontal"
-            # self.set_k9_pwm_direct(self.pwm_tailh, self.tailh)
+            self.set_k9_pwm(self.pwm_tailh, self.tailh)
             print "All servo driver initial state set..."
             print "k9 instance of K9 Class initialized"
-
-    def set_k9_pwm_direct(self, channel, pwm):
-        if not sim:
-            print "Setting channel " + channel + " to " + pwm
-            self.pwm.set_pwm(channel, 0, pwm)
 
     def switch_obj_to_channel(self, object):
         convert = {
@@ -224,10 +219,7 @@ class K9:
 
     def set_k9_object(self, object, brightness):
         self.pwm_channel = self.switch_obj_to_channel(object)
-        if (self.pwm_channel == 4 or self.pwm_channel == 5):
-            self.set_k9_pwm_direct(self.pwm_channel, brightness)
-        else:
-            self.set_k9_pwm(self.pwm_channel, brightness)
+        self.set_k9_pwm(self.pwm_channel, brightness)
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = channel
@@ -326,25 +318,26 @@ class K9PythonController(WebSocketClient):
         self.brightness = 0  # default to "off" value
         if (self.message_dict["object"] == "tail"):
             if (self.message_dict["value"] == "up"):
-                self.k9.set_k9_pwm(5, 382)  # centre tail
-                self.k9.set_k9_pwm(4, 270)  # move up
+                self.k9.set_k9_pwm(5, 50)  # centre tail
+                self.k9.set_k9_pwm(4, 0)  # move up
             else:
-                self.k9.set_k9_pwm(5, 382)  # centre tail
-                self.k9.set_k9_pwm(4, 370)  # move up
+                self.k9.set_k9_pwm(5, 50)  # centre tail
+                self.k9.set_k9_pwm(4, 100)  # move up
         elif (self.message_dict["object"] == "tailh"):
             if (self.message_dict["value"] == "left"):
-                self.k9.set_k9_pwm(4, 320)  # centre tail
-                self.k9.set_k9_pwm(5, 325)  # move left
+                self.k9.set_k9_pwm(4, 50)  # centre tail
+                self.k9.set_k9_pwm(5, 0)  # move left
             else:
-                self.k9.set_k9_pwm(4, 320)  # centre tail
-                self.k9.set_k9_pwm(5, 440)  # move right
+                self.k9.set_k9_pwm(4, 50)  # centre tail
+                self.k9.set_k9_pwm(5, 100)  # move right
         else:
             if self.message_dict["value"] == "on":
                 self.brightness = 100
             self.k9.set_k9_object(self.message_dict["object"], self.brightness)
 
     def servo_message(self):
-        self.k9.set_k9_object(self.message_dict["object"], self.message_dict["value"])
+        self.k9.set_k9_object(
+            self.message_dict["object"], self.message_dict["value"])
 
     def received_message(self, message):
         self.message = message
