@@ -181,6 +181,7 @@ class K9:
         self.screen = 100
         self.tail = 320
         self.tailh = 382
+        self.motorctrl=0
         # Create two motor objects
         self.leftMotor = Motor("left", m1_qpps)
         self.rightMotor = Motor("right", m2_qpps)
@@ -267,6 +268,7 @@ class K9:
             "eyes": self.eyes,
             "hover": self.hover,
             "screen": self.screen,
+            "motorctrl": self.motorctrl,
             "main_volt": self.main_volt,
             "brain_volt": self.brain_volt,
             "motor_l_amp": self.m1current,
