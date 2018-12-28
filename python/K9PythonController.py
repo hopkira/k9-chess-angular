@@ -231,9 +231,8 @@ class K9:
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = channel
-        self.brightness = brightness
         self.channel = int(self.channel)
-        self.brightness = int(self.brightness * 40.95)
+        self.brightness = int(int(brightness) * 40.95)
         print "Setting channel " +\
             str(self.channel) + " to " + str(self.brightness)
         if not sim:
