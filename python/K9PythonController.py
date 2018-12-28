@@ -218,13 +218,13 @@ class K9:
         return convert.get(object)
 
     def set_k9_object(self, object, brightness):
-        self.brightness = int(brightness)
+        self.brightness = float(brightness)
         self.pwm_channel = self.switch_obj_to_channel(object)
         self.set_k9_pwm(self.pwm_channel, self.brightness)
 
     def set_k9_pwm(self, channel, brightness):
         self.channel = int(channel)
-        self.brightness = int(int(brightness) * 40.95)
+        self.brightness = int(brightness * 40.95)
         print "Setting channel " +\
             str(self.channel) + " to " + str(self.brightness)
         if not sim:
