@@ -178,8 +178,8 @@ class K9:
         self.eyes = 5
         self.hover = 0
         self.screen = 100
-        self.tailv = 50
-        self.tailh = 50
+        self.tailv = 14.04
+        self.tailh = 15.02
         self.motorctrl = 0
         # Create two motor objects
         self.leftMotor = Motor("left", m1_qpps)
@@ -318,18 +318,18 @@ class K9PythonController(WebSocketClient):
         self.brightness = 0  # default to "off" value
         if (self.message_dict["object"] == "tailv"):
             if (self.message_dict["value"] == "up"):
-                self.k9.set_k9_pwm(5, 50)  # centre tail
-                self.k9.set_k9_pwm(4, 0)  # move up
+                self.k9.set_k9_pwm(5, 15.02)  # centre tail
+                self.k9.set_k9_pwm(4, 10.99)  # move up
             else:
-                self.k9.set_k9_pwm(5, 50)  # centre tail
-                self.k9.set_k9_pwm(4, 100)  # move up
+                self.k9.set_k9_pwm(5, 15.02)  # centre tail
+                self.k9.set_k9_pwm(4, 17.09)  # move up
         elif (self.message_dict["object"] == "tailh"):
             if (self.message_dict["value"] == "left"):
-                self.k9.set_k9_pwm(4, 50)  # centre tail
-                self.k9.set_k9_pwm(5, 0)  # move left
+                self.k9.set_k9_pwm(4, 14.04)  # centre tail
+                self.k9.set_k9_pwm(5, 12.82)  # move left
             else:
-                self.k9.set_k9_pwm(4, 50)  # centre tail
-                self.k9.set_k9_pwm(5, 100)  # move right
+                self.k9.set_k9_pwm(4, 14.04)  # centre tail
+                self.k9.set_k9_pwm(5, 17.22)  # move right
         else:
             if self.message_dict["value"] == "on":
                 self.brightness = 100
