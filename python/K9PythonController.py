@@ -169,7 +169,7 @@ class K9:
         # Create names for each PWM channel
         self.pwm_eyes = 0
         self.pwm_hover = 3
-        self.pwm_screen = 2
+        self.pwm_screen = 6
         self.pwm_lights = 1
         self.pwm_tail = 4
         self.pwm_tailh = 5
@@ -210,7 +210,7 @@ class K9:
         convert = {
             "eyes": 0,
             "lights": 1,
-            "screen": 2,
+            "screen": 6,
             "hover": 3,
             "tail": 4,
             "tailh": 5
@@ -218,12 +218,12 @@ class K9:
         return convert.get(object)
 
     def set_k9_object(self, object, brightness):
+        self.brightness = int(brightness)
         self.pwm_channel = self.switch_obj_to_channel(object)
-        self.set_k9_pwm(self.pwm_channel, brightness)
+        self.set_k9_pwm(self.pwm_channel, self.brightness)
 
     def set_k9_pwm(self, channel, brightness):
-        self.channel = channel
-        self.channel = int(self.channel)
+        self.channel = int(channel)
         self.brightness = int(int(brightness) * 40.95)
         print "Setting channel " +\
             str(self.channel) + " to " + str(self.brightness)
