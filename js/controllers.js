@@ -68,12 +68,12 @@ angular.module('K9.controllers', [])
         strokeLinecap: "round"
         });
 
-      $scope.rdtime=setInterval(function() {$scope.reDraw();},60);
+      $scope.rdtime=setInterval(function() {$scope.reDraw();},15);
     }
     $scope.reDraw = function () {
       // method to reDraw sensor screen
       mySensorArray=msgtoPoint.getSensorArray();
-      $scope.ultrasonic.animate({cx: mySensorArray[0].x,cy: mySensorArray[0].y},60,mina.easein);
+      $scope.ultrasonic.animate({cx: mySensorArray[0].x,cy: mySensorArray[0].y},30,mina.easeinout);
 
       $scope.line1.animate({ x1: mySensorArray[1].x, x2: mySensorArray[2].x, y1: mySensorArray[1].y, y2: mySensorArray[2].y},30);
       $scope.line2.animate({ x1: mySensorArray[2].x, x2: mySensorArray[3].x, y1: mySensorArray[2].y, y2: mySensorArray[3].y},30);
