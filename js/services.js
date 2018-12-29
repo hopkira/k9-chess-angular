@@ -331,7 +331,7 @@ angular.module('K9.services', [])
       {
          if (!sensorLocations[i].angle) {
             // compare the name and angle
-            if ((angle > sensorLocations[i].min_angle) && (angle <= sensorLocations[i].max_angle)){
+            if ((angle > sensorLocations[i].min_angle) && (angle <= sensorLocations[i].max_angle) && (sensorLocations[i].sensorName == mySensorLocation.name)){
                break;
             }
          }
