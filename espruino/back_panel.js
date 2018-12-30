@@ -26,11 +26,11 @@ function onInit(){
     // this array of objects represent the Sharp infrared
     // sensors built into the back panel
     sensors=[
-        {sensorName:"left",pinName:"A2",angle:Math.PI/2},
-        {sensorName:"bl_corner",pinName:"A3",angle:Math.PI*3/4},
-        {sensorName:"tail",pinName:"A4",angle:Math.PI},
-        {sensorName:"br_corner",pinName:"A5",angle:Math.PI*-3/4},
-        {sensorName:"right",pinName:"A6",angle:Math.PI/-2}
+        {sensorName:"left",pinName:"A2",angle:90},
+        {sensorName:"bl_corner",pinName:"A3",angle:135},
+        {sensorName:"tail",pinName:"A4",angle:180},
+        {sensorName:"br_corner",pinName:"A5",angle:225},
+        {sensorName:"right",pinName:"A6",angle:270}
     ];
     numSensors=sensors.length;
     i = setInterval(IRReading, 200);
@@ -80,9 +80,8 @@ function IRReading() {
 // converts a pin voltage reading to metres, within the constraints
 // of the device
 function convertPin2m(pinreading) {
-  var volts = pinreading * 3.3;
+  var volts = pinreading * E.getAnalogVRef();
   var m = volts/0.6413;
-  if (m<0.15){m=0.15;}
   return m;
 }
 
