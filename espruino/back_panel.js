@@ -68,7 +68,7 @@ var numTouchSwitches=touchswitches.length;
 // for each sensor
 function IRReading() {
   for (var sensor=0; sensor < numSensors; sensor++) {
-    adcPin= new Pin(sensors[sensor].pinName);
+    adcPin= Pin(sensors[sensor].pinName);
     sensorName = sensors[sensor].sensorName;
     reading = analogRead(adcPin);
     distance = convertPin2m(reading);
@@ -81,9 +81,8 @@ function IRReading() {
 // of the device
 function convertPin2m(pinreading) {
   var volts = pinreading * 3.3;
-  var m = 1/volts*0.65;
-  if (m>1.5){m=1.5;}
-  if (m<0.2){m=0.2;}
+  var m = volts/0.6413;
+  if (m<0.15){m=0.15;}
   return m;
 }
 
