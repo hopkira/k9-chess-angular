@@ -21,90 +21,16 @@ distance of the transmitter.
 Simple trigonometry is then used to translate those values
 to x and y co-ordinates relative to the centre of K9.
 
-Program is designed to runs on Espruino microcontroller, but will also run
-with simulated readings and outputs
-for testing purposes using node.js via the command
-
-usage: node moving_average_net [-s]
-	options:
-		-s 		run in simulation mode
-
-You will need to comment out the process.argv if clause to get
-the program to run on an Espruino.
+Program is designed to runs on Espruino microcontroller.
 
 Published under The Unlicense
-Richard Hopkins, 15th October 2017
+Richard Hopkins, 29th December 2018
 
 */
-// if -s is used to start script, then run in simulation mode
-// this capabilty is commented out as the Espruino cannot understand
-//
-var sim = false;
-/*
-if(process.argv.indexOf("-s") != -1){
-	sim = true;
-	console.log("Simulating sensors");
-	}
-*/
-// set up USB serial port
-if (!sim){
-USB.setup(57600,{
-	  bytesize:8,    // How many data bits - 7 or 8
-	  parity:'none', // Parity bit
-	  stopbits:1,    // Number of stop bits to use
-	});
-;}
-
-var sensor_data = [];  // initialise sensor array that will hold objects
-// list of sensor names
-var sensor_names = ["front_left","front_right","left","right","back"];
-// list of Espruino pins that correspond to the names
-var pins = ["A2","A3","A4","A5","A6"];
-
-
-var sensors = sensor_names.length;  // how many sensors do we have?
-var readings = 20; // the number here must match the length of the readings array
-
-/*
-Initialise sensor array objects
-
-This loop creates an object for each sensor, providing each object with
-name, pin identifier and an empty set of readings
-These are initialised at zero as K9 will not respond until the
-moving average on one of the sensors exceeds 0.2; this therefore gives
-the moving average some time to remove noise before K9 moves.
-
-Two methods are created:
-
-	mov_avg			calculates the average reading of the sensor object
-
-	make_reading	adds a new reading to the end of the array and
-					removes the oldest reading from the front -
-					this means that mov_avg will calculate a moving average
-					for that sensor object
-
-*/
-
-for (i=0;i<sensors;i++){
-  sensor_data[i] = {
-  	name: sensor_names[i], // sensor name
-  	pin: pins[i], // sensor pin
-  	reading: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], // initialise readings array
-  	mov_avg: function() {
-  		var sum = 0;
-  		for (var j in this.reading) {sum += this.reading[j];}  // calculate array total
-  		return sum/readings;  // return the moving average
-  		},
-  	make_reading: function(value) {
-  		this.reading.push(value);  // push new value onto end of array
-  		this.reading.splice(0,1);  // remove first value from array
-  	}
-  }
-//  for (j=0;j<readings;j++){sensor_data[i].reading[j] = i*j;}
-;}
 
 // neural net function that returns an x,y co-ordinates object
 // based on the moving average readings from five sensors
+
 function calculate(input) {
 F = {
 0: 0.16528572518,
@@ -221,15 +147,13 @@ return bearings;
 
 function takeSensorReadings(){
 	for (i=0;i<sensors;i++){
-		if (!sim) {sensor_data[i].make_reading(analogRead(sensor_data[i].pin));}
-		else {sensor_data[i].make_reading(Math.random()*0.35);} // simulate analog read
+		sensor_data[i].make_reading(analogRead(sensor_data[i].pin));
 		}
 }
 
 function sendNRMsg(type,sensor,distance,angle) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}!');
-  if (!sim){USB.println(message);}
-  else {console.log(message);}
+  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}');
+  USB.println(message);
 }
 
 function sendXYtoNR(){
@@ -248,7 +172,56 @@ function sendXYtoNR(){
     }   sendNRMsg("sensor","ultrasonic",bearings.distance.toString(),bearings.angle.toString());
 }
 
-// take sensor readings every 6ms
-var scan=setInterval(takeSensorReadings,6);
-// send message to node-RED every 120ms
-var send=setInterval(sendXYtoNR,120);
+function onInit(){
+  // set up USB serial port
+  USB.setup(115200,{
+	  bytesize:8,    // How many data bits
+	  stopbits:1,    // Number of stop bits to use
+	  });
+  sensor_data = [];  // initialise sensor array that will hold objects
+  // list of sensor names
+  sensor_names = ["front_left","front_right","left","right","back"];
+  // list of Espruino pins that correspond to the names
+  pins = ["A2","A3","A4","A5","A6"];
+  sensors = sensor_names.length;  // how many sensors do we have?
+  readings = 20; // the number here must match the length of the readings array
+  /*
+  Initialise sensor array objects
+
+  This loop creates an object for each sensor, providing each object with
+  name, pin identifier and an empty set of readings
+  These are initialised at zero as K9 will not respond until the
+  moving average on one of the sensors exceeds 0.2; this therefore gives
+  the moving average some time to remove noise before K9 moves.
+
+  Two methods are created:
+
+	  mov_avg			calculates the average reading of the sensor object
+
+	  make_reading	adds a new reading to the end of the array and
+					removes the oldest reading from the front -
+					this means that mov_avg will calculate a moving average
+					for that sensor object
+
+  */
+  for (i=0;i<sensors;i++){
+    sensor_data[i] = {
+  	  name: sensor_names[i], // sensor name
+  	  pin: pins[i], // sensor pin
+  	  reading: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], // initialise readings array
+  	  mov_avg: function() {
+  		  var sum = 0;
+  		  for (var j in this.reading) {sum += this.reading[j];}  // calculate array total
+  		  return sum/readings;  // return the moving average
+  		  },
+  	  make_reading: function(value) {
+  		  this.reading.push(value);  // push new value onto end of array
+  		  this.reading.splice(0,1);  // remove first value from array
+  	  }
+    }
+  ;}
+  // take sensor readings every 6ms
+  var scan=setInterval(takeSensorReadings,6);
+  // send message to node-RED every 120ms
+  var send=setInterval(sendXYtoNR,120);
+}

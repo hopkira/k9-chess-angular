@@ -15,23 +15,27 @@ serial connection over a USB cable.
 
 Published under The Unlicense
 
-Richard Hopkins, 7th January 2018
+Richard Hopkins, 29th December 2018
 */
 
-// set up USB connector to send messages to Pi via
-// serial over USB
-USB.setup(115200,{bytesize:8,stopbits:1});
-
-// this array of objects represent the Sharp infrared
-// sensors built into the back panel
-var sensors=[
-  {sensorName:"left",pinName:"C0",angle:Math.PI/2},
-  {sensorName:"bl_corner",pinName:"C1",angle:Math.PI*3/4},
-  {sensorName:"tail",pinName:"C2",angle:Math.PI},
-  {sensorName:"br_corner",pinName:"C3",angle:Math.PI*-3/4},
-  {sensorName:"right",pinName:"A0",angle:Math.PI/-2}
-];
-var numSensors=sensors.length;
+function onInit(){
+    toggle = true;
+    // set up USB connector to send messages to Pi via
+    // serial over USB
+    USB.setup(115200,{bytesize:8,stopbits:1});
+    // this array of objects represent the Sharp infrared
+    // sensors built into the back panel
+    sensors=[
+        {sensorName:"left",pinName:"A2",angle:90},
+        {sensorName:"bl_corner",pinName:"A3",angle:135},
+        {sensorName:"tail",pinName:"A4",angle:180},
+        {sensorName:"br_corner",pinName:"A5",angle:225},
+        {sensorName:"right",pinName:"A6",angle:270}
+    ];
+    numSensors=sensors.length;
+    i = setInterval(IRReading, 200);
+}
+/*
 
 // The array of switch objects used to associate buttons to pin names
 var switches=[
@@ -57,12 +61,14 @@ var touchswitches=[
 ];
 var numTouchSwitches=touchswitches.length;
 
+*/
+
 // this function will scan all the array of sensors
 // objects and will send a message to the Raspberry Pi
 // for each sensor
 function IRReading() {
   for (var sensor=0; sensor < numSensors; sensor++) {
-    adcPin= new Pin(sensors[sensor].pinName);
+    adcPin= Pin(sensors[sensor].pinName);
     sensorName = sensors[sensor].sensorName;
     reading = analogRead(adcPin);
     distance = convertPin2m(reading);
@@ -74,22 +80,20 @@ function IRReading() {
 // converts a pin voltage reading to metres, within the constraints
 // of the device
 function convertPin2m(pinreading) {
-  var volts = pinreading * 3.3;
-  var m = 1/volts*0.65;
-  if (m>1.5){m=1.5;}
-  if (m<0.2){m=0.2;}
+  var volts = pinreading * E.getAnalogVRef();
+  var m = volts/0.6413;
   return m;
 }
 
 // this function is used by the IR sensors and back panel switches to
 // send a message to the Rapsberry Pi via a USB serial connection
 function sendMsg(type,sensor,distance,angle) {
-  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}!');
+  message = String('{"type":"'+type+'","sensor":"'+sensor+'","distance":"'+distance+'","angle":"'+angle+'"}');
   USB.print(message);
+  digitalWrite(LED2,toggle=!toggle);
   }
 
-var i = setInterval(IRReading, 200);
-
+/*
 // this loop registers a separate rising and falling watcher for each
 // of the switch buttons.  When activated they will send an 'on' of 'off' message
 // to the Raspberry Pi via the USB serial connection
@@ -123,3 +127,4 @@ for (var ts=0; ts < numTouchSwitches; ts++) {
       sendMsg("switch",switchName,"on",999);
     },switchPin,{ repeat: true, debounce : 50, edge: "falling" });
 }
+*/

@@ -68,12 +68,12 @@ angular.module('K9.controllers', [])
         strokeLinecap: "round"
         });
 
-      $scope.rdtime=setInterval(function() {$scope.reDraw();},60);
+      $scope.rdtime=setInterval(function() {$scope.reDraw();},15);
     }
     $scope.reDraw = function () {
       // method to reDraw sensor screen
       mySensorArray=msgtoPoint.getSensorArray();
-      $scope.ultrasonic.animate({cx: mySensorArray[0].x,cy: mySensorArray[0].y},60,mina.easein);
+      $scope.ultrasonic.animate({cx: mySensorArray[0].x,cy: mySensorArray[0].y},30,mina.easeinout);
 
       $scope.line1.animate({ x1: mySensorArray[1].x, x2: mySensorArray[2].x, y1: mySensorArray[1].y, y2: mySensorArray[2].y},30);
       $scope.line2.animate({ x1: mySensorArray[2].x, x2: mySensorArray[3].x, y1: mySensorArray[2].y, y2: mySensorArray[3].y},30);
@@ -208,16 +208,16 @@ if (parseInt($scope.dogstatus.pwmhover) <= 50) {
 }
 
 $scope.changeTail = function() {
-  NRInstruction.send('toggle','tail',$scope.dogstatus.tail);
+  NRInstruction.send('toggle','tailv',$scope.dogstatus.tail);
   if ($scope.dogstatus.tail == "down" ) {
-    $scope.dogstatus.pwmverttail="370";
+    $scope.dogstatus.pwmverttail="17";
     } else {
-    $scope.dogstatus.pwmverttail="270";
+    $scope.dogstatus.pwmverttail="11";
     }
   }
 
  $scope.setTailVPWM = function() {
- if (parseInt($scope.dogstatus.pwmverttail) <= 320) {
+ if (parseInt($scope.dogstatus.pwmverttail) <= 14) {
    $scope.dogstatus.tail = "up"
    } else {
    $scope.dogstatus.tail = "down"
@@ -228,14 +228,14 @@ $scope.changeTail = function() {
  $scope.changeTailH = function() {
    NRInstruction.send('toggle','tailh',$scope.dogstatus.tailh);
    if ($scope.dogstatus.tailh == "right" ) {
-     $scope.dogstatus.pwmhoriztail="440";
+     $scope.dogstatus.pwmhoriztail="17.0";
      } else {
-     $scope.dogstatus.pwmhoriztail="325";
+     $scope.dogstatus.pwmhoriztail="13.0";
      }
    }
 
   $scope.setTailHPWM = function() {
-  if (parseInt($scope.dogstatus.pwmhoriztail) <= 380) {
+  if (parseInt($scope.dogstatus.pwmhoriztail) <= 15) {
     $scope.dogstatus.tailh = "left"
     } else {
     $scope.dogstatus.tailh = "right"
