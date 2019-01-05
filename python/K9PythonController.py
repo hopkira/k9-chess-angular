@@ -113,7 +113,8 @@ class Motor:
                 self.reqmotorspeed, 2.0) + math.pow(self.reqsteering, 2.0)))
         # If motorctrl is 1, then translate into precise
         # speed and direction up to 10mph
-        print "Speed: " + self.reqmotorspeed + " Steering: " + self.reqsteering + "Magnitude: " + self.magnitude
+        print "Speed: " + str(self.reqmotorspeed) + " Steering: " + \
+            str(self.reqsteering) + "Magnitude: " + str(self.magnitude)
         if (self.motorctrl != 1.0):
             # If motorctrl is not in turbo mode, then reduce
             # speed by 25%
@@ -165,8 +166,8 @@ class Motor:
         if not sim:
             self.click_speed = int(self.QPPS * self.target)
             self.distance = int(abs(self.target * self.QPPS / 4))
-            print "Command: " + str(self.name) + " set to " +\
-                str(self.click_speed)
+            # print "Command: " + str(self.name) + " set to " +\
+            #    str(self.click_speed)
             if self.name == "left":
                 if self.target == 0:
                     rc.SpeedM1(rc_address, 0)
@@ -244,7 +245,7 @@ class K9:
         self.channel = int(channel)
         self.brightness = int(brightness * 40.95)
         # print "Setting channel " +\
-            str(self.channel) + " to " + str(self.brightness)
+        #    str(self.channel) + " to " + str(self.brightness)
         if not sim:
             self.pwm.set_pwm(self.channel, 0, self.brightness)
         # print "Channel " + str(self.channel) +\
