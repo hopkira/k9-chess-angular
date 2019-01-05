@@ -99,13 +99,16 @@ class Motor:
         # by applying an elipse as the limiter
         self.myAngle = math.atan2(self.reqmotorspeed, self.reqsteering)
         if (self.reqmotorspeed >= 0):
-            self.reqmotorspeed * math.cos(self.myAngle)
+            self.reqmotorspeed = self.reqmotorspeed * math.cos(self.myAngle)
         else:
-            self.reqmotorspeed * math.cos(self.myAngle) * -1
+            self.reqmotorspeed = \
+                self.reqmotorspeed * math.cos(self.myAngle) * -1
         if (self.reqsteering >= 0):
-            self.reqsteering = self.reqsteering * math.sin(self.myAngle) * .25
+            self.reqsteering = \
+                self.reqsteering * math.sin(self.myAngle) * 0.25
         else:
-            self.reqsteering = self.reqsteering * math.sin(self.myAngle) * -.25
+            self.reqsteering = \
+                self.reqsteering * math.sin(self.myAngle) * -0.25
         self.magnitude = min(100.0, math.sqrt(math.pow(
                 self.reqmotorspeed, 2.0) + math.pow(self.reqsteering, 2.0)))
         # If motorctrl is 1, then translate into precise
