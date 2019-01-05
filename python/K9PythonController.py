@@ -113,6 +113,7 @@ class Motor:
                 self.reqmotorspeed, 2.0) + math.pow(self.reqsteering, 2.0)))
         # If motorctrl is 1, then translate into precise
         # speed and direction up to 10mph
+        print "Speed: " + self.reqmotorspeed + " Steering: " + self.reqsteering + "Magnitude: " + self.magnitude
         if (self.motorctrl != 1.0):
             # If motorctrl is not in turbo mode, then reduce
             # speed by 25%
@@ -149,8 +150,8 @@ class Motor:
         else:
             self.speed = self.target
             self.encoder = self.encoder + self.speed
-        print str(self.name) + " speed: " + str(self.speed)
-        print str(self.name) + " encoder: " + str(self.encoder)
+        # print str(self.name) + " speed: " + str(self.speed)
+        # print str(self.name) + " encoder: " + str(self.encoder)
         # Store current speed and encoder reading in K9 memory
         memory.storeState(str(self.name)+":speed", self.speed)
         memory.storeState(str(self.name)+":encoder", self.encoder)
@@ -242,12 +243,12 @@ class K9:
     def set_k9_pwm(self, channel, brightness):
         self.channel = int(channel)
         self.brightness = int(brightness * 40.95)
-        print "Setting channel " +\
+        # print "Setting channel " +\
             str(self.channel) + " to " + str(self.brightness)
         if not sim:
             self.pwm.set_pwm(self.channel, 0, self.brightness)
-        print "Channel " + str(self.channel) +\
-            " set to " + str(self.brightness)
+        # print "Channel " + str(self.channel) +\
+        #    " set to " + str(self.brightness)
 
     def getStatusInfo(self):
         # retrieves status of motors and lights
