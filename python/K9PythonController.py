@@ -94,16 +94,30 @@ class Motor:
         self.reqmotorspeed = reqmotorspeed
         self.reqsteering = reqsteering
         self.motorctrl = motorctrl
-        self.magnitude = min(100.0, math.sqrt(math.pow(
-            self.reqmotorspeed, 2.0) + math.pow(self.reqsteering, 2.0)))
+        # Modify the instructions to restrict turning
+        # component to 25% of full speed
+        # by applying an elipse as the limiter
         self.myAngle = math.atan2(self.reqmotorspeed, self.reqsteering)
+        if (self.reqmotorspeed >= 0):
+            self.reqmotorspeed * math.cos(self.myAngle)
+        else:
+            self.reqmotorspeed * math.cos(self.myAngle) * -1
+        if (self.reqsteering >= 0):
+            self.reqsteering = self.reqsteering * math.sin(self.myAngle) * .25
+        else:
+            self.reqsteering = self.reqsteering * math.sin(self.myAngle) * -.25
+        self.magnitude = min(100.0, math.sqrt(math.pow(
+                self.reqmotorspeed, 2.0) + math.pow(self.reqsteering, 2.0)))
         # If motorctrl is 1, then translate into precise
         # speed and direction up to 10mph
         if (self.motorctrl != 1.0):
-            # Make 1mph the maximum speed and approximate direction
-            # to forward, backward or spin
-            self.magnitude = self.magnitude / 10
+            # If motorctrl is not in turbo mode, then reduce
+            # speed by 25%
+            self.magnitude = self.magnitude / 4
+            # and limit the angle of movement to forward, backward or spin
             self.myAngle = round(self.myAngle / (math.pi/4.0))*math.pi/4.0
+        # Rotate the frame of reference by 45 degrees to translate into motor
+        # speeds
         self.myAngle = self.myAngle - (math.pi/4.0)
         if self.name == "left":
             self.targetspeed = self.magnitude * math.cos(self.myAngle)

@@ -4,7 +4,7 @@ This simple program calculates the distance to the nearest obstacle
 for each of the five IR sensors based on a moving average of readings.
 
 It captures the data from the five ultrasonic sensors
-every 10ms and maintains a moving average of their last 20 readings
+every 25ms and maintains a moving average of their last 10 readings
 (a period of 200ms)
 
 Program is designed to run on a Espruino microcontroller.
@@ -13,12 +13,26 @@ Published under The Unlicense
 Richard Hopkins, 30th December 2018
 
 */
-
+function voltsToMeters(voltage){
+    // convert voltage to metres, ignoring high or low takeSensorReadings
+    var dist_v
+    if (voltage < 0.5) {
+        dist_v = 1.5;
+    }
+    else if (voltage > 2.5) {
+        dist_v = 0.2;
+    }
+    else {
+        dist_v = (1 / voltage) * 0.68
+    }
+    return dist_v;
+}
 
 function takeSensorReadings(){
 	for (i=0;i<sensors;i++){
-		sensor_data[i].make_reading(analogRead(sensor_data[i].pin) * E.getAnalogVRef()/0.6413);
-		}
+		sensor_data[i].make_reading(analogRead(sensor_data[i].pin));
+        var voltage = sensor_data[i] * 3.3;
+        sensor_data[i] = voltsToMeters(voltage);
 }
 
 function sendNRMsg(type,sensor,distance,angle) {
@@ -48,15 +62,12 @@ function onInit(){
   pins = ["A2","A3","A4","A5","A6"];
   angles = [90,135,180,225,270];  // direction of the sensor
   sensors = sensor_names.length;  // how many sensors do we have?
-  readings = 20; // the number here must match the length of the readings array
+  readings = 10; // the number here must match the length of the readings array
   /*
   Initialise sensor array objects
 
   This loop creates an object for each sensor, providing each object with
   name, pin identifier and an empty set of readings
-  These are initialised at zero as K9 will not respond until the
-  moving average on one of the sensors exceeds 0.2; this therefore gives
-  the moving average some time to remove noise before K9 moves.
 
   Two methods are created:
 
@@ -73,7 +84,7 @@ function onInit(){
   	  name: sensor_names[i], // sensor name
   	  pin: pins[i], // sensor pin
       angle: angles[i],
-  	  reading: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], // initialise readings array
+  	  reading: [0,0,0,0,0,0,0,0,0,0], // initialise readings array
   	  mov_avg: function() {
   		  var sum = 0;
   		  for (var j in this.reading) {sum += this.reading[j];}  // calculate array total
@@ -85,8 +96,8 @@ function onInit(){
   	  }
     }
   ;}
-  // take sensor readings every 10ms
-  var scan=setInterval(takeSensorReadings,10);
+  // take set of sensor readings every 25ms
+  var scan=setInterval(takeSensorReadings,25);
   // send message to node-RED every 200ms
   var send=setInterval(sendXYtoNR,200);
 }
