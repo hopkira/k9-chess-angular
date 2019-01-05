@@ -15,7 +15,7 @@ Richard Hopkins, 30th December 2018
 */
 function voltsToMeters(voltage){
     // convert voltage to metres, ignoring high or low takeSensorReadings
-    var dist_v
+    var dist_v;
     if (voltage < 0.5) {
         dist_v = 1.5;
     }
@@ -23,16 +23,15 @@ function voltsToMeters(voltage){
         dist_v = 0.2;
     }
     else {
-        dist_v = (1 / voltage) * 0.68
+        dist_v = (1 / voltage) * 0.68;
     }
     return dist_v;
 }
 
 function takeSensorReadings(){
 	for (i=0;i<sensors;i++){
-		sensor_data[i].make_reading(analogRead(sensor_data[i].pin));
-        var voltage = sensor_data[i] * 3.3;
-        sensor_data[i] = voltsToMeters(voltage);
+		sensor_data[i].make_reading(voltsToMeters(analogRead(sensor_data[i].pin)*3.3));
+  }
 }
 
 function sendNRMsg(type,sensor,distance,angle) {
