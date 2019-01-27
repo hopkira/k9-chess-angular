@@ -66,6 +66,7 @@ angular.module('K9.directives', [])
             var joystick_pic = Snap.load("img/Joystick Slow.svg", onJoyLoaded);
             // draw the joystick circle
             var joy = s.circle(joy_position.x,joy_position.y,20);
+            var start = +new Date();
             // initialise as green or red depending upon turbo value
             joy.attr({
               stroke: "none",  // NEED TO LINK TO TOGGLEVALUE
@@ -127,7 +128,12 @@ angular.module('K9.directives', [])
                //     cy: joy_position.y
                // });
                //console.log("x: "+x+", dx:"+dx+", y: "+y+", dx:"+dy);
-              send(joy_position);
+              now = +new Date();
+              // only send 10 messages per second
+              if ((now - start) > 100) {
+                send(joy_position);
+                start = now;
+              }
             }
 
             var start = function(x,y,ev) {
