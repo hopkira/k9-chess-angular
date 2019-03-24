@@ -10,19 +10,12 @@
 # data at each point in its revolution
 # it can take parameters for different behaviours and distances
 
-import time
 import math
-import sys
 import argparse
 import serial
-import random
-# import logocmd
+import logocmd
 
-# sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
-sensors = serial.Serial('/dev/ttys9', 115200, timeout=1)
-sensors.reset_input_buffer()
-sensor_reading = sensors.readline()   # read a '\n' terminated line
-print 'Timed out'
+sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
 
 
 def main():
@@ -44,35 +37,43 @@ def main():
     parser.add_argument('-c', '--clockwise',
                         action='store_true',
                         help='turn robot clockwise')
+    parser.add_argument('-r', '--readings',
+                        type=int,
+                        default=100,
+                        help='number of readings at each point')
     args = parser.parse_args()
     new_filename = args.output_file + '.csv'
     output_file = open(new_filename, "wt")
     output_file.write("distance," + str(args.distance) + '\n')
     output_file.write("motors," + str(args.motors) + '\n')
     output_file.write("steps," + str(args.steps) + '\n')
-    step = 0
-    while (step < args.steps):
-        front_left = random.uniform(0, 1)
-        front_right = random.uniform(0, 1)
-        right = random.uniform(0, 1)
-        left = random.uniform(0, 1)
-        back = random.uniform(0, 1)
+    output_file.write("total readings," +
+                      str(args.steps * args.readings) +
+                      '\n')
+    input("Press Enter to begin data collection...")
+    step = 1
+    while (step <= args.steps):
         fraction = float(step) / float(args.steps)
         if (args.clockwise is False):
             angle = 2 * math.pi * fraction
+            logocmd.left(angle)
         else:
             angle = 2 * math.pi * (1 - fraction)
+            logocmd.right(angle)
         sine = (1 + math.sin(angle)) / 2
         cosine = (1 + math.cos(angle)) / 2
-        output_file.write("{input:[" +
-                          str(front_left) + "," +
-                          str(front_right) + "," +
-                          str(left) + "," +
-                          str(right) + "," +
-                          str(back) + "],output: [" +
-                          str(sine) + "," +
-                          str(cosine) + "," +
-                          str(args.distance) + "]},\n")
+        distance = args.distance/3
+        sensors.reset_input_buffer()
+        events = 0
+        while (events < args.readings):
+            message = sensors.readline()   # read a '\n' terminated line
+            output_file.write("{input:[" +
+                              message +
+                              "],output: [" +
+                              str(sine) + "," +
+                              str(cosine) + "," +
+                              str(distance) + "]},\n")
+            events += 1
         step += 1
 
 
