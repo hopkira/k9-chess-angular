@@ -8,18 +8,34 @@
 #
 # This program moves K9 in a circle
 
-import logocmd as logo
 import math
-import argparse
-
-
-parser = argparse.ArgumentParser(description='Makes dog spin on the spot.')
-parser.add_argument('-s', '--steps',
-                    type=int,
-                    default=6,
-                    help='number of elements to spin')
-args = parser.parse_args()
-i = 0
-while (i < args.steps):
-    input("Press enter to make move " + str(i) + " of " + str(args.steps))
-    logo.right(2 * math.pi / float(args.steps))
+from roboclaw import Roboclaw
+rc = Roboclaw("/dev/roboclaw", 115200)
+rc.Open()
+rc_address = 0x80
+m1_qpps = 740
+m2_qpps = 700
+acceleration = 6
+speed = 12
+distance = 12
+# Get roboclaw version to test if is attached
+version = rc.ReadVersion(rc_address)
+# Set PID variables to those required by K9
+rc.SetM1VelocityPID(rc_address, 20000, 2000, 0, m1_qpps)
+rc.SetM2VelocityPID(rc_address, 20000, 2000, 0, m2_qpps)
+# Zero the motor encoders
+rc.ResetEncoders(rc_address)
+rc.SpeedAccelDistanceM1M2(address=rc_address,
+                          accel=int(acceleration),
+                          speed1=int(-speed),
+                          distance1=int(distance),
+                          speed2=int(speed),
+                          distance2=int(distance),
+                          buffer=int(1))
+rc.SpeedAccelDistanceM1M2(address=rc_address,
+                          accel=acceleration,
+                          speed1=int(0),
+                          distance1=int(distance),
+                          speed2=int(0),
+                          distance2=int(distance),
+                          buffer=int(0))
