@@ -8,7 +8,7 @@ Program is designed to runs on Espruino microcontroller.
 
 It is designed to provide training data for a neural net and replicates
 how data will be fed into that neural net to create a vector to the
-ultrasonic transmitter
+ultrasonic transmitter.
 
 Published under The Unlicense
 Richard Hopkins, 24th March 2018

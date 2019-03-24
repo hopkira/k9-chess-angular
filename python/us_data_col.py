@@ -15,8 +15,6 @@ import argparse
 import serial
 import logocmd
 
-sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Collects ultrasonic data.')
@@ -42,6 +40,7 @@ def main():
                         default=100,
                         help='number of readings at each point')
     args = parser.parse_args()
+    sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
     new_filename = args.output_file + '.csv'
     output_file = open(new_filename, "wt")
     output_file.write("distance," + str(args.distance) + '\n')
