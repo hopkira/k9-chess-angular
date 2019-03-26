@@ -76,7 +76,7 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
 buffers = (0, 0, 0)
 while(buffers[1] != 0x80 and buffers[2] != 0x80):
     displayspeed()
-    buffers = rc.ReadBuffers(address)
+    buffers = rc.ReadBuffers(rc_address)
     time.sleep(0.1)
 
 rc.SpeedAccelDistanceM1M2(address=rc_address,
