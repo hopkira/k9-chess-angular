@@ -66,22 +66,26 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           distance2=int(distance),
                           buffer=int(1))
 print "=== accelerate command issued ==="
+buffers = (0, 0, 0)
+while(buffers[1] != 0x80 and buffers[2] != 0x80):
+    displayspeed()
+    buffers = rc.ReadBuffers(rc_address)
+    time.sleep(0.1)
+print "=== accelerate command complete =="
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=int(acceleration),
                           speed1=int(0),
                           distance1=int(distance),
                           speed2=int(0),
                           distance2=int(distance),
-                          buffer=int(0))
+                          buffer=int(1))
 print "=== decelarate command issued ==="
-
 buffers = (0, 0, 0)
 while(buffers[1] != 0x80 and buffers[2] != 0x80):
     displayspeed()
     buffers = rc.ReadBuffers(rc_address)
     time.sleep(0.1)
-
-print '=== both commands complete ==='
+print "=== decelerate command complete =="
 
 count = 0
 while (count < 200):
