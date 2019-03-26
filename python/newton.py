@@ -64,11 +64,11 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           distance1=int(distance),
                           speed2=int(speed),
                           distance2=int(distance),
-                          buffer=int(1))
+                          buffer=int(0))
 print "Speed reached..."
 displayspeed()
 rc.SpeedAccelDistanceM1M2(address=rc_address,
-                          accel=655360,
+                          accel=acceleration,
                           speed1=int(-1),
                           distance1=int(0),
                           speed2=int(-1),
@@ -78,13 +78,4 @@ print "Should have decelerated..."
 displayspeed()
 time.sleep(0.5)
 print "Should have stopped..."
-displayspeed()
-rc.SpeedAccelDistanceM1M2(address=rc_address,
-                          accel=0,
-                          speed1=int(0),
-                          distance1=int(0),
-                          speed2=int(0),
-                          distance2=int(0),
-                          buffer=int(0))
-print "Motors released..."
 displayspeed()
