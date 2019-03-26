@@ -46,7 +46,7 @@ def displayspeed():
     else:
         print "failed",
     if(speed2[0]):
-        print str(speed2[1]) + ",",
+        print str(speed2[1])
     else:
         print "failed "
 
