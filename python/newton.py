@@ -32,25 +32,21 @@ def displayspeed():
     enc2 = rc.ReadEncM2(rc_address)
     speed1 = rc.ReadSpeedM1(rc_address)
     speed2 = rc.ReadSpeedM2(rc_address)
-    print str(time.time() - base_time),
-    print("Enc1:"),
+    print str(time.time() - base_time) + ",",
     if(enc1[0] == 1):
-        print enc1[1],
+        print enc1[1] + ",",
     else:
         print "failed",
-    print "Enc2:",
     if(enc2[0] == 1):
-        print enc2[1],
+        print enc2[1] + ",",
     else:
         print "failed ",
-    print "Speed1:",
     if(speed1[0]):
-        print speed1[1],
+        print speed1[1] + ",",
     else:
         print "failed",
-    print("Speed2:"),
     if(speed2[0]):
-        print speed2[1]
+        print speed2[1] + ","
     else:
         print "failed "
 
