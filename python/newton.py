@@ -82,7 +82,7 @@ while(buffers[1] != 0x80 and buffers[2] != 0x80):
 print '=== commands completed ==='
 
 count = 0
-while (count<50):
+while (count < 200):
     displayspeed()
     time.sleep(0.1)
     count += 1
