@@ -18,7 +18,7 @@ m1_qpps = 1570
 m2_qpps = 1138
 acceleration = 25
 speed = 50
-distance = 138
+distance = 150
 # Get roboclaw version to test if is attached
 version = rc.ReadVersion(rc_address)
 # Set PID variables to those required by K9
