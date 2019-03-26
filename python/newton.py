@@ -15,8 +15,7 @@ rc = Roboclaw("/dev/roboclaw", 115200)
 rc.Open()
 rc_address = 0x80
 m1_qpps = 1762
-m2_qpps = 1762
-# m2_qpps = 1050
+m2_qpps = 1050
 acceleration = 250
 speed = 500
 distance = 5000
@@ -24,8 +23,8 @@ distance = 5000
 version = rc.ReadVersion(rc_address)
 # Set PID variables to those required by K9
 rc.SetM1VelocityPID(rc_address, 8.55, 2.21, 0, m1_qpps)
-# rc.SetM2VelocityPID(rc_address, 8.96, 2.82, 0, m2_qpps) autotuned
-rc.SetM2VelocityPID(rc_address, 8.55, 2.21, 0, m1_qpps)
+#rc.SetM2VelocityPID(rc_address, 8.96, 2.82, 0, m2_qpps) autotuned
+rc.SetM2VelocityPID(rc_address, 80, 20, 0, m1_qpps)
 # Zero the motor encoders
 rc.ResetEncoders(rc_address)
 
