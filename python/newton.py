@@ -72,13 +72,13 @@ buffers = (0, 0, 0)
 while(buffers[1] != 0x80 and buffers[2] != 0x80):
     displayspeed()
     buffers = rc.ReadBuffers(rc_address)
-    time.sleep(0.1)
+    # time.sleep(0.01)
 print "=== all commands complete =="
 
 count = 0
 while (count < 50):
     displayspeed()
-    time.sleep(0.1)
+    time.sleep(0.01)
     count += 1
 
 print '=== experiment finished ==='
