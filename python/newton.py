@@ -75,9 +75,9 @@ print "=== accelerate command complete =="
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=int(acceleration),
                           speed1=int(0),
-                          distance1=int(distance),
+                          distance1=int(distance+5000),
                           speed2=int(0),
-                          distance2=int(distance),
+                          distance2=int(distance+5000),
                           buffer=int(1))
 print "=== decelarate command issued ==="
 buffers = (0, 0, 0)
