@@ -64,14 +64,14 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           distance1=int(distance),
                           speed2=int(speed),
                           distance2=int(distance),
-                          buffer=int(0))
+                          buffer=int(1))
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=int(acceleration),
                           speed1=int(-1),
                           distance1=int(distance),
                           speed2=int(-1),
                           distance2=int(distance),
-                          buffer=int(1))
+                          buffer=int(0))
 
 buffers = (0, 0, 0)
 while(buffers[1] != 0x80 and buffers[2] != 0x80):
@@ -85,4 +85,4 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           distance1=int(0),
                           speed2=int(0),
                           distance2=int(0),
-                          buffer=int(0))
+                          buffer=int(1))
