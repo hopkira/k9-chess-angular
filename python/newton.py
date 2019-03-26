@@ -32,7 +32,7 @@ def displayspeed():
     enc2 = rc.ReadEncM2(rc_address)
     speed1 = rc.ReadSpeedM1(rc_address)
     speed2 = rc.ReadSpeedM2(rc_address)
-    print str(time.clock() - base_time),
+    print str(time.perf_counter() - base_time),
     print("Enc1:"),
     if(enc1[0] == 1):
         print enc1[1],
@@ -54,7 +54,7 @@ def displayspeed():
     else:
         print "failed "
 
-base_time = time.clock()
+base_time = time.perf_counter()
 
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=int(acceleration),
