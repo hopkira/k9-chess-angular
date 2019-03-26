@@ -16,9 +16,9 @@ rc.Open()
 rc_address = 0x80
 m1_qpps = 1762
 m2_qpps = 1050
-acceleration = 25
-speed = 50
-distance = 100
+acceleration = 250
+speed = 500
+distance = 1000
 # Get roboclaw version to test if is attached
 version = rc.ReadVersion(rc_address)
 # Set PID variables to those required by K9
@@ -26,6 +26,38 @@ rc.SetM1VelocityPID(rc_address, 8.55, 2.21, 0, m1_qpps)
 rc.SetM2VelocityPID(rc_address, 8.96, 2.82, 0, m2_qpps)
 # Zero the motor encoders
 rc.ResetEncoders(rc_address)
+
+
+def displayspeed():
+	enc1 = rc.ReadEncM1(address)
+	enc2 = rc.ReadEncM2(address)
+	speed1 = rc.ReadSpeedM1(address)
+	speed2 = rc.ReadSpeedM2(address)
+
+	print("Encoder1:"),
+	if(enc1[0]==1):
+		print enc1[1],
+		print format(enc1[2],'02x'),
+	else:
+		print "failed",
+	print "Encoder2:",
+	if(enc2[0]==1):
+		print enc2[1],
+		print format(enc2[2],'02x'),
+	else:
+		print "failed " ,
+	print "Speed1:",
+	if(speed1[0]):
+		print speed1[1],
+	else:
+		print "failed",
+	print("Speed2:"),
+	if(speed2[0]):
+		print speed2[1]
+	else:
+		print "failed "
+
+
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=acceleration,
                           speed1=int(speed),
@@ -33,14 +65,20 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           speed2=int(speed),
                           distance2=int(distance),
                           buffer=int(1))
+print "Speed reached..."
+displayspeed()
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=655360,
                           speed1=int(-1),
                           distance1=int(0),
                           speed2=int(-1),
                           distance2=int(0),
-                          buffer=int(0))
+                          buffer=int(1))
+print "Should have decelerated..."
+displayspeed()
 time.sleep(0.5)
+print "Should have stopped..."
+displayspeed()
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=0,
                           speed1=int(0),
@@ -48,3 +86,5 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           speed2=int(0),
                           distance2=int(0),
                           buffer=int(0))
+print "Motors released..."
+displayspeed()
