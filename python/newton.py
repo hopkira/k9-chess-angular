@@ -27,23 +27,20 @@ rc.SetM2VelocityPID(rc_address, 8.96, 2.82, 0, m2_qpps)
 # Zero the motor encoders
 rc.ResetEncoders(rc_address)
 
-
 def displayspeed():
     enc1 = rc.ReadEncM1(rc_address)
     enc2 = rc.ReadEncM2(rc_address)
     speed1 = rc.ReadSpeedM1(rc_address)
     speed2 = rc.ReadSpeedM2(rc_address)
-
-    print("Encoder1:"),
+    print str(time.clock() - base_time),
+    print("Enc1:"),
     if(enc1[0] == 1):
         print enc1[1],
-        print format(enc1[2],'02x'),
     else:
         print "failed",
-    print "Encoder2:",
+    print "Enc2:",
     if(enc2[0] == 1):
         print enc2[1],
-        print format(enc2[2],'02x'),
     else:
         print "failed ",
     print "Speed1:",
@@ -57,6 +54,7 @@ def displayspeed():
     else:
         print "failed "
 
+base_time = time.clock()
 
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=int(acceleration),
