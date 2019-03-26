@@ -67,9 +67,9 @@ rc.SpeedAccelDistanceM1M2(address=rc_address,
                           buffer=int(1))
 rc.SpeedAccelDistanceM1M2(address=rc_address,
                           accel=int(acceleration),
-                          speed1=int(-1),
+                          speed1=int(0),
                           distance1=int(distance),
-                          speed2=int(-1),
+                          speed2=int(0),
                           distance2=int(distance),
                           buffer=int(0))
 
@@ -79,10 +79,9 @@ while(buffers[1] != 0x80 and buffers[2] != 0x80):
     buffers = rc.ReadBuffers(rc_address)
     time.sleep(0.1)
 
-rc.SpeedAccelDistanceM1M2(address=rc_address,
-                          accel=int(0),
-                          speed1=int(0),
-                          distance1=int(0),
-                          speed2=int(0),
-                          distance2=int(0),
-                          buffer=int(1))
+print '================================='
+
+count = 0
+while (count<50):
+    displayspeed()
+    time.sleep(0.1)
