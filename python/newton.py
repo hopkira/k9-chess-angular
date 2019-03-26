@@ -75,6 +75,9 @@ while(buffers[1] != 0x80 and buffers[2] != 0x80):
     # time.sleep(0.01)
 print "=== all commands complete =="
 
+rc.ForwardBackwardM1(rc_address, 64)	# Stopped
+rc.ForwardBackwardM2(rc_address, 64)	# Stopped
+
 count = 0
 while (count < 50):
     displayspeed()
