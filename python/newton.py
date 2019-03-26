@@ -29,10 +29,10 @@ rc.ResetEncoders(rc_address)
 
 
 def displayspeed():
-	enc1 = rc.ReadEncM1(address)
-	enc2 = rc.ReadEncM2(address)
-	speed1 = rc.ReadSpeedM1(address)
-	speed2 = rc.ReadSpeedM2(address)
+	enc1 = rc.ReadEncM1(rc_address)
+	enc2 = rc.ReadEncM2(rc_address)
+	speed1 = rc.ReadSpeedM1(rc_address)
+	speed2 = rc.ReadSpeedM2(rc_address)
 
 	print("Encoder1:"),
 	if(enc1[0]==1):
