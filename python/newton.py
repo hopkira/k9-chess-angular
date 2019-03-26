@@ -16,9 +16,9 @@ rc.Open()
 rc_address = 0x80
 m1_qpps = 1762
 m2_qpps = 1050
-acceleration = 35
-speed = 70
-distance = 150
+acceleration = 25
+speed = 50
+distance = 125
 # Get roboclaw version to test if is attached
 version = rc.ReadVersion(rc_address)
 # Set PID variables to those required by K9
