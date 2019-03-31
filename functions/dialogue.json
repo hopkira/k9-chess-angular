@@ -1,0 +1,22 @@
+{
+  "context": {
+      "private": {
+          "my_credentials": {
+              "api_key":"username:password"
+          }
+      }
+  },
+  "actions": [
+    {
+      "name":"/richard.hopkins@uk.ibm.com_k9-assistant/actionlist3",
+      "type":"cloud_function",
+      "parameters": {
+      },
+      "result_variable": "$my_result",
+      "credentials": "$private.my_credentials"
+    }
+  ],
+  "output": {
+    "text": "These are your actions Master! $my_result"
+  }
+}
