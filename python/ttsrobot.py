@@ -20,14 +20,14 @@
 
 from ws4py.client.threadedclient import WebSocketClient
 from watson_developer_cloud import ConversationV1
-from Adafruit_PWM_Servo_Driver import PWM
 import os, sys, signal, snowboydecoder, re, base64, json, ssl, subprocess, threading, time
+# import Adafruit_PCA9685
+# pwm = Adafruit_PCA9685.PCA9685()
+pwm=0
 
 variables = ['WCpassword','WCusername','WCversion','WCworkspace','WTTSurl','WTTSpassword','WTTSusername']
 for variable in variables:
-	try:
-		os.environ[variable]
-	except KeyError:
+	if os.environ.get(variable) is None:
 		print "Please set the environment variable " + variable
 		sys.exit(1)
 
@@ -46,9 +46,8 @@ conversation = ConversationV1(
     version=os.environ['WCversion'])
 workspace_id = os.environ['WCworkspace']
 
-# Initialise the PWM device using the default address
-pwm = PWM(0x40)
-pwm.setPWMFreq(100)  # Set frequency to 100 Hz
+# Set PWM frequency to 100Hz
+#pwm.set_pwm_freq(100)
 
 # Create names for each PWM channel
 PWM_eye = 0
@@ -174,7 +173,8 @@ def set_PWM(light, brightness):
 	brightness = int(float(brightness)*40.95)
 	if light >=0 and light <=15: # check that PWM channel exists
 		if brightness >= 0 and brightness <= 4095: # check that frequency is valid
-			pwm.setPWM(0,light,brightness)
+			#pwm.set_pwm(0,light,brightness)
+                        print "Eyes at " + str(brightness)
 
 # Initialise the eye lights at 3%
 set_PWM(PWM_eye,3)

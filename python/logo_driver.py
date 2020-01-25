@@ -1,2 +1,2 @@
 import logo
-logo.forward(1.0)
+logo.backward(0.1)

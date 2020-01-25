@@ -35,10 +35,38 @@ GAIN = 1
 # Create and intialise servo driver
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(50)
-pwm.set_pwm(0, 4, 0)
-pwm.set_pwm(0, 5, 0)
+pwm.set_pwm(4, 0, 315)
+pwm.set_pwm(5, 0, 315)
 
-while True:
-    left_direction = adc.read_adc(1,gain=GAIN)
-    right_direction = adc.read_adc(2,gain=GAIN)
-    print("Left:"+str(left_direction)+"v Right: "+str(right_direction)+"v")
+leftmin=65000
+rightmin=65000
+leftmax=0
+rightmax=0
+hz = 260
+
+while (hz<370.0):
+    pwm.set_pwm(4, 0, int(hz))
+    pwm.set_pwm(5, 0, int(hz))
+    
+    left_direction = adc.read_adc(0,gain=GAIN)
+    right_direction = adc.read_adc(1,gain=GAIN)
+
+    if (left_direction<leftmin) :
+        leftmin=left_direction
+        print("Left min:"+str(leftmin))
+    if (right_direction<rightmin) :
+        rightmin=right_direction
+        print("Right min:"+str(rightmin))
+    if (left_direction>leftmax) :
+        leftmax=left_direction
+        print("Left max:"+str(leftmax))
+    if (right_direction>rightmax) :
+        rightmax=right_direction
+        print("Right max:"+str(rightmax))
+    hz = hz + 0.1
+    print str(hz)
+    # print("Left:"+str(left_direction)+"v Right: "+str(right_direction)+"v")
+
+pwm.set_pwm(4, 0, 315)
+pwm.set_pwm(5, 0, 315)
+

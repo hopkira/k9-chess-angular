@@ -27,46 +27,27 @@ import time    # enable sleep function
 sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685') # persistent directory for Adafruit driver
 print "Importing servo driver library..."
 import Adafruit_PCA9685 # enable control of devices ear servos via Adafruit library
-print "Importing ADC driver library..."
-import Adafruit_ADS1x15
-# Create ADC object
-adc = Adafruit_ADS1x15.ADS1115()
-GAIN = 1
+
 # Create and intialise servo driver
 pwm = Adafruit_PCA9685.PCA9685()
-pwm.set_pwm_freq(60)
+pwm.set_pwm_freq(50)
 
-min_pwm = 200
-mid_pwm = 400
+min_pwm = 140
+mid_pwm = 370
 max_pwm = 600
-min_pot = 0.78
-mid_pot = 1.65
-max_pot = 3.13
 left_pwm_channel = 4
 right_pwm_channel = 5
 
-def my_range(start, end, step):
-    while start <= end:
-        yield start
-        start += step
+pwm.set_pwm(left_pwm_channel,0,mid_pwm)
+pwm.set_pwm(right_pwm_channel,0,mid_pwm)
 
-for forward_speed in my_range (-1,1,0.0001):
-    if (forward_speed > 0) :
-        percent = min(1,forward_speed)
-    else:
-        percent = 0
-    left_pot_edge = mid_pot + (percent*(max_pot - mid_pot))
-    right_pot_edge = mid_pot - (percent*(mid_pot-min_pot))
-    left_pwm_edge = mid_pwm + (percent*(max_pwm - mid_pwm))
-    right_pwm_edge = mid_pwm - (percent*(mid_pwm-min_pwm))
-    left_direction = adc.read_adc(1,gain=GAIN)
-    right_direction = adc.read_adc(2,gain=GAIN)
-    print("Speed: "+str(forward_speed)+"m/s left: "+str(left_direction)+"v right: "+str(right_direction)+"v")
-    if ((left_direction < mid_pot) & (right_direction > mid_pot)) :
-        pwm.set_pwm(0, left_pwm_channel, max_pwm)
-        pwm.set_pwm(0, right_pwm_channel, min_pwm)
-        print("Flip to extremes")
-    if ((left_direction > max_pot) & (right_direction < min_pot)) :
-        pwm.set_pwm(0, left_pwm_channel, mid_pwm)
-        pwm.set_pwm(0, right_pwm_channel, mid.pwm)
-        print("Flip towards mid")
+time.sleep(10)
+
+pwm.set_pwm(left_pwm_channel,0,max_pwm)
+pwm.set_pwm(right_pwm_channel,0,min_pwm)
+
+time.sleep(10)
+
+pwm.set_pwm(left_pwm_channel,0,mid_pwm)
+pwm.set_pwm(right_pwm_channel,0,mid_pwm)
+

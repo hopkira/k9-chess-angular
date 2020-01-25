@@ -13,29 +13,29 @@ from roboclaw import Roboclaw
 rc = Roboclaw("/dev/roboclaw", 115200)
 rc.Open()
 rc_address = 0x80
-m1_qpps = 740
-m2_qpps = 700
-acceleration = 6
-speed = 12
-distance = 12
+m1_qpps = 1762
+m2_qpps = 1050
+acceleration = 100
+speed = 500
+distance = 300
 # Get roboclaw version to test if is attached
 version = rc.ReadVersion(rc_address)
 # Set PID variables to those required by K9
-rc.SetM1VelocityPID(rc_address, 20000, 2000, 0, m1_qpps)
-rc.SetM2VelocityPID(rc_address, 20000, 2000, 0, m2_qpps)
+rc.SetM1VelocityPID(rc_address, 8.55, 2.21, 0, m1_qpps)
+rc.SetM2VelocityPID(rc_address, 8.96, 2.82, 0, m2_qpps)
 # Zero the motor encoders
 rc.ResetEncoders(rc_address)
 rc.SpeedAccelDistanceM1M2(address=rc_address,
-                          accel=int(acceleration),
+                          accel=acceleration,
                           speed1=int(-speed),
                           distance1=int(distance),
                           speed2=int(speed),
                           distance2=int(distance),
                           buffer=int(1))
 rc.SpeedAccelDistanceM1M2(address=rc_address,
-                          accel=acceleration,
-                          speed1=int(0),
+                          accel=655360,
+                          speed1=int(-1),
                           distance1=int(distance),
-                          speed2=int(0),
+                          speed2=int(-1),
                           distance2=int(distance),
                           buffer=int(0))
