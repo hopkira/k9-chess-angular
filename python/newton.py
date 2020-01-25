@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 #
-# Turn on the spot
+# Tune the dog's movement
 #
 # authored by Richard Hopkins March 2019
 #
 # Licensed under The Unlicense, so free for public domain use
 #
-# This program moves K9 in a circle
+# This program moves K9 in a straight line and measures the result
 
 import math
 import time
