@@ -6,7 +6,7 @@ import time
 from roboclaw import Roboclaw
 
 #Windows comport name
-rc = Roboclaw("COM3",115200)
+rc = Roboclaw("COM9",38400)
 #Linux comport name
 #rc = Roboclaw("/dev/ttyACM0",115200)
 
@@ -55,6 +55,10 @@ while(1):
 	rc.SpeedAccelDistanceM2(address,12000,0,0,0);  #that makes the total move in one direction 48000
 	buffers = (0,0,0)
 	while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
+		print "Buffers: ",
+		print buffers[1],
+		print " ",
+		print buffers[2]
 		displayspeed();
 		buffers = rc.ReadBuffers(address);
   
@@ -66,6 +70,10 @@ while(1):
 	rc.SpeedAccelDistanceM2(address,48000,0,0,0);  #that makes the total move in one direction 48000
 	buffers = (0,0,0)
 	while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
+		print "Buffers: ",
+		print buffers[1],
+		print " ",
+		print buffers[2]
 		displayspeed()
 		buffers = rc.ReadBuffers(address)
   
