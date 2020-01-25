@@ -13,7 +13,8 @@
 import math
 import argparse
 import serial
-import logocmd
+import logo as logo
+import time
 
 
 def main():
@@ -40,7 +41,7 @@ def main():
                         default=100,
                         help='number of readings at each point')
     args = parser.parse_args()
-    sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
+    #sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
     new_filename = args.output_file + '.csv'
     output_file = open(new_filename, "wt")
     output_file.write("distance," + str(args.distance) + '\n')
@@ -49,23 +50,26 @@ def main():
     output_file.write("total readings," +
                       str(args.steps * args.readings) +
                       '\n')
-    input("Press Enter to begin data collection...")
+    my_input = raw_input("Press Enter to begin data collection...")
+    print("I got here")
     step = 1
+    turn_angle = 1 / float(args.steps)
     while (step <= args.steps):
         fraction = float(step) / float(args.steps)
         if (args.clockwise is False):
             angle = 2 * math.pi * fraction
-            logocmd.left(angle)
+            logo.left(turn_angle)
         else:
             angle = 2 * math.pi * (1 - fraction)
-            logocmd.right(angle)
+            logo.right(turn_angle)
         sine = (1 + math.sin(angle)) / 2
         cosine = (1 + math.cos(angle)) / 2
         distance = args.distance/3
-        sensors.reset_input_buffer()
+        #sensors.reset_input_buffer()
         events = 0
         while (events < args.readings):
-            message = sensors.readline()   # read a '\n' terminated line
+            #message = sensors.readline()   # read a '\n' terminated line
+            message = "dummy"
             output_file.write("{input:[" +
                               message +
                               "],output: [" +
@@ -78,3 +82,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

@@ -15,23 +15,31 @@ import argparse
 
 sim = False
 
-try:
-    if __name__ == '__main__':
-        if (len(sys.argv) > 1):
-            verb = sys.argv[1]
-            object = float(sys.argv[2])
-            if (verb == "circle" and len(sys.argv) > 2):
-                object2 = float(sys.argv[3])
-                if (len(sys.argv) > 3):
-                    if (sys.argv[4] == "test"):
-                        sim = True
-                        print("Test mode active")
-            if (len(sys.argv) > 2):
-                if (sys.argv[3] == "test"):
-                    sim = True
-                    print("Test mode active")
-except IndexError:
-    print("Please use valid arguments")
+parser = argparse.ArgumentParser(description='Moves robot using logo commands.')
+parser.add_argument('command',
+                    choices=['arc','fd','bk','lt','rt','stop'],
+                    help='movement command')
+parser.add_argument('parameter',
+                     type=float,
+                     default=0.0,
+                     nargs='?',
+                     help='distance in metres or angle in radians')
+parser.add_argument('radius',
+                     type=float,
+                     default=0.0,
+                     nargs='?',
+                     help='radius of arc in metres (arc  only)')
+parser.add_argument('-t', '--test',
+                    action='store_true',
+                    help='execute in simulation mode')
+args = parser.parse_args()
+
+sim = args.test
+verb = args.command
+object1 = args.parameter
+object2 = args.radius
+
+if sim : print("Test mode active")
 
 # Wheel circumference is 0.436m, with 200 clicks per turn
 # Each click is 0.002179m (assumes each wheel is 0.139m)
@@ -48,8 +56,8 @@ M1_P = 10.644  # Proportional element of feedback for PID controller
 M2_P = 9.768
 M1_I = 2.206  # Integral element of feedback for PID controller
 M2_I = 2.294
-M1_D = 0  # Derived element of feedback for PID controller
-M2_D = 0
+M1_D = 0.0  # Derived element of feedback for PID controller
+M2_D = 0.0
 
 if not sim:
     #  Initialise the roboclaw motorcontroller
@@ -254,6 +262,7 @@ def circle(radius, extent):
     print("M2 Speed=" + str(click_vel2) + " Distance=" + str(distance2) + "\n")
     waitForMove2Finish()
 
+arc = circle
 
 def finished():
     '''Checks to see if last robot movement has been completed
@@ -267,7 +276,7 @@ def finished():
 
 # if executed from the command line then execute arguments as functions
 if __name__ == '__main__':
-    if (verb == "circle"):
-        locals()[verb](object, object2)
+    if (verb == "arc"):
+        locals()[verb](object1, object2)
     else:
-        locals()[verb](object)
+        locals()[verb](object1)
