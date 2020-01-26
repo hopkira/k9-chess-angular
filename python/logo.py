@@ -15,32 +15,6 @@ import argparse
 
 sim = False
 
-parser = argparse.ArgumentParser(description='Moves robot using logo commands.')
-parser.add_argument('command',
-                    choices=['arc','fd','bk','lt','rt','stop'],
-                    help='movement command')
-parser.add_argument('parameter',
-                     type=float,
-                     default=0.0,
-                     nargs='?',
-                     help='distance in metres or angle in radians')
-parser.add_argument('radius',
-                     type=float,
-                     default=0.0,
-                     nargs='?',
-                     help='radius of arc in metres (arc  only)')
-parser.add_argument('-t', '--test',
-                    action='store_true',
-                    help='execute in simulation mode')
-args = parser.parse_args()
-
-sim = args.test
-verb = args.command
-object1 = args.parameter
-object2 = args.radius
-
-if sim : print("Test mode active")
-
 # Wheel circumference is 0.436m, with 200 clicks per turn
 # Each click is 0.002179m (assumes each wheel is 0.139m)
 CLICK2METRES = 0.002179  # converts clicks to metres
@@ -59,31 +33,43 @@ M2_I = 2.294
 M1_D = 0.0  # Derived element of feedback for PID controller
 M2_D = 0.0
 
-if not sim:
-    #  Initialise the roboclaw motorcontroller
-    print("Initialising roboclaw driver...")
-    from roboclaw import Roboclaw
-    rc = Roboclaw("/dev/roboclaw", 115200)
-    rc.Open()
-    rc_address = 0x80
-    # Get roboclaw version to test if is attached
-    version = rc.ReadVersion(rc_address)
-    if version[0] is False:
-        print("Roboclaw get version failed")
-        sys.exit()
+def main():
+    global sim
+    parser = argparse.ArgumentParser(description='Moves robot using logo commands.')
+    parser.add_argument('command',
+                        choices=['arc','fd','bk','lt','rt','stop'],
+                        help='movement command')
+    parser.add_argument('parameter',
+                        type=float,
+                        default=0.0,
+                        nargs='?',
+                        help='distance in metres or angle in radians')
+    parser.add_argument('radius',
+                        type=float,
+                        default=0.0,
+                        nargs='?',
+                        help='radius of arc in metres (arc  only)')
+    parser.add_argument('-t', '--test',
+                        action='store_true',
+                        help='execute in simulation mode')
+    args = parser.parse_args()
+    sim = args.test
+    verb = args.command
+    object1 = args.parameter
+    object2 = args.radius
+    if sim:
+        print("Test mode active")
     else:
-        print(repr(version[1]))
-        # Set PID variables to those required by K9
-        rc.SetM1VelocityPID(rc_address, M1_P, M1_I, M1_D, M1_QPPS)
-        rc.SetM2VelocityPID(rc_address, M2_P, M2_I, M2_D, M2_QPPS)
-        # Zero the motor encoders
-        rc.ResetEncoders(rc_address)
-        print("PID variables set on roboclaw")
-
+        init_rc()
+    if (verb == "arc"):
+        globals()[verb](object1, object2)
+    else:
+        globals()[verb](object1)
 
 def stop():
     '''Lock motors to stop motion
     '''
+    global rc
     print("Stopping")
     if not sim:
         rc.SpeedAccelDistanceM1M2(address=rc_address,
@@ -99,12 +85,25 @@ def stop():
 def waitForMove2Finish():
     ''' Waits until robot has finished move
     '''
-    print("Wating for move to finish...")
     if not sim:
-        buffers = (0, 0, 0)
-        while (buffers[1] != 0x80 and buffers[2] != 0x80):
-            buffers = rc.ReadBuffers(rc_address)
-            time.sleep(0.05)
+        while(motors_moving() or buffer_full()):
+            time.sleep(0.1)
+    print("Move finished")
+
+def motors_moving():
+    ''' Detects that motors are moving
+    '''
+    global rc
+    m1_speed = rc.ReadSpeedM1(rc_address)
+    m2_speed = rc.ReadSpeedM2(rc_address)
+    return ((m1_speed[1] != 0) or (m2_speed[1] != 0))
+
+def buffer_full():
+    ''' Detects if moves have finished
+    '''
+    global rc
+    buffers = rc.ReadBuffers(rc_address)
+    return ((buffers[1] != 0x80) or (buffers[2] != 0x80))
 
 
 def calc_turn_modifier(radius):
@@ -155,11 +154,12 @@ def forward(distance):
     Arguments:
     distance -- the distance to move in metres
     '''
+    global rc
     clicks = int(round(distance/CLICK2METRES))
     click_vel = calc_click_vel(clicks=clicks, turn_mod=1)
     accel = calc_accel(click_vel, clicks/2)
     print("Clicks: " + str(clicks) + " Velocity: " + str(click_vel))
-    if not sim:
+    if not sim:                       
         rc.SpeedAccelDistanceM1M2(address=rc_address,
                                   accel=accel,
                                   speed1=int(round(click_vel)),
@@ -176,9 +176,7 @@ def forward(distance):
                                   buffer=0)
     waitForMove2Finish()
 
-
 fd = fwd = forwards = forward
-
 
 def backward(distance):
     '''Moves K9 backward by 'distance' metres
@@ -192,6 +190,7 @@ back = bk = backwards = backward
 def left(angle):
     '''Moves K9 right by 'angle' radians
     '''
+    global rc
     fraction = angle/(2*math.pi)
     clicks = TURNING_CIRCLE*fraction
     turn_modifier = calc_turn_modifier(radius=0)
@@ -214,6 +213,7 @@ def left(angle):
                                   buffer=int(0))
     print("Spinning...")
     print("Speed=" + str(click_vel) + " Distance=" + str(clicks) + "\n")
+    waitForMove2Finish()
 
 lt = left
 
@@ -236,6 +236,7 @@ def circle(radius, extent):
               a 180 semi-circle to the right
 
     '''
+    global rc
     distance1 = int(extent*(radius-HALF_WHEEL_GAP)/CLICK2METRES)
     distance2 = int(extent*(radius+HALF_WHEEL_GAP)/CLICK2METRES)
     turn_mod1 = calc_turn_modifier(radius-HALF_WHEEL_GAP)
@@ -264,19 +265,53 @@ def circle(radius, extent):
 
 arc = circle
 
-def finished():
-    '''Checks to see if last robot movement has been completed
-    '''
-    if not sim:
-        buffers = rc.ReadBuffers(rc_address)
-        if (buffers[1] == 0x80 and buffers[2] == 0x80):
-            return True
-    return False
+def init_rc():
+    global rc
+    global rc_address
+    #  Initialise the roboclaw motorcontroller
+    print("Initialising roboclaw driver...")
+    from roboclaw import Roboclaw
+    rc_address = 0x80
+    rc = Roboclaw("/dev/roboclaw", 115200)
+    rc.Open()
+    # Get roboclaw version to test if is attached
+    version = rc.ReadVersion(rc_address)
+    if version[0] is False:
+        print("Roboclaw get version failed")
+        sys.exit()
+    else:
+        print(repr(version[1]))
+
+    # Set motor controller variables to those required by K9
+    rc.SetM1VelocityPID(rc_address, M1_P, M1_I, M1_D, M1_QPPS)
+    rc.SetM2VelocityPID(rc_address, M2_P, M2_I, M2_D, M2_QPPS)
+    rc.SetMainVoltages(rc_address,232,290) # 23.2V min, 29V max
+    rc.SetPinFunctions(rc_address,2,0,0)
+    # Zero the motor encoders
+    rc.ResetEncoders(rc_address)
+
+    # Print Motor PID Settings
+    m1pid = rc.ReadM1VelocityPID(rc_address)
+    m2pid = rc.ReadM2VelocityPID(rc_address)
+    print("M1 P: " + str(m1pid[1]) + ", I:" + str(m1pid[2]) + ", D:" + str(m1pid[3]))
+    print("M2 P: " + str(m2pid[1]) + ", I:" + str(m2pid[2]) + ", D:" + str(m2pid[3]))
+    # Print Min and Max Main Battery Settings
+    minmaxv = rc.ReadMinMaxMainVoltages(rc_address) # get min max volts
+    print ("Min Main Battery: " + str(int(minmaxv[1])/10) + "V")
+    print ("Max Main Battery: " + str(int(minmaxv[2])/10) + "V")
+    # Print S3, S4 and S5 Modes
+    S3mode=['Default','E-Stop (latching)','E-Stop','Voltage Clamp','Undefined']
+    S4mode=['Disabled','E-Stop (latching)','E-Stop','Voltage Clamp','M1 Home']
+    S5mode=['Disabled','E-Stop (latching)','E-Stop','Voltage Clamp','M2 Home']
+    pinfunc = rc.ReadPinFunctions(rc_address)
+    print ("S3 pin: " + S3mode[pinfunc[1]])
+    print ("S4 pin: " + S4mode[pinfunc[2]])
+    print ("S5 pin: " + S5mode[pinfunc[3]])
+    print("Roboclaw motor controller initialised...")
 
 
 # if executed from the command line then execute arguments as functions
 if __name__ == '__main__':
-    if (verb == "arc"):
-        locals()[verb](object1, object2)
-    else:
-        locals()[verb](object1)
+    main()
+else:
+    init_rc()

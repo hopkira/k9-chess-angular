@@ -13,9 +13,8 @@
 import math
 import argparse
 import serial
-import logo as logo
 import time
-
+import logo
 
 def main():
     parser = argparse.ArgumentParser(description='Collects ultrasonic data.')
