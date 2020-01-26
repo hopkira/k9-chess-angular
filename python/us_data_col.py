@@ -52,7 +52,7 @@ def main():
     my_input = raw_input("Press Enter to begin data collection...")
     print("I got here")
     step = 1
-    turn_angle = 1 / float(args.steps)
+    turn_angle = 2 * math.pi / float(args.steps)
     while (step <= args.steps):
         fraction = float(step) / float(args.steps)
         if (args.clockwise is False):
