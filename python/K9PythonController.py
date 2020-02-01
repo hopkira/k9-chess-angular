@@ -193,12 +193,13 @@ class Motor:
                 if self.target == 0:
                     rc.SpeedM1(rc_address, 0)
                 else:
-                    rc.SpeedAccelM1(rc_address,accel,self.click_speed)
+                    rc.SpeedAccelM1(rc_address,ACCELERATION,self.click_speed)
                     #rc.SpeedM1(rc_address, self.click_speed)
             elif self.name == "right":
                 if self.target == 0:
                     rc.SpeedM2(rc_address, 0)
                 else:
+                    rc.SpeedAccelM2(rc_address,ACCELERATION,self.click_speed)
                     rc.SpeedM2(rc_address, self.click_speed)
             else:
                 print "Unknown motor"
