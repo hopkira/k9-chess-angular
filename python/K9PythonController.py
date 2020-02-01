@@ -1,7 +1,7 @@
 #
 # K9 Python Controller
 #
-# authored by Richard Hopkins, October 2017
+# authored by Richard Hopkins, 2017-2020
 #
 # Licensed under The Unlicense, so free for public domain use
 #
@@ -33,8 +33,15 @@ sys.path.append('/home/pi')  # persistent import directory for K9 secrets
 sys.path.append('/home/pi/Adafruit_Python_PCA9685/Adafruit_PCA9685')
 # persistent directory for Adafruit driver
 sim = False  # by default run as a real motor controller
-m1_qpps = 740
-m2_qpps = 700
+ACCELERATION = 128  # accelerate to top speed in 5s
+M1_QPPS = 1987   # max speed of wheel in clicks per second
+M2_QPPS = 1837
+M1_P = 10.644  # Proportional element of feedback for PID controller
+M2_P = 9.768
+M1_I = 2.206  # Integral element of feedback for PID controller
+M2_I = 2.294
+M1_D = 0.0  # Derived element of feedback for PID controller
+M2_D = 0.0
 
 # sim is a program wide flag to allow the program to run without the Roboclaw
 # this can be enabled by appending the word "test" to the command line
@@ -64,17 +71,31 @@ if not sim:
         sys.exit()
     else:
         print repr(version[1])
-        # Set PID variables to those required by K9
-        rc.SetM1VelocityPID(rc_address, 20000, 2000, 0, m1_qpps)
-        rc.SetM2VelocityPID(rc_address, 20000, 2000, 0, m2_qpps)
+        # Set motor controller variables to those required by K9
+        rc.SetM1VelocityPID(rc_address, M1_P, M1_I, M1_D, M1_QPPS)
+        rc.SetM2VelocityPID(rc_address, M2_P, M2_I, M2_D, M2_QPPS)
+        rc.SetMainVoltages(rc_address,232,290) # 23.2V min, 29V max
+        rc.SetPinFunctions(rc_address,2,0,0)
         # Zero the motor encoders
         rc.ResetEncoders(rc_address)
-        print "PID variables set on roboclaw"
-    # import RPi.GPIO as GPIO  # enables manipulation of GPIO ports
-    # GPIO.setmode(GPIO.BOARD)  # use board numbers rather than BCM numbers
-    # GPIO.setwarnings(False)  # remove duplication warnings
-    # chan_list = [11, 13]     # GPIO channels to initialise and use
-    # GPIO.setup(chan_list, GPIO.IN)  # set GPIO to low at initialise
+        # Print Motor PID Settings
+        m1pid = rc.ReadM1VelocityPID(rc_address)
+        m2pid = rc.ReadM2VelocityPID(rc_address)
+        print("M1 P: " + str(m1pid[1]) + ", I:" + str(m1pid[2]) + ", D:" + str(m1pid[3]))
+        print("M2 P: " + str(m2pid[1]) + ", I:" + str(m2pid[2]) + ", D:" + str(m2pid[3]))
+        # Print Min and Max Main Battery Settings
+        minmaxv = rc.ReadMinMaxMainVoltages(rc_address) # get min max volts
+        print ("Min Main Battery: " + str(int(minmaxv[1])/10) + "V")
+        print ("Max Main Battery: " + str(int(minmaxv[2])/10) + "V")
+        # Print S3, S4 and S5 Modes
+        S3mode=['Default','E-Stop (latching)','E-Stop','Voltage Clamp','Undefined']
+        S4mode=['Disabled','E-Stop (latching)','E-Stop','Voltage Clamp','M1 Home']
+        S5mode=['Disabled','E-Stop (latching)','E-Stop','Voltage Clamp','M2 Home']
+        pinfunc = rc.ReadPinFunctions(rc_address)
+        print ("S3 pin: " + S3mode[pinfunc[1]])
+        print ("S4 pin: " + S4mode[pinfunc[2]])
+        print ("S5 pin: " + S5mode[pinfunc[3]])
+        print("Roboclaw motor controller initialised...")
 else:
     # otherwise use local host as node-RED server
     # and don't initialise GPIO or Roboclaw
@@ -172,7 +193,8 @@ class Motor:
                 if self.target == 0:
                     rc.SpeedM1(rc_address, 0)
                 else:
-                    rc.SpeedM1(rc_address, self.click_speed)
+                    rc.SpeedAccelM1(rc_address,accel,self.click_speed)
+                    #rc.SpeedM1(rc_address, self.click_speed)
             elif self.name == "right":
                 if self.target == 0:
                     rc.SpeedM2(rc_address, 0)
@@ -201,8 +223,8 @@ class K9:
         self.tailh = 15.02
         self.motorctrl = 0
         # Create two motor objects
-        self.leftMotor = Motor("left", m1_qpps)
-        self.rightMotor = Motor("right", m2_qpps)
+        self.leftMotor = Motor("left", M1_QPPS)
+        self.rightMotor = Motor("right", M2_QPPS)
         if not sim:
             # Initialise the PWM device using the default address
             # This is the Adafruit servo control device that makes the tail,
