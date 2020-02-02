@@ -33,7 +33,7 @@ function makeReading() {
         front_right + "," + 
         left + "," + 
         right + "," + 
-        back + "]\n");
+        back + "]");
     digitalWrite(LED1, OFF);
     }
 
