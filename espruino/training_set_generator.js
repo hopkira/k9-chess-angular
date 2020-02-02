@@ -27,7 +27,7 @@ function makeReading() {
     left = analogRead(LEFT);
     right = analogRead(RIGHT);
     back = analogRead(BACK);
-    console.log(
+    USB.print(
       "input:[" + 
         front_left + "," + 
         front_right + "," + 
