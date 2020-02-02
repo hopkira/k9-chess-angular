@@ -28,12 +28,12 @@ function makeReading() {
     right = analogueRead(RIGHT);
     back = analogueRead(BACK);
     console.log(
-      "{input:[" + 
+      "input:[" + 
         front_left + "," + 
         front_right + "," + 
         left + "," + 
         right + "," + 
-        back + "]},");
+        back + "]\n");
     digitalWrite(LED1, OFF)
     }
 
