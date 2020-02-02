@@ -64,7 +64,7 @@ def waitForMove2Finish():
         sensors.flushInput()
         message = sensors.readline()   # read a '\n' terminated line
         message = message[1:]
-        
+        message = re.sub('J', '', message)
         output_file.write("{" +
                           message +
                           ",output: [" +
