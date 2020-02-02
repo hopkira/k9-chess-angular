@@ -60,12 +60,12 @@ def waitForMove2Finish():
         sine = (1 + math.sin(angle)) / 2
         cosine = (1 + math.cos(angle)) / 2
         distance = args.distance/3
-        #sensors.reset_input_buffer()
-        #message = sensors.readline()   # read a '\n' terminated line
+        sensors.flushInput()
+        message = sensors.readline()   # read a '\n' terminated line
         message = "dummy"
-        output_file.write("{input:[" +
+        output_file.write("{" +
                           message +
-                          "],output: [" +
+                          ",output: [" +
                           str(sine) + "," +
                           str(cosine) + "," +
                           str(distance) + "]},\n")
@@ -132,7 +132,7 @@ parser.add_argument('-c', '--clockwise',
                     action='store_true',
                     help='turn robot clockwise')
 args = parser.parse_args()
-#sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
+sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
 new_filename = args.output_file + '.csv'
 output_file = open(new_filename, "wt")
 my_input = raw_input("Press Enter to begin data collection...")
