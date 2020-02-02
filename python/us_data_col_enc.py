@@ -62,7 +62,6 @@ def waitForMove2Finish():
         distance = args.distance/3
         sensors.flushInput()
         message = sensors.readline()   # read a '\n' terminated line
-        message = "dummy"
         output_file.write("{" +
                           message +
                           ",output: [" +
@@ -121,7 +120,7 @@ def calc_click_vel(clicks, turn_mod):
     return click_vel*sign_modifier
 
 parser = argparse.ArgumentParser(description='Collects ultrasonic data.')
-parser.add_argument('-f', '--output-file',
+parser.add_argument('-f', '--outputfile',
                     default='output',
                     help='name of output CSV file')
 parser.add_argument('-d', '--distance',
@@ -133,7 +132,7 @@ parser.add_argument('-c', '--clockwise',
                     help='turn robot clockwise')
 args = parser.parse_args()
 sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
-new_filename = args.output_file + '.csv'
+new_filename = args.outputfile + str(args.distance) + '.csv'
 output_file = open(new_filename, "wt")
 my_input = raw_input("Press Enter to begin data collection...")
 

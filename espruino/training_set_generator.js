@@ -22,11 +22,11 @@ var OFF = 0;
 
 function makeReading() {
     digitalWrite(LED1, ON);
-    front_left = analogueRead(FRONT_LEFT);
-    front_right = analogueRead(FRONT_RIGHT);
-    left = analogueRead(LEFT);
-    right = analogueRead(RIGHT);
-    back = analogueRead(BACK);
+    front_left = analogRead(FRONT_LEFT);
+    front_right = analogRead(FRONT_RIGHT);
+    left = analogRead(LEFT);
+    right = analogRead(RIGHT);
+    back = analogRead(BACK);
     console.log(
       "input:[" + 
         front_left + "," + 
@@ -34,7 +34,9 @@ function makeReading() {
         left + "," + 
         right + "," + 
         back + "]\n");
-    digitalWrite(LED1, OFF)
+    digitalWrite(LED1, OFF);
     }
 
-setInterval(makeReading,50)
+function onInit(){
+  setInterval(makeReading,50);
+}
