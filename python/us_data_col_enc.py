@@ -15,13 +15,14 @@ import argparse
 import serial
 import time
 import logo
+import re
 
 # Wheel circumference is 0.436m, with 200 clicks per turn
 # Each click is 0.002179m (assumes each wheel is 0.139m)
 CLICK2METRES = 0.002179  # converts clicks to metres
 WALKINGSPEED = 1.4  # top speed of robot in metres per second
 TOPSPEED = int(WALKINGSPEED/CLICK2METRES)  # calculate and store max velocity
-ACCELERATION = int(TOPSPEED/50)  # accelerate to top speed in 5s
+ACCELERATION = int(TOPSPEED/25)  # accelerate to top speed in 5s
 HALF_WHEEL_GAP = 0.1011
 TURNING_CIRCLE = 2*math.pi*HALF_WHEEL_GAP/CLICK2METRES  # clicks in a full spin
 #print("Turning circle:" + str(TURNING_CIRCLE))
@@ -62,6 +63,8 @@ def waitForMove2Finish():
         distance = args.distance/3
         sensors.flushInput()
         message = sensors.readline()   # read a '\n' terminated line
+        message = message[1:]
+        message = re.sub('J', '', message)
         output_file.write("{" +
                           message +
                           ",output: [" +
