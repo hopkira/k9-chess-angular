@@ -15,13 +15,14 @@ import argparse
 import serial
 import time
 import logo
+import re
 
 # Wheel circumference is 0.436m, with 200 clicks per turn
 # Each click is 0.002179m (assumes each wheel is 0.139m)
 CLICK2METRES = 0.002179  # converts clicks to metres
 WALKINGSPEED = 1.4  # top speed of robot in metres per second
 TOPSPEED = int(WALKINGSPEED/CLICK2METRES)  # calculate and store max velocity
-ACCELERATION = int(TOPSPEED/50)  # accelerate to top speed in 5s
+ACCELERATION = int(TOPSPEED/25)  # accelerate to top speed in 5s
 HALF_WHEEL_GAP = 0.1011
 TURNING_CIRCLE = 2*math.pi*HALF_WHEEL_GAP/CLICK2METRES  # clicks in a full spin
 #print("Turning circle:" + str(TURNING_CIRCLE))
@@ -51,7 +52,9 @@ rc.ResetEncoders(rc_address)
 def waitForMove2Finish():
     ''' Waits until robot has finished move
     '''
+    output_file.write('{"dataset": [')
     while(motors_moving() or buffer_full()):
+        sensors.flushInput()
         enc_rdg=(rc.ReadEncM2(rc_address))
         trav = int(enc_rdg[1])
         perc = trav/clicks*100
@@ -60,14 +63,18 @@ def waitForMove2Finish():
         sine = (1 + math.sin(angle)) / 2
         cosine = (1 + math.cos(angle)) / 2
         distance = args.distance/3
-        sensors.flushInput()
         message = sensors.readline()   # read a '\n' terminated line
+        #message = message[4:]  # remove garbage from messsage
+        #message = re.sub('J', '', message) # remove any remaining Js
+        message = message.strip('\n')
         output_file.write("{" +
                           message +
-                          ",output: [" +
+                          ',"output": [' +
                           str(sine) + "," +
                           str(cosine) + "," +
+                          str(float(args.signal)) + "," +
                           str(distance) + "]},\n")
+    output_file.write("]}")
     print("Capture finished")
 
 
@@ -122,18 +129,27 @@ def calc_click_vel(clicks, turn_mod):
 parser = argparse.ArgumentParser(description='Collects ultrasonic data.')
 parser.add_argument('-f', '--outputfile',
                     default='output',
-                    help='name of output CSV file')
+                    help='name of output JSON file')
 parser.add_argument('-d', '--distance',
                     type=float,
                     default=1.0,
                     help='distance to ultrasonic transmitter')
-parser.add_argument('-c', '--clockwise',
+parser.add_argument('-s', '--signal',
                     action='store_true',
-                    help='turn robot clockwise')
+                    help='was transmitter transmitting')
 args = parser.parse_args()
-sensors = serial.Serial('/dev/ttyESPFollow', 115200, timeout=1)
-new_filename = args.outputfile + str(args.distance) + '.csv'
+sensors = serial.Serial('/dev/ttyESPFollow',
+                        baudrate=115200,
+                        parity=serial.PARITY_NONE,
+                        stopbits=serial.STOPBITS_ONE,
+                        bytesize=serial.EIGHTBITS,
+                        xonxoff=0, rtscts=0, dsrdtr=0,
+                        )
+new_filename = args.outputfile + str(args.distance) + '.json'
 output_file = open(new_filename, "wt")
+print("Outputfile: " + str(new_filename))
+print("Distance: " + str(args.distance))
+print("Signal: " + str(float(args.signal)))
 my_input = raw_input("Press Enter to begin data collection...")
 
 fraction = 1
