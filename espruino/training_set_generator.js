@@ -27,16 +27,18 @@ function makeReading() {
     left = analogRead(LEFT);
     right = analogRead(RIGHT);
     back = analogRead(BACK);
-    USB.print(
-      "input:[" + 
+    message = "input:[" + 
         front_left + "," + 
         front_right + "," + 
         left + "," + 
         right + "," + 
         back + "]");
+    messageStr = JSON.stringify(message);
+    USB.write(messageStr);
     digitalWrite(LED1, OFF);
     }
 
 function onInit(){
+  USB.setup(115200,{bytesize:8,stopbits:1});
   setInterval(makeReading,50);
 }
