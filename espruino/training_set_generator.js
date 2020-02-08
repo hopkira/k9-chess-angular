@@ -27,14 +27,8 @@ function makeReading() {
     left = analogRead(LEFT);
     right = analogRead(RIGHT);
     back = analogRead(BACK);
-    message = "input:[" + 
-        front_left + "," + 
-        front_right + "," + 
-        left + "," + 
-        right + "," + 
-        back + "]");
-    messageStr = JSON.stringify(message);
-    USB.write(messageStr);
+    message = '"input":['+front_left+","+front_right+","+left+","+right+","+back+"]\n";
+    USB.write(message);
     digitalWrite(LED1, OFF);
     }
 
