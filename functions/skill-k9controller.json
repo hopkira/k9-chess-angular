@@ -1,0 +1,1153 @@
+{
+  "intents": [
+    {
+      "intent": "component-off",
+      "examples": [
+        {
+          "text": "Back off"
+        },
+        {
+          "text": "Turn the @component off"
+        },
+        {
+          "text": "deactivate @component"
+        },
+        {
+          "text": "@component off"
+        },
+        {
+          "text": "Turn @component off"
+        },
+        {
+          "text": "Turn off the @component"
+        },
+        {
+          "text": "Turn eye lights off"
+        },
+        {
+          "text": "stop @component"
+        },
+        {
+          "text": "Turn off eyes"
+        }
+      ]
+    },
+    {
+      "intent": "General_Security_Assurance",
+      "examples": [
+        {
+          "text": "Is this conversation secure?"
+        },
+        {
+          "text": "Protection hacks?"
+        },
+        {
+          "text": "Secure conversation?"
+        },
+        {
+          "text": "What guards do you have in place to protect your customer's data?"
+        },
+        {
+          "text": "What safety measures are used to ensure that chat is secure?"
+        },
+        {
+          "text": "Why would I trust this chat?"
+        },
+        {
+          "text": "Will my conversation remain secured?"
+        },
+        {
+          "text": "In what way can I tell if my plastic is safe?"
+        },
+        {
+          "text": "Is my card info secure?"
+        },
+        {
+          "text": "Is my payment information secure?"
+        },
+        {
+          "text": "Is there a reason to distrust this chat?"
+        },
+        {
+          "text": "Is this a trusted chat site?"
+        },
+        {
+          "text": "Is this an official chat?"
+        },
+        {
+          "text": "Precautions hackers?"
+        },
+        {
+          "text": "What makes this chat trustworthy?"
+        },
+        {
+          "text": "Are you safe on hackers?"
+        },
+        {
+          "text": "Are you safe?"
+        },
+        {
+          "text": "Can I be sure that my stored card details are held securely?"
+        },
+        {
+          "text": "Conversation secure?"
+        },
+        {
+          "text": "Customer info secured?"
+        },
+        {
+          "text": "Do you have protection against hacks?"
+        },
+        {
+          "text": "How do I know if my card info is kept safe?"
+        },
+        {
+          "text": "How do I know this chat is not a scam?"
+        },
+        {
+          "text": "How is my credit card info secured?"
+        },
+        {
+          "text": "How safe is my data?"
+        },
+        {
+          "text": "I'd like proof of a secure chat"
+        }
+      ],
+      "description": "Express concerns about the security of the bot."
+    },
+    {
+      "intent": "todo",
+      "examples": [
+        {
+          "text": "What's do I have to do now?"
+        },
+        {
+          "text": "What's on my plate?"
+        },
+        {
+          "text": "What is on my @todo list"
+        },
+        {
+          "text": "What's next?"
+        },
+        {
+          "text": "What is my next @todo"
+        },
+        {
+          "text": "What do I need to do next?"
+        },
+        {
+          "text": "What's on my to do list?"
+        }
+      ],
+      "description": "What is my todo list showing?"
+    },
+    {
+      "intent": "General_Greetings",
+      "examples": [
+        {
+          "text": "How r u?"
+        },
+        {
+          "text": "How is it going?"
+        },
+        {
+          "text": "How have you been?"
+        },
+        {
+          "text": "How are you today?"
+        },
+        {
+          "text": "How are things going?"
+        },
+        {
+          "text": "Hi there"
+        },
+        {
+          "text": "Hi advisor"
+        },
+        {
+          "text": "Hey you"
+        },
+        {
+          "text": "Hey twin"
+        },
+        {
+          "text": "Hey there"
+        },
+        {
+          "text": "Who is this?"
+        },
+        {
+          "text": "Good day"
+        },
+        {
+          "text": "Good evening"
+        },
+        {
+          "text": "Good morning"
+        },
+        {
+          "text": "Good to see you"
+        },
+        {
+          "text": "Greetings"
+        },
+        {
+          "text": "Have you been well?"
+        },
+        {
+          "text": "Hello Agent"
+        },
+        {
+          "text": "Hello I am looking for some help here"
+        },
+        {
+          "text": "Hello"
+        },
+        {
+          "text": "Hey how are you doing"
+        },
+        {
+          "text": "You there"
+        },
+        {
+          "text": "What's up?"
+        },
+        {
+          "text": "What's new?"
+        },
+        {
+          "text": "Hey there all"
+        },
+        {
+          "text": "Ok take me back"
+        },
+        {
+          "text": "Looking good eve"
+        }
+      ],
+      "description": "Greet the bot."
+    },
+    {
+      "intent": "General_Positive_Feedback",
+      "examples": [
+        {
+          "text": "Thank you"
+        },
+        {
+          "text": "Ok thank you"
+        },
+        {
+          "text": "This is so cool"
+        },
+        {
+          "text": "You are awesome"
+        },
+        {
+          "text": "You are great"
+        },
+        {
+          "text": "You are the best"
+        },
+        {
+          "text": "You are wonderful"
+        },
+        {
+          "text": "You the man"
+        },
+        {
+          "text": "Love your work"
+        },
+        {
+          "text": "I like what you did there! :)"
+        },
+        {
+          "text": "This is good"
+        },
+        {
+          "text": "I'm looking forward to working with you again! :)"
+        },
+        {
+          "text": "How cool is this?"
+        },
+        {
+          "text": "Can't believe you are that good"
+        },
+        {
+          "text": "Brilliant!"
+        },
+        {
+          "text": "This is great"
+        },
+        {
+          "text": "You gave me exactly what I need!"
+        },
+        {
+          "text": "You're a genius!"
+        },
+        {
+          "text": "You've been so helpful :)"
+        }
+      ],
+      "description": "Express positive sentiment or gratitude."
+    },
+    {
+      "intent": "sleep",
+      "examples": [
+        {
+          "text": "Sleep"
+        },
+        {
+          "text": "Off"
+        },
+        {
+          "text": "Turn off"
+        },
+        {
+          "text": "Conserve power"
+        },
+        {
+          "text": "Time for bed"
+        },
+        {
+          "text": "Bye"
+        },
+        {
+          "text": "Save your battery"
+        },
+        {
+          "text": "Time for bed said Zebedee"
+        },
+        {
+          "text": "See you later"
+        },
+        {
+          "text": "Goodbye"
+        },
+        {
+          "text": "Goodnight"
+        },
+        {
+          "text": "Ta Ta"
+        },
+        {
+          "text": "Power off"
+        }
+      ]
+    },
+    {
+      "intent": "General_Human_or_Bot",
+      "examples": [
+        {
+          "text": "How can you prove you are a human?"
+        },
+        {
+          "text": "Am I talking to a person or am I talking to an AI?"
+        },
+        {
+          "text": "Are you human?"
+        },
+        {
+          "text": "Are you even real?"
+        },
+        {
+          "text": "Are you a robot?"
+        },
+        {
+          "text": "Are you a human or a bot?"
+        },
+        {
+          "text": "Am I talking to a Bot?"
+        },
+        {
+          "text": "Am I chatting with a human?"
+        },
+        {
+          "text": "Tell me, are you a human or no?"
+        },
+        {
+          "text": "Is this a computer?"
+        },
+        {
+          "text": "Are you real?"
+        },
+        {
+          "text": "Am I talking to Watson?"
+        }
+      ],
+      "description": "Ask if speaking to a human or a bot."
+    },
+    {
+      "intent": "component-on",
+      "examples": [
+        {
+          "text": "Wag tail"
+        },
+        {
+          "text": "eye lights"
+        },
+        {
+          "text": "Turn on the @component"
+        },
+        {
+          "text": "Activate @component"
+        },
+        {
+          "text": "@component"
+        },
+        {
+          "text": "Turn on @component"
+        },
+        {
+          "text": "@component on"
+        }
+      ]
+    },
+    {
+      "intent": "wakeup",
+      "examples": [
+        {
+          "text": "Morning"
+        },
+        {
+          "text": "Hello"
+        },
+        {
+          "text": "Good evening"
+        },
+        {
+          "text": "Power on"
+        },
+        {
+          "text": "Good afternoon"
+        },
+        {
+          "text": "Wake up"
+        },
+        {
+          "text": "Good morning"
+        }
+      ]
+    },
+    {
+      "intent": "General_Negative_Feedback",
+      "examples": [
+        {
+          "text": "Do not like you?"
+        },
+        {
+          "text": "Robots are stupid"
+        },
+        {
+          "text": "Stupid"
+        },
+        {
+          "text": "Why are you so annoying?"
+        },
+        {
+          "text": "Why are you stupid?"
+        },
+        {
+          "text": "You are having delusions"
+        },
+        {
+          "text": "You are on my nerves"
+        },
+        {
+          "text": "You are very frustrating"
+        },
+        {
+          "text": "You do not seem smart"
+        },
+        {
+          "text": "You're really frustrating"
+        },
+        {
+          "text": "You're really irritating"
+        },
+        {
+          "text": "You're too stupid"
+        },
+        {
+          "text": "Robots are boring"
+        },
+        {
+          "text": "Quit annoying me"
+        },
+        {
+          "text": "It is annoying"
+        },
+        {
+          "text": "I hate you"
+        },
+        {
+          "text": "I hate this!"
+        },
+        {
+          "text": "I do not like you"
+        },
+        {
+          "text": "Hate you"
+        },
+        {
+          "text": "Everyone hates you"
+        }
+      ],
+      "description": "Express unfavorable feedback."
+    },
+    {
+      "intent": "General_Jokes",
+      "examples": [
+        {
+          "text": "I want a joke"
+        },
+        {
+          "text": "Are there jokes?"
+        },
+        {
+          "text": "Can you tell a joke?"
+        },
+        {
+          "text": "Can you tell me a joke?"
+        },
+        {
+          "text": "I am getting bored"
+        },
+        {
+          "text": "Do you have humor?"
+        },
+        {
+          "text": "Do you like fun?"
+        },
+        {
+          "text": "Do you like humor?"
+        },
+        {
+          "text": "Another joke"
+        },
+        {
+          "text": "What do you do for fun?"
+        },
+        {
+          "text": "What is your favorite joke?"
+        },
+        {
+          "text": "Tell me something funny"
+        },
+        {
+          "text": "Tell me a joke"
+        },
+        {
+          "text": "Surprise me with something hilarious"
+        },
+        {
+          "text": "One more joke"
+        },
+        {
+          "text": "I'm bored"
+        },
+        {
+          "text": "Do you have a joke?"
+        }
+      ],
+      "description": "Request a joke."
+    },
+    {
+      "intent": "purpose",
+      "examples": [
+        {
+          "text": "What were you designed for?"
+        },
+        {
+          "text": "Why were you created?"
+        },
+        {
+          "text": "What is your purpose?"
+        },
+        {
+          "text": "What do you do?"
+        },
+        {
+          "text": "Why were you built?"
+        }
+      ]
+    },
+    {
+      "intent": "goodboy",
+      "examples": [
+        {
+          "text": "Thankyou"
+        },
+        {
+          "text": "Clever dog"
+        },
+        {
+          "text": "Superstar!"
+        },
+        {
+          "text": "Well done"
+        },
+        {
+          "text": "Have a jelly baby"
+        },
+        {
+          "text": "Good boy"
+        },
+        {
+          "text": "Thank you"
+        }
+      ]
+    },
+    {
+      "intent": "followme",
+      "examples": [
+        {
+          "text": "Come"
+        },
+        {
+          "text": "Heel"
+        },
+        {
+          "text": "K9 come"
+        },
+        {
+          "text": "Walkies"
+        },
+        {
+          "text": "Follow me"
+        },
+        {
+          "text": "Time for a walk"
+        },
+        {
+          "text": "Follow"
+        },
+        {
+          "text": "Come on"
+        }
+      ]
+    },
+    {
+      "intent": "General_Ending",
+      "examples": [
+        {
+          "text": "Ok goodbye"
+        },
+        {
+          "text": "See you later"
+        },
+        {
+          "text": "Stop talking to me"
+        },
+        {
+          "text": "Thank you for your time"
+        },
+        {
+          "text": "Thanks, bye!"
+        },
+        {
+          "text": "Thanks very much, bye!"
+        },
+        {
+          "text": "That is all"
+        },
+        {
+          "text": "That's everything"
+        },
+        {
+          "text": "Time to go"
+        },
+        {
+          "text": "See you"
+        },
+        {
+          "text": "It was nice chatting with you"
+        },
+        {
+          "text": "I'm leaving now"
+        },
+        {
+          "text": "Im good thank you"
+        },
+        {
+          "text": "Im done"
+        },
+        {
+          "text": "I'm done"
+        },
+        {
+          "text": "I want to quit"
+        },
+        {
+          "text": "I have got to go"
+        },
+        {
+          "text": "I d like to stop doing this"
+        },
+        {
+          "text": "I am out of here"
+        },
+        {
+          "text": "I am leaving"
+        },
+        {
+          "text": "Hey bot go away"
+        },
+        {
+          "text": "Have a nice day?"
+        },
+        {
+          "text": "Goodbye"
+        },
+        {
+          "text": "Good. bye."
+        },
+        {
+          "text": "Going now"
+        },
+        {
+          "text": "Go off"
+        },
+        {
+          "text": "Go away"
+        },
+        {
+          "text": "Get lost"
+        },
+        {
+          "text": "Finished now, good bye"
+        },
+        {
+          "text": "Ending this session"
+        },
+        {
+          "text": "End trial"
+        },
+        {
+          "text": "Cya later"
+        },
+        {
+          "text": "Catch you later"
+        },
+        {
+          "text": "Bye now"
+        },
+        {
+          "text": "Bye bye"
+        },
+        {
+          "text": "Stop doing this"
+        },
+        {
+          "text": "Shut up"
+        }
+      ],
+      "description": "End the conversation."
+    }
+  ],
+  "entities": [
+    {
+      "entity": "todo",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "task",
+          "synonyms": [
+            "to do item",
+            "chore",
+            "work",
+            "todo",
+            "to do",
+            "job"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "component",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "screen",
+          "synonyms": [
+            "display",
+            "TV",
+            "side screen"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "tail",
+          "synonyms": [
+            "antenna"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "back panel",
+          "synonyms": [
+            "back",
+            "panel",
+            "flashing lights",
+            "switches",
+            "buttons",
+            "control panel"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "eye",
+          "synonyms": [
+            "eye lights",
+            "eyes"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "ears",
+          "synonyms": [
+            "radar",
+            "scanner",
+            "scanners"
+          ]
+        }
+      ],
+      "fuzzy_match": false
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    },
+    "runtime_version": "2016-09-20"
+  },
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "Conserving battery power",
+            "Entering sleep mode...",
+            "Good night master!",
+            "Shutting down non-essential systems.",
+            "Shutting down"
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#sleep",
+      "dialog_node": "node_5_1479135404286",
+      "previous_sibling": "node_1_1479134306004"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "All systems operational",
+            "All systems waking up!",
+            "All systems fully functional!",
+            "I am awake Master!"
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#wakeup",
+      "dialog_node": "node_3_1479135126979",
+      "previous_sibling": "node_8_1479138628338"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "I am clearly a robot, you are a very silly human.",
+            "K9 would be a very sad name for a human.",
+            "I am a robot dog.",
+            "I am K9 Mark five.  I am a robot.",
+            "I was programmed by the President of the IBM Academy of Technology.  I am a robot."
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#General_Human_or_Bot",
+      "dialog_node": "node_3_1553967032185",
+      "previous_sibling": "node_2_1553966833893"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "My purpose is to assist and serve.",
+            "I am K9 Mark V.  I am the robotic assistant of the President of the IBM Academy of Technology.",
+            "I am a helpful robot.",
+            "I am K9, the President's faithful robot dog."
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#purpose",
+      "dialog_node": "node_2_1479502847890",
+      "previous_sibling": "node_9_1479139082405"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "I am sorry you are dissatisfied.",
+            "Even a robot dog has his limitations.",
+            "I apologise if my functions have offended.",
+            "Criticism noted."
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#General_Negative_Feedback",
+      "dialog_node": "node_5_1553967591762",
+      "previous_sibling": "node_4_1553967221629"
+    },
+    {
+      "type": "standard",
+      "title": "to-do",
+      "output": {
+        "text": {
+          "values": [
+            "These are your to do actions Master! $my_result"
+          ]
+        }
+      },
+      "actions": [
+        {
+          "name": "/richard.hopkins@uk.ibm.com_k9-assistant/actionlist3",
+          "type": "cloud_function",
+          "parameters": {},
+          "credentials": "$private.my_credentials",
+          "result_variable": "$my_result"
+        }
+      ],
+      "context": {
+        "private": {
+          "my_credentials": {
+            "api_key": "867b7081-983d-48af-a4d3-b1ba1494cbdb:3buHKHl4EpOIvTjnAZKcYJ7RaD9xdM6jbKbqOcNZezimxb7Bu2snFKeAqsHur5BE"
+          }
+        }
+      },
+      "metadata": {},
+      "conditions": "#todo || @todo",
+      "dialog_node": "node_1_1553953997399",
+      "previous_sibling": "node_2_1479502847890"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "Goodbye",
+            "Goodbye master!"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "metadata": {},
+      "conditions": "#General_Ending",
+      "dialog_node": "node_1_1553966711798",
+      "previous_sibling": "node_1_1553953997399"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "All my functions are subject to quantum cryptography.",
+            "I have very high levels of security clearance.",
+            "I am more secure than your passwords!",
+            "I am a robot and I am a dog - what could be more trusted?",
+            "My security is from the year 5,000.  It would appear you are still using RSA public key encryption."
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#General_Security_Assurance",
+      "dialog_node": "node_6_1553967749290",
+      "previous_sibling": "node_5_1553967591762"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "@component activated!",
+            "I have turned on the @component",
+            "The @component is now on!",
+            "@component on",
+            "Turning @component on",
+            "@component is on"
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#component-on",
+      "dialog_node": "node_7_1479138085749",
+      "previous_sibling": "node_3_1479135126979"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "Greetings and felicitations master!",
+            "I am a robot, I do not require such politeness!",
+            "Hello, I am K9",
+            "I am K9, what can I do for you?",
+            "Master?",
+            "Auditory circuits engaged.",
+            "Hello."
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#General_Greetings",
+      "dialog_node": "node_2_1553966833893",
+      "previous_sibling": "node_1_1553966711798"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "What happened when the dog went to the flea circus? - he stole the show!",
+            "I am a robot I do not tell jokes.",
+            "How are a dog and a marine biologist alike? - One wags a tail and the other tags a whale.",
+            "I have not been programmed with a sense of humour."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "metadata": {},
+      "conditions": "#General_Jokes",
+      "dialog_node": "node_4_1553967221629",
+      "previous_sibling": "node_3_1553967032185"
+    },
+    {
+      "type": "standard",
+      "title": "universe",
+      "output": {
+        "generic": [
+          {
+            "values": [],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "values": [],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#",
+      "dialog_node": "node_7_1592746251938",
+      "previous_sibling": "node_2_1479134357475"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "Apologies master, I do not understand",
+            "Command not understood.",
+            "I am unable to process your instruction.",
+            "I do not understand.",
+            "Please clarify your instruction."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "metadata": {},
+      "conditions": "anything_else",
+      "dialog_node": "node_2_1479134357475",
+      "previous_sibling": "node_6_1553967749290"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "@component turned off",
+            "@component off",
+            "Turning @component off",
+            "@component is now off",
+            "Turning off @component"
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#component-off",
+      "dialog_node": "node_9_1479139082405",
+      "previous_sibling": "node_7_1479138085749"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "Thanks are not necessary Master!",
+            "Appreciation registered!",
+            "Thanks unnecessary, it was my pleasure!",
+            "Your appreciation is noted."
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#goodboy || #General_Positive_Feedback",
+      "dialog_node": "node_8_1479138628338",
+      "previous_sibling": "node_5_1479135404286"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "Following you master!",
+            "Coming master!",
+            "On my way!",
+            "Coming!",
+            "Navigating to your position master!",
+            "Moving!"
+          ],
+          "selection_policy": "random"
+        }
+      },
+      "metadata": {},
+      "conditions": "#followme",
+      "dialog_node": "node_1_1479134306004"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "system_entities": {
+      "enabled": true
+    }
+  },
+  "learning_opt_out": false,
+  "name": "k9controller",
+  "language": "en",
+  "description": "K9 intents, entities and dialogues"
+}
