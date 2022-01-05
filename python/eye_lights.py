@@ -13,13 +13,17 @@ pca.frequency = 60
 
 # 3%, 30%, 100%
 
-for brightness in range(0, 65535, 5):
+for brightness in range(0, 65535, 255):
     pca.channels[0].duty_cycle = brightness
 
 time.sleep(1.0)
 
-for brightness in range(0, 65535, 5):
+for brightness in range(0, 65535, 255):
     pca.channels[0].duty_cycle = 65535-brightness
+
+pca.channels[0].duty_cycle = 200
+
+time.sleep(1.0)
 
 pca.channels[0].duty_cycle = 2000
 
@@ -29,4 +33,4 @@ pca.channels[0].duty_cycle = 20000
 
 time.sleep(1.0)
 
-pca.channels[0].duty_cycle = 65535
+pca.channels[0].duty_cycle = 200
